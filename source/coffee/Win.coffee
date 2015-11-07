@@ -18,6 +18,7 @@ Win = do ->
 		height          = obj.height || 200
 		id              = obj.id || ''
 		title           = obj.title || ''
+		titleStyle      = obj.titleStyle || ''
 		modal           = obj.modal || ''
 		autoScroll      = obj.autoScroll || ''
 		closable        = obj.closable || ''
@@ -28,7 +29,7 @@ Win = do ->
 		theme           = obj.theme || ''
 		bodyStyle       = obj.bodyStyle || ''
 		bodyColor       = obj.bodyColor || '#FFF'
-		backgroundTitle = obj.backgroundTitle || '#000'
+		backgroundTitle = obj.backgroundTitle || '#23232E'
 		body            = document.querySelector('body')
 		winModal        = document.createElement('div')
 		win 			= this
@@ -48,9 +49,9 @@ Win = do ->
 
 
 		winModal.innerHTML = """<div style="width:#{width}; height:#{height}; top:#{top}; left:#{left}; background-color:#{bodyColor}; #{bodyStyle};" id="#{id}">
-									<div class="win-title" id="win_title_#{id}" style="background-color:#{backgroundTitle};">
-										<div class="win-title_txt">#{title}</div>
-										<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="document.querySelector('body').removeChild(document.querySelector('#win_modal_#{id}'));">X</div>
+									<div class="win-title" id="win_title_#{id}" style="background-color:#{backgroundTitle}; #{titleStyle}">
+										<div class="win-title-txt">#{title}</div>
+										<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="document.querySelector('body').removeChild(document.querySelector('#win_modal_#{id}'));"></div>
 									</div>
 									<div class="win-tbar" id="win_tbar_#{id}"></div>
 									<div class="win-window-body" id="win_window_#{id}">Contenido</div>
@@ -70,20 +71,22 @@ Win = do ->
 
 
 	tbar: (obj) ->
-		div = ''
+
 		if(typeof(obj) == 'object')
 			objDiv = document.getElementById('win_tbar_'+obj.id);
 
 			obj.forEach((elemento,index,element)->
-				elemento.tbar = objDiv
-				if elemento.xtype == 'button'
-					div += Win.button(elemento)
-				else if elemento.xtype == 'buttongroup'
-					div += Win.buttongroup(elemento)
 
-				# console.log(value+'-'+index);
+				if elemento.xtype == 'button'
+					elemento.tbar = objDiv
+					Win.button(elemento)
+				else if elemento.xtype == 'buttongroup'
+					elemento.tbar = objDiv
+					Win.buttongroup(elemento)
+				else if elemento == '-'
+					Win.separator(objDiv)
 			)
-		return	div += "</div>"
+		return
 
 	button: (obj) ->
 		text = obj.text || ''
@@ -94,7 +97,7 @@ Win = do ->
 		boton.setAttribute("class","win-btn")
 
 		boton.innerHTML = """<button>#{text}</button>"""
-		boton.onclick= obj.handler
+		boton.onclick   = obj.handler
 
 		obj.tbar.appendChild(boton);
 
@@ -107,6 +110,9 @@ Win = do ->
 			document.getElementById('id').style.display = 'block';
 
 		return id
+
+	separator: (tbar)->
+		tbar.innerHTML += """<div class="win-separator">|</div>"""
 
 	buttongroup: (obj) ->
 

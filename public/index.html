@@ -3,6 +3,7 @@
 		<title></title>
 		<link rel="stylesheet" href="css/normalize.css" />
 		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/theme-dark.css" />
 		<!-- // <script src="js/Win.js"></script> -->
 		<script src="js/Win.js"></script>
 	</head>
@@ -12,6 +13,7 @@
 		<input type="text" id="inputDouble" placeholder="inputDouble"/><br><br>
 		<input type="text" id="inputGlobal" placeholder="inputGlobal"/><br><br>
 		<input type="text" id="inputEmail" placeholder="inputEmail"/><br><br>
+		<input type="text" id="prueba" placeholder="prueba"/><br><br>
 		<script>
 
 			new Win.form.intField({
@@ -110,6 +112,7 @@
 					height      : 700,
 					id          : 'Win_ventana_1',
 					title       : 'VENTANA 1',
+					titleStyle  : 'text-align:center;',
 					modal       : true,
 					autoScroll  : true,
 					closable    : true,
@@ -135,7 +138,7 @@
 							cls   : 'prueba',
 							text  : 'guardar<br>archivo',
 							handler : function(){ nueva_ventana(); }
-						},
+						},'-',
 						{
 							xtype : 'button',
 							id    : 'btn_2',

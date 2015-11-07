@@ -1,4 +1,4 @@
-Copyright (c) 24-10-2014 Jonatan Herran
+Copyright (c) 24-10-2014
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

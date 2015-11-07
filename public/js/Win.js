@@ -14,11 +14,12 @@ var Win;
 Win = (function() {
   return {
     Window: function(obj) {
-      var autoDestroy, autoLoad, autoScroll, backgroundTitle, body, bodyColor, bodyStyle, closable, drag, height, id, left, modal, resize, tbar, theme, title, top, width, win, winModal;
+      var autoDestroy, autoLoad, autoScroll, backgroundTitle, body, bodyColor, bodyStyle, closable, drag, height, id, left, modal, resize, tbar, theme, title, titleStyle, top, width, win, winModal;
       width = obj.width || 200;
       height = obj.height || 200;
       id = obj.id || '';
       title = obj.title || '';
+      titleStyle = obj.titleStyle || '';
       modal = obj.modal || '';
       autoScroll = obj.autoScroll || '';
       closable = obj.closable || '';
@@ -29,7 +30,7 @@ Win = (function() {
       theme = obj.theme || '';
       bodyStyle = obj.bodyStyle || '';
       bodyColor = obj.bodyColor || '#FFF';
-      backgroundTitle = obj.backgroundTitle || '#000';
+      backgroundTitle = obj.backgroundTitle || '#23232E';
       body = document.querySelector('body');
       winModal = document.createElement('div');
       win = this;
@@ -43,7 +44,7 @@ Win = (function() {
       }
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; background-color:" + bodyColor + "; " + bodyStyle + ";\" id=\"" + id + "\">\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"background-color:" + backgroundTitle + ";\">\n		<div class=\"win-title_txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"document.querySelector('body').removeChild(document.querySelector('#win_modal_" + id + "'));\">X</div>\n	</div>\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body\" id=\"win_window_" + id + "\">Contenido</div>\n	<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>\n</div>\n<script onload>alert(1);</script>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; background-color:" + bodyColor + "; " + bodyStyle + ";\" id=\"" + id + "\">\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"background-color:" + backgroundTitle + "; " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"document.querySelector('body').removeChild(document.querySelector('#win_modal_" + id + "'));\"></div>\n	</div>\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body\" id=\"win_window_" + id + "\">Contenido</div>\n	<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>\n</div>\n<script onload>alert(1);</script>";
       body.appendChild(winModal);
       obj.tbar.id = id;
       tbar = Win.tbar(obj.tbar);
@@ -51,20 +52,21 @@ Win = (function() {
       console.log(Win);
     },
     tbar: function(obj) {
-      var div, objDiv;
-      div = '';
+      var objDiv;
       if (typeof obj === 'object') {
         objDiv = document.getElementById('win_tbar_' + obj.id);
         obj.forEach(function(elemento, index, element) {
-          elemento.tbar = objDiv;
           if (elemento.xtype === 'button') {
-            return div += Win.button(elemento);
+            elemento.tbar = objDiv;
+            return Win.button(elemento);
           } else if (elemento.xtype === 'buttongroup') {
-            return div += Win.buttongroup(elemento);
+            elemento.tbar = objDiv;
+            return Win.buttongroup(elemento);
+          } else if (elemento === '-') {
+            return Win.separator(objDiv);
           }
         });
       }
-      return div += "</div>";
     },
     button: function(obj) {
       var boton, id, text;
@@ -85,6 +87,9 @@ Win = (function() {
         return document.getElementById('id').style.display = 'block';
       };
       return id;
+    },
+    separator: function(tbar) {
+      return tbar.innerHTML += "<div class=\"win-separator\">|</div>";
     },
     buttongroup: function(obj) {},
     autoLoad: function(obj) {

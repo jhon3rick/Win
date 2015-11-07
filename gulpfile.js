@@ -5,13 +5,7 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
   	uglify = require('gulp-uglify');
 
-gulp.task('ugly', function () {
-  gulp.src('js/*.js')
-  .pipe(uglify())
-  .pipe(gulp.dest('./public/js/build/'))
-});
-
-gulp.task('scripts', function() {
+gulp.task('coffee', function() {
   gulp.src('./source/coffee/*.coffee')
     .pipe(coffee({bare: true, compress: true}).on('error', function(){
 		console.log(err.name + " en " + err.plugin);
@@ -19,10 +13,17 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('public/js'))
 });
 
-gulp.task('styles', function() {
+gulp.task('stylus', function() {
   gulp.src('./source/stylus/*.styl')
-    .pipe(stylus({compress: true}))
+    .pipe(stylus())
+    // .pipe(stylus({compress: true}))
     .pipe(gulp.dest('public/css'))
+});
+
+gulp.task('uglify', function () {
+  gulp.src('./public/js/*.js')
+  .pipe(uglify())
+  .pipe(gulp.dest('./public/js/min/'))
 });
 
 gulp.task('watch', function() {
@@ -43,6 +44,7 @@ gulp.task('clean', function() {
 });
 
 //define cmd line default task
-gulp.task('compile', ['scripts']);
-gulp.task('build', ['compile', 'ugly', 'styles']);
-gulp.task('default', ['build', 'watch', 'browserSync']);
+gulp.task('script', ['coffee']);
+gulp.task('build', ['script', 'uglify', 'stylus']);
+gulp.task('produccion', ['build', 'watch', 'browserSync']);
+gulp.task('default', ['coffee', 'stylus', 'watch']);
