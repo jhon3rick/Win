@@ -1,0 +1,273 @@
+<html>
+	<head>
+		<title></title>
+		<link rel="stylesheet" href="css/normalize.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<!-- // <script src="js/Win.js"></script> -->
+		<script src="js/Win.js"></script>
+	</head>
+	<body>
+		<input type="text" id="inputText" placeholder="inputText"/><br><br>
+		<input type="text" id="inputNumber" placeholder="inputNumber"/><br><br>
+		<input type="text" id="inputDouble" placeholder="inputDouble"/><br><br>
+		<input type="text" id="inputGlobal" placeholder="inputGlobal"/><br><br>
+		<input type="text" id="inputEmail" placeholder="inputEmail"/><br><br>
+		<script>
+
+			new Win.form.intField({
+				applyTo : 'inputNumber'
+			});
+
+			new Win.form.textField({
+				applyTo : 'inputText',
+				type: 'lowercase'
+			});
+
+			new Win.form.emailField({
+				applyTo : 'inputEmail'
+			});
+
+			new Win.form.doubleField({
+				applyTo : 'inputDouble'
+			});
+
+			// console.log(Win)
+
+			// new Win.formula.globalField({
+			// 	applyTo : 'inputGlobal'
+			// });
+
+			// debugger;
+
+			// new Ext.form.DateField({
+			//     emptyText  : 'Insert a date...',    //PLACEHOLDER
+			//     fieldLabel : 'Date from today',     //SI TIENE LABEL
+			//     format     : 'Y-m-d',               //FORMATO
+			//     width      : 130,                   //ANCHO
+			//     allowBlank : false,
+			//     showToday  : false,
+			//     applyTo    : '',
+			//     editable   : false,                 //EDITABLE
+			//     maxValue   : '2009-08-28',          //MAXIMO
+			//     minValue   : '2009-08-28',          //MINIMO
+			//     value      : new Date(),             //VALOR POR DEFECTO
+			//     listeners  : { select: function() {   } }
+			// });
+
+		// var myalto  = Ext.getBody().getHeight();
+		// var myancho = Ext.getBody().getWidth();
+
+		// Win_Ventana_ = new Ext.Window({
+		//     width       : myancho-100,
+		//     height      : myalto-50,
+		//     id          : 'Win_Ventana_',
+		//     title       : '',
+		//     modal       : true,
+		//     autoScroll  : false,
+		//     closable    : false,
+		//     autoDestroy : true,
+		//     autoLoad    :
+		//     {
+		//         url     : '.php',
+		//         scripts : true,
+		//         nocache : true,
+		//         params  :
+		//         {
+		//             var1 : 'var1',
+		//             var2 : 'var2',
+		//         }
+		//     },
+		//     tbar        :
+		//     [
+		//         {
+		//             xtype   : 'buttongroup',
+		//             columns : 3,
+		//             title   : 'Opciones',
+		//             style   : 'border-right:none;',
+		//             items   :
+		//             [
+		//                 {
+		//                     xtype       : 'button',
+		//                     width       : 60,
+		//                     height      : 56,
+		//                     text        : 'Regresar',
+		//                     scale       : 'large',
+		//                     iconCls     : 'regresar',
+		//                     iconAlign   : 'top',
+		//                     hidden      : false,
+		//                     handler     : function(){ BloqBtn(this); Win_Ventana_.close(id) }
+		//                 }
+		//             ]
+		//         }
+		//     ]
+		// }).show();
+
+
+				Win_ventana_1 = new Win.Window({
+					apply       : 'prueba',
+					bodyStyle   : '',
+					width       : 800,
+					height      : 700,
+					id          : 'Win_ventana_1',
+					title       : 'VENTANA 1',
+					modal       : true,
+					autoScroll  : true,
+					closable    : true,
+					autoDestroy : true,
+					autoLoad    :
+					{
+				        url     : '.php',
+				        scripts : true,
+				        nocache : true,
+				        params  :
+				        {
+				            var1 : 'var1',
+				            var2 : 'var2',
+				        }
+				    },
+					drag        : true,
+					resize      : true,
+					tbar        :
+					[
+						{
+							xtype : 'button',
+							id    : 'btn_1',
+							cls   : 'prueba',
+							text  : 'guardar<br>archivo',
+							handler : function(){ nueva_ventana(); }
+						},
+						{
+							xtype : 'button',
+							id    : 'btn_2',
+							cls   : 'prueba',
+							// text  : 'guardar'
+						}
+					]
+				});
+
+				function nueva_ventana(){
+					Win_ventana_2 = new Win.Window({
+						apply       : 'prueba',
+						bodyStyle   : '',
+						width       : 600,
+						height      : 500,
+						id          : 'Win_ventana_2',
+						title       : 'VENTANA 3',
+						modal       : true,
+						autoScroll  : true,
+						closable    : true,
+						autoDestroy : true,
+						autoLoad    :
+						{
+					        url     : '.php',
+					        scripts : true,
+					        nocache : true,
+					        params  :
+					        {
+					            var1 : 'var1',
+					            var2 : 'var2',
+					        }
+					    },
+						drag        : true,
+						resize      : true,
+						tbar        :
+						[
+							{
+								xtype : 'button',
+								id    : 'btn_1',
+								cls   : 'prueba',
+								text  : 'guardar<br>archivo',
+								handler : function(){ nueva_ventana2(); }
+							},
+							{
+								xtype : 'button',
+								id    : 'btn_2',
+								cls   : 'prueba',
+								// text  : 'guardar'
+							},
+						]
+					});
+				}
+
+				function nueva_ventana2(){
+					Win_ventana_3 = new Win.Window({
+						apply       : 'prueba',
+						bodyStyle   : '',
+						width       : 400,
+						height      : 300,
+						id          : 'Win_ventana_3',
+						title       : 'VENTANA 3',
+						modal       : true,
+						autoScroll  : true,
+						closable    : true,
+						autoDestroy : true,
+						autoLoad    :
+						{
+					        url     : '.php',
+					        scripts : true,
+					        nocache : true,
+					        params  :
+					        {
+					            var1 : 'var1',
+					            var2 : 'var2',
+					        }
+					    },
+						drag        : true,
+						resize      : true,
+						tbar        :
+						[
+							{
+								xtype : 'button',
+								id    : 'btn_1',
+								cls   : 'prueba',
+								text  : 'guardar<br>archivo',
+								handler : function(){ nueva_ventana2(); }
+							},
+							{
+								xtype : 'button',
+								id    : 'btn_2',
+								cls   : 'prueba',
+								// text  : 'guardar'
+							},
+						]
+					});
+				}
+
+				// Win.getButton('btn_1').hiden;
+				// prueba = new Win.getButton('btn_1').hiden
+				// console.log(prueba)
+				// console.log(Win.getButton('btn_1'))
+
+
+			// array.forEach(function(value,index,element){
+			//     console.log(value+'-'+index);
+			// });
+
+			// return;
+			// AJAX REQUEST
+			// Win.Ajax.request({
+			// 	url: 'bd.php',
+			// 	params: {
+			// 		opc: 'prueba_ajax',
+			// 		prueba: 1
+			// 	},
+			// 	success :function (result,xhr){
+
+			//                 if(result == 'true'){ console.log("true"); }
+			//                 else{ console.log("false"); }
+			//             },
+	  //           failure : function(xhr){ console.log("fail"); }
+			// })
+
+			// Win.get('win_window_ventana_1').load({
+			// 	url: 'bd.php',
+			// 	params: {
+			// 		opc: 'prueba_ajax',
+			// 		prueba: 1
+			// 	}
+			// })
+
+		</script>
+
+	</body>
+</html>

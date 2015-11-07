@@ -1,0 +1,31 @@
+{
+  "name": "win",
+  "version": "0.0.1",
+  "description": "Libreria para web aplicaciones RIA",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.9.12",
+    "gulp": "^3.9.0",
+    "gulp-coffee": "^2.3.1",
+    "gulp-stylus": "^2.1.0",
+    "gulp-uglify": "^1.4.2",
+    "gulp-util": "^3.0.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhon3rick/Win.js.git"
+  },
+  "keywords": [
+    "gruntJs"
+  ],
+  "author": "jhon3rick",
+  "license": "(MIT)",
+  "bugs": {
+    "url": "https://github.com/jhon3rick/Win.js/issues"
+  },
+  "homepage": "https://github.com/jhon3rick/Win.js#readme"
+}
