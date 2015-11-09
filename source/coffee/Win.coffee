@@ -3,6 +3,7 @@
 # @namespeace Win
 #
 # @version 0.1
+# @author Jhon Marroquin  || @jhon3rick
 # @author Jonatan Herran  || @jonatan2874
 #
 ###
@@ -15,21 +16,21 @@ Win = do ->
 	# Widges ventana
 	###
 	Window: (obj) ->
-		width           = obj.width || 300
-		height          = obj.height || 300
-		id              = obj.id || ''
-		title           = obj.title || ''
-		titleStyle      = obj.titleStyle || ''
-		modal           = obj.modal || ''
-		autoScroll      = obj.autoScroll || ''
-		closable        = obj.closable || ''
-		autoDestroy     = obj.autoDestroy || ''
-		autoLoad        = obj.autoLoad || ''
-		drag            = obj.drag || ''
-		resize          = obj.resize || ''
-		theme           = obj.theme || ''
-		bodyStyle       = obj.bodyStyle || ''
-		bodyColor       = obj.bodyColor || '#FFF'
+		width           = obj.width or 300
+		height          = obj.height or 300
+		id              = obj.id or ''
+		title           = obj.title or ''
+		titleStyle      = obj.titleStyle or ''
+		modal           = obj.modal or ''
+		autoScroll      = obj.autoScroll or ''
+		closable        = obj.closable or ''
+		autoDestroy     = obj.autoDestroy or ''
+		autoLoad        = obj.autoLoad or ''
+		drag            = obj.drag or ''
+		resize          = obj.resize or ''
+		theme           = obj.theme or ''
+		bodyStyle       = obj.bodyStyle or ''
+		bodyColor       = obj.bodyColor or '#FFF'
 		body            = document.querySelector('body')
 		winModal        = document.createElement('div')
 		win 			= this
@@ -54,7 +55,7 @@ Win = do ->
 								</div>
 								<script onload>alert(1);</script>"""
 
-		body.appendChild(winModal);
+		body.appendChild(winModal)
 
 		obj.tbar.id = id
 		Win.tbar(obj.tbar)
@@ -79,7 +80,7 @@ Win = do ->
 					Win.tbtext({ tbar:objDiv, align: align, json:json })
 
 				else if json == '-'
-					Win.separator(objDiv)
+					Win.separator({ tbar:objDiv, align: align })
 
 				else if json == '->'
 					align = 'right'
@@ -88,9 +89,9 @@ Win = do ->
 
 	button: (obj) ->
 		console.log(obj.align)
-		text     = obj.json.text || ''
-		id       = obj.json.id || ''
-		cls      = obj.json.cls || ''
+		text     = obj.json.text or ''
+		id       = obj.json.id or ''
+		cls      = obj.json.cls or ''
 		clsAling = if obj.align == 'right' then 'widge-right' else ''
 
 		boton = document.createElement('div')
@@ -112,13 +113,13 @@ Win = do ->
 		text.innerHTML = """<div>#{obj.json.text}</div>"""
 		(obj.tbar).appendChild(text)
 
-	separator: (tbar) ->
-		div = document.createElement('div')
-		div.setAttribute("class","win-separator")
-		div.innerHTML = "<div>|</div>"
-		tbar.appendChild(div)
+	separator: (obj) ->
+		div      = document.createElement('div')
+		clsAling = if obj.align == 'right' then 'widge-right' else ''
 
-	right: (tbar) ->
+		div.setAttribute("class","win-separator "+clsAling)
+		div.innerHTML = "<div>|</div>"
+		obj.tbar.appendChild(div)
 
 	###
 	# Get Elements
@@ -164,7 +165,7 @@ Win = do ->
 
 			xhr     = new XMLHttpRequest
 			bodyXhr = obj.url+'?'+parametros
-			method  = obj.method || 'POST'
+			method  = obj.method or 'POST'
 
 			xhr.open(method,bodyXhr, true)
 			xhr.onreadystatechange=() ->
@@ -188,7 +189,7 @@ Win = do ->
 
 			xhr     = new XMLHttpRequest
 			bodyXhr = obj.url+'?'+parametros;
-			method  = obj.method || 'POST'
+			method  = obj.method or 'POST'
 
 			xhr.open(method,bodyXhr, true);
 			xhr.onreadystatechange=() ->
@@ -204,7 +205,7 @@ Win = do ->
 		element: ->
 			return document.getElementById(element_id)
 
-@Win = Win
+# @Win = Win
 
 # module?.exports = Win
 # return
