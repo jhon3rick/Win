@@ -146,6 +146,7 @@
 						{
 							xtype : 'button',
 							id    : 'btn_2',
+							handler: function () { ajax_load();	}
 							// cls   : 'prueba',
 							// text  : 'guardar'
 						},'->','-',
@@ -279,13 +280,17 @@
 	  //           failure : function(xhr){ console.log("fail"); }
 			// })
 
-			// Win.get('win_window_ventana_1').load({
-			// 	url: 'bd.php',
-			// 	params: {
-			// 		opc: 'prueba_ajax',
-			// 		prueba: 1
-			// 	}
-			// })
+
+
+			function ajax_load () {
+				Win.get('win_window_Win_ventana_1').load({
+					url: 'bd.php',
+					params: {
+						opc: 'prueba_ajax_load',
+						prueba: 1
+					}
+				})
+			}
 
 		</script>
 

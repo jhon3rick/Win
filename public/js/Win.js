@@ -1,10 +1,3 @@
-/**
- * win - Libreria para web aplicaciones RIA
- * @version v0.0.1
- * @link    https://github.com/jhon3rick/Win.js#readme
- * @author  Jhon Marroquin (Twitter @jhon3rick || email jhon3rick@gmail.com)
- * @license (MIT)
- */
 
 /*
  * Win.js
@@ -185,7 +178,7 @@ Win = (function() {
           return xhr.send(null);
         },
         load: function(dom_element, obj) {
-          var bodyXhr, eval_script, extract_script, method, parametros, tagScript, value, xhr;
+          var bodyXhr, method, parametros, tagScript, value, xhr;
           parametros = '';
           tagScript = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)';
           if (typeof obj === 'undefined') {
@@ -201,29 +194,21 @@ Win = (function() {
           method = obj.method || 'POST';
           xhr.open(method, bodyXhr, true);
           xhr.onreadystatechange = function() {
-            var html, response;
+            var SearchExp, html, response, script, scripts;
             if (xhr.readyState === 4) {
               response = xhr.responseText;
-              html = extract_script(response);
-              dom_element.innerHTML = html;
-              return eval_script(response);
+              SearchExp = new RegExp(tagScript, 'img');
+              html = response.replace(SearchExp, '');
+              scripts = response.match(new RegExp(tagScript, 'img')) || [];
+              script = '';
+              scripts.map(function(script_map) {
+                return script += (script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1];
+              });
+              eval(script);
+              return dom_element.innerHTML = html;
             }
           };
-          xhr.send(null);
-          extract_script = function(string) {
-            var SearchExp;
-            SearchExp = new RegExp(tagScript, 'img');
-            return string.replace(SearchExp, '');
-          };
-          return eval_script = function(string) {
-            var script, scripts;
-            scripts = string.match(new RegExp(tagScript, 'img')) || [];
-            script = '';
-            scripts.map(function(script_map) {
-              return script += (script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1];
-            });
-            return eval(script);
-          };
+          return xhr.send(null);
         }
       };
     })(),

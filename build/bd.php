@@ -5,6 +5,9 @@
 		case 'prueba_ajax':
 			prueba_ajax();
 			break;
+		case 'prueba_ajax_load':
+			prueba_ajax_load();
+			break;
 
 		default:
 			default_function();
@@ -13,6 +16,10 @@
 
 	function prueba_ajax(){
 		echo "true";
+	}
+
+	function prueba_ajax_load(){
+		echo "<script>alert('Load!!!');</script> Contenido Load <script>console.log('in');</script>";
 	}
 
 	function default_function()

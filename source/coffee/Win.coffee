@@ -188,13 +188,28 @@ Win = do ->
 
 			xhr     = new XMLHttpRequest
 			bodyXhr = obj.url+'?'+parametros;
-			method  = obj.method or 'POST'
+			method  = obj.method || 'POST'
 
 			xhr.open(method,bodyXhr, true);
 			xhr.onreadystatechange=() ->
 				if xhr.readyState==4
 					response = xhr.responseText
+					html = extract_script(response)
+					dom_element.innerHTML = html
+					eval_script(response)
+
 			xhr.send(null);
+
+			extract_script = (string) ->
+				SearchExp = new RegExp(tagScript, 'img')
+				return string.replace(SearchExp, '')
+
+			eval_script = (string) ->
+				scripts = (string.match(new RegExp(tagScript, 'img')) || [])
+				script = ''
+				scripts.map (script_map) ->
+					script+=(script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1];
+				eval(script)
 
 	get: (element_id) ->
 		load: (obj) ->
