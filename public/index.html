@@ -2,10 +2,14 @@
 	<head>
 		<title></title>
 		<link rel="stylesheet" href="css/normalize.css" />
-		<link rel="stylesheet" href="css/style.css" />
-		<link rel="stylesheet" href="css/theme-dark.css" />
-		<!-- // <script src="js/Win.js"></script> -->
+		<link rel="stylesheet" href="css/Win.css" />
+
+		<!-- STYLE -->
+		<link rel="stylesheet" href="css/Win-theme-dark.css" />
+		<!-- <link rel="stylesheet" href="css/Win-theme-light.css" /> -->
+
 		<script src="js/Win.js"></script>
+		<script src="js/Win.form.js"></script>
 	</head>
 	<body>
 		<input type="text" id="inputText" placeholder="inputText"/><br><br>
@@ -112,7 +116,7 @@
 					height      : 700,
 					id          : 'Win_ventana_1',
 					title       : 'VENTANA 1',
-					titleStyle  : 'text-align:center;',
+					titleStyle  : '',
 					modal       : true,
 					autoScroll  : true,
 					closable    : true,
@@ -136,7 +140,7 @@
 							xtype : 'button',
 							id    : 'btn_1',
 							cls   : 'prueba',
-							text  : 'guardar<br>archivo',
+							text  : 'guardar<br>archivo config',
 							handler : function(){ nueva_ventana(); }
 						},'-',
 						{
@@ -144,11 +148,24 @@
 							id    : 'btn_2',
 							cls   : 'prueba',
 							// text  : 'guardar'
+						},'->',
+						{
+							xtype : 'button',
+							id    : 'btn_1',
+							cls   : 'prueba',
+							text  : 'guardar<br>archivo config',
+							handler : function(){ alert(4); nueva_ventana(); }
+						},
+						{
+							xtype : 'tbtext',
+							id    : 'btn_1',
+							text  : 'una demostracion de un texto largo<br>con salto de linea',
 						}
 					]
 				});
 
 				function nueva_ventana(){
+
 					Win_ventana_2 = new Win.Window({
 						apply       : 'prueba',
 						bodyStyle   : '',
