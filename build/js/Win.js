@@ -92,15 +92,14 @@ Win = (function() {
     buttongroup: function(obj) {},
     button: function(obj) {
       var boton, cls, clsAling, id, text;
-      console.log(obj.align);
       text = obj.json.text || '';
       id = obj.json.id || '';
       cls = obj.json.cls || '';
       clsAling = obj.align === 'right' ? 'widge-right' : '';
       boton = document.createElement('div');
       boton.setAttribute("id", id);
-      boton.setAttribute("class", "win-btn " + cls + " " + clsAling);
-      boton.innerHTML = "<button>" + text + "</button>";
+      boton.setAttribute("class", "win-btn " + clsAling);
+      boton.innerHTML = "<button class=\"" + cls + "\">" + text + "</button>";
       boton.onclick = obj.json.handler;
       return obj.tbar.appendChild(boton);
     },

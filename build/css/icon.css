@@ -1,0 +1,169 @@
+/**
+ * win - Libreria para web aplicaciones RIA
+ * @version v0.0.1
+ * @link    https://github.com/jhon3rick/Win.js#readme
+ * @author  Jhon Marroquin (Twitter @jhon3rick || email jhon3rick@gmail.com)
+ * @license (MIT)
+ */
+.ic_check_circle_black_18dp {
+  background-image: url("../img/icons/36dp/ic_check_circle_black_18dp.png");
+}
+.ic_check_circle_white_18dp {
+  background-image: url("../img/icons/36dp/ic_check_circle_white_18dp.png");
+}
+.ic_done_black_18dp {
+  background-image: url("../img/icons/36dp/ic_done_black_18dp.png");
+}
+.ic_done_white_18dp {
+  background-image: url("../img/icons/36dp/ic_done_white_18dp.png");
+}
+.ic_error_black_18dp {
+  background-image: url("../img/icons/36dp/ic_error_black_18dp.png");
+}
+.ic_error_outline_black_18dp {
+  background-image: url("../img/icons/36dp/ic_error_outline_black_18dp.png");
+}
+.ic_help_black_18dp {
+  background-image: url("../img/icons/36dp/ic_help_black_18dp.png");
+}
+.ic_help_outline_black_18dp {
+  background-image: url("../img/icons/36dp/ic_help_outline_black_18dp.png");
+}
+.ic_https_black_18dp {
+  background-image: url("../img/icons/36dp/ic_https_black_18dp.png");
+}
+.ic_https_white_18dp {
+  background-image: url("../img/icons/36dp/ic_https_white_18dp.png");
+}
+.ic_info_black_18dp {
+  background-image: url("../img/icons/36dp/ic_info_black_18dp.png");
+}
+.ic_info_outline_black_18dp {
+  background-image: url("../img/icons/36dp/ic_info_outline_black_18dp.png");
+}
+.ic_perm_identity_black_18dp {
+  background-image: url("../img/icons/36dp/ic_perm_identity_black_18dp.png");
+}
+.ic_perm_identity_white_18dp {
+  background-image: url("../img/icons/36dp/ic_perm_identity_white_18dp.png");
+}
+.ic_search_black_18dp {
+  background-image: url("../img/icons/36dp/ic_search_black_18dp.png");
+}
+.ic_search_white_18dp {
+  background-image: url("../img/icons/36dp/ic_search_white_18dp.png");
+}
+.ic_settings_black_18dp {
+  background-image: url("../img/icons/36dp/ic_settings_black_18dp.png");
+}
+.ic_supervisor_account_black_18dp {
+  background-image: url("../img/icons/36dp/ic_supervisor_account_black_18dp.png");
+}
+.ic_supervisor_account_white_18dp {
+  background-image: url("../img/icons/36dp/ic_supervisor_account_white_18dp.png");
+}
+.ic_view_headline_black_18dp {
+  background-image: url("../img/icons/36dp/ic_view_headline_black_18dp.png");
+}
+.ic_warning_black_18dp {
+  background-image: url("../img/icons/36dp/ic_warning_black_18dp.png");
+}
+.ic_warning_black_24dp {
+  background-image: url("../img/icons/36dp/ic_warning_black_24dp.png");
+}
+.ic_highlight_off_black_24dp {
+  background-image: url("../img/icons/36dp/ic_highlight_off_black_24dp.png");
+}
+.ic_highlight_off_white_24dp {
+  background-image: url("../img/icons/36dp/ic_highlight_off_white_24dp.png");
+}
+.ic_view_headline_black_24dp {
+  background-image: url("../img/icons/36dp/ic_view_headline_black_24dp.png");
+}
+.home_white_36dp {
+  background-image: url("../img/icons/36dp/home_white_36dp.png");
+}
+.ic_autorenew_black_36dp {
+  background-image: url("../img/icons/36dp/ic_autorenew_black_36dp.png");
+}
+.ic_autorenew_white_36dp {
+  background-image: url("../img/icons/36dp/ic_autorenew_white_36dp.png");
+}
+.ic_backup_black_36dp {
+  background-image: url("../img/icons/36dp/ic_backup_black_36dp.png");
+}
+.ic_backup_white_36dp {
+  background-image: url("../img/icons/36dp/ic_backup_white_36dp.png");
+}
+.ic_event_black_36dp {
+  background-image: url("../img/icons/36dp/ic_event_black_36dp.png");
+}
+.ic_event_white_36dp {
+  background-image: url("../img/icons/36dp/ic_event_white_36dp.png");
+}
+.ic_exit_to_app_black_36dp {
+  background-image: url("../img/icons/36dp/ic_exit_to_app_black_36dp.png");
+}
+.ic_exit_to_app_white_36dp {
+  background-image: url("../img/icons/36dp/ic_exit_to_app_white_36dp.png");
+}
+.ic_get_app_black_36dp {
+  background-image: url("../img/icons/36dp/ic_get_app_black_36dp.png");
+}
+.ic_get_app_white_36dp {
+  background-image: url("../img/icons/36dp/ic_get_app_white_36dp.png");
+}
+.ic_highlight_off_black_36dp {
+  background-image: url("../img/icons/36dp/ic_highlight_off_black_36dp.png");
+}
+.ic_highlight_off_white_36dp {
+  background-image: url("../img/icons/36dp/ic_highlight_off_white_36dp.png");
+}
+.ic_history_black_36dp {
+  background-image: url("../img/icons/36dp/ic_history_black_36dp.png");
+}
+.ic_history_white_36dp {
+  background-image: url("../img/icons/36dp/ic_history_white_36dp.png");
+}
+.ic_home_black_36dp {
+  background-image: url("../img/icons/36dp/ic_home_black_36dp.png");
+}
+.ic_note_add_white_36dp {
+  background-image: url("../img/icons/36dp/ic_note_add_white_36dp.png");
+}
+.ic_open_with_black_36dp {
+  background-image: url("../img/icons/36dp/ic_open_with_black_36dp.png");
+}
+.ic_open_with_white_36dp {
+  background-image: url("../img/icons/36dp/ic_open_with_white_36dp.png");
+}
+.ic_print_black_36dp {
+  background-image: url("../img/icons/36dp/ic_print_black_36dp.png");
+}
+.ic_print_white_36dp {
+  background-image: url("../img/icons/36dp/ic_print_white_36dp.png");
+}
+.ic_query_builder_black_36dp {
+  background-image: url("../img/icons/36dp/ic_query_builder_black_36dp.png");
+}
+.ic_query_builder_white_36dp {
+  background-image: url("../img/icons/36dp/ic_query_builder_white_36dp.png");
+}
+.ic_settings_black_36dp {
+  background-image: url("../img/icons/36dp/ic_settings_black_36dp.png");
+}
+.ic_supervisor_account_black_36dp {
+  background-image: url("../img/icons/36dp/ic_supervisor_account_black_36dp.png");
+}
+.ic_supervisor_account_white_36dp {
+  background-image: url("../img/icons/36dp/ic_supervisor_account_white_36dp.png");
+}
+.ic_trending_flat_black_36dp {
+  background-image: url("../img/icons/36dp/ic_trending_flat_black_36dp.png");
+}
+.ic_trending_flat_white_36dp {
+  background-image: url("../img/icons/36dp/ic_trending_flat_white_36dp.png");
+}
+.user_black_36 {
+  background-image: url("../img/icons/36dp/user_black_36.png");
+}

@@ -88,7 +88,6 @@ Win = do ->
 	buttongroup: (obj) ->
 
 	button: (obj) ->
-		console.log(obj.align)
 		text     = obj.json.text or ''
 		id       = obj.json.id or ''
 		cls      = obj.json.cls or ''
@@ -96,9 +95,9 @@ Win = do ->
 
 		boton = document.createElement('div')
 		boton.setAttribute("id",id)
-		boton.setAttribute("class","win-btn "+cls+" "+clsAling)
+		boton.setAttribute("class","win-btn "+clsAling)
 
-		boton.innerHTML = "<button>#{text}</button>"
+		boton.innerHTML = """<button class="#{cls}">#{text}</button>"""
 		boton.onclick   = obj.json.handler
 
 		(obj.tbar).appendChild(boton)

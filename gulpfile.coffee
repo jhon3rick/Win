@@ -9,15 +9,18 @@ coffee      = require 'gulp-coffee'
 browserSync = require 'browser-sync'
 uglify      = require 'gulp-uglify'
 rename      = require 'gulp-rename'
+jshint      = require 'gulp-jshint'
+notify      = require 'gulp-notify'
 pkg         = require './package.json'
 
 path =
-	distCoffee   : './dist/coffee'
-	distStylus   : './dist/stylus'
-	buildCoffee   : './build/js'
-	buildStylus   : './build/css'
-	coffee        : ['./source/coffee/*.coffee']
-	stylus        : ['./source/stylus/*.styl']
+	distCoffee  : './dist/coffee'
+	distStylus  : './dist/stylus'
+	buildCoffee : './build/js'
+	buildStylus : './build/css'
+	coffee      : ['./source/coffee/*.coffee']
+	stylus      : ['./source/stylus/*.styl']
+	jshint      : ['./build/js/*.js']
 
 banner = [
 	"/**"
@@ -56,6 +59,12 @@ gulp.task 'minStylus', ->
 		.pipe header banner, pkg: pkg
 		.pipe(rename({extname: '.min.css'}))
 		.pipe gulp.dest path.distStylus
+
+gulp.task "validate", ->
+     gulp.src path.jshint
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(notify({ message: 'JSHints task complete' }));
 
 gulp.task 'default', ->
 	gulp.watch path.coffee, ['coffee', 'minCoffee']

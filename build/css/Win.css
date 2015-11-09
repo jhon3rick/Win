@@ -129,7 +129,6 @@ select:focus {
 }
 .win-btn > button {
   background-color: rgba(0,0,0,0);
-  background-image: url("../img/guardar.png");
   background-size: 30px;
   background-repeat: no-repeat;
   background-position: center top;

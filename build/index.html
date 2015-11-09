@@ -3,6 +3,7 @@
 		<title></title>
 		<link rel="stylesheet" href="css/normalize.css" />
 		<link rel="stylesheet" href="css/Win.css" />
+		<link rel="stylesheet" href="css/icon.css" />
 
 		<!-- STYLE -->
 		<!-- <link rel="stylesheet" href="css/Win-theme-dark.css" /> -->
@@ -110,7 +111,6 @@
 
 
 				Win_ventana_1 = new Win.Window({
-					apply       : 'prueba',
 					bodyStyle   : '',
 					width       : 800,
 					height      : 700,
@@ -139,21 +139,21 @@
 						{
 							xtype : 'button',
 							id    : 'btn_1',
-							cls   : 'prueba',
-							text  : 'guardar<br>archivo config',
+							cls   : 'icon-user-black',
+							text  : 'Nuevo Usuario',
 							handler : function(){ nueva_ventana(); }
 						},'-',
 						{
 							xtype : 'button',
 							id    : 'btn_2',
-							cls   : 'prueba',
+							// cls   : 'prueba',
 							// text  : 'guardar'
 						},'->','-',
 						{
 							xtype : 'button',
 							id    : 'btn_1',
-							cls   : 'prueba',
-							text  : 'guardar<br>archivo config',
+							cls   : 'icon-action-black-ic_perm_identity_black_24dp',
+							text  : 'Salir',
 							handler : function(){ alert(4); nueva_ventana(); }
 						},'-',
 						{
