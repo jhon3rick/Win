@@ -50,10 +50,11 @@ Win = (function() {
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"document.querySelector('body').removeChild(document.querySelector('#win_modal_" + id + "'));\"></div>\n	</div>\n	<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body\" id=\"win_window_" + id + "\">Contenido</div>\n</div>\n<script onload>alert(1);</script>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-modal-parent\" id=\"win_modal_window_" + id + "\"><div class=\"win-modal-content\"><div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div><div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div></div></div>\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"document.querySelector('body').removeChild(document.querySelector('#win_modal_" + id + "'));\"></div>\n	</div>\n	<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body\" id=\"win_window_" + id + "\">Contenido</div>\n</div>\n<script onload>alert(1);</script>";
       body.appendChild(winModal);
       obj.tbar.id = id;
       Win.tbar(obj.tbar);
+      obj.autoLoad.id_ventana = id;
       return Win.Ajax.load(document.querySelector('#win_window_' + id), obj.autoLoad);
     },
     tbar: function(obj) {
@@ -143,6 +144,31 @@ Win = (function() {
           return document.getElementById(element_id);
         }
       };
+    },
+    loading: function(obj) {
+      var loader, mask, text;
+      if (typeof obj === 'undefined') {
+        console.warn("Para hacer uso de la ventana modal debe enviar el objeto con los paramteros Win.loading(obj) \nParametro Obligatorios: id_ventana ,estado");
+        return;
+      }
+      if (typeof obj.id_ventana === 'undefined' || typeof obj.estado === 'undefined') {
+        console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
+        return;
+      }
+      if (!document.getElementById('win_window_' + obj.id_ventana)) {
+        console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana ' + id_ventana);
+        return;
+      }
+      mask = document.getElementById('win_modal_window_' + obj.id_ventana);
+      text = obj.text || 'Cargando';
+      loader = obj.loader || 'default';
+      if (obj.estado === 'on') {
+        mask.style.visibility = 'visible';
+        document.getElementById('win_loader_' + obj.id_ventana).setAttribute('class', 'win-loader-' + loader);
+        return document.getElementById('label_cargando_' + obj.id_ventana).innerHTML = text;
+      } else if (obj.estado === 'off') {
+        return mask.style.visibility = 'hidden';
+      }
     }
   };
 })();

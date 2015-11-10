@@ -45,6 +45,7 @@ Win = do ->
 		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
 
 		winModal.innerHTML = """<div style="width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}" id="#{id}" class="win-marco">
+									<div class="win-modal-parent" id="win_modal_window_#{id}"><div class="win-modal-content"><div class="win-loader-default" id="win_loader_#{id}"></div><div class="win-modal-label" id="label_cargando_#{id}"></div></div></div>
 									<div class="win-title" id="win_title_#{id}" style="#{bgTitle} #{titleStyle}">
 										<div class="win-title-txt">#{title}</div>
 										<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="document.querySelector('body').removeChild(document.querySelector('#win_modal_#{id}'));"></div>
@@ -59,7 +60,7 @@ Win = do ->
 
 		obj.tbar.id = id
 		Win.tbar(obj.tbar)
-
+		obj.autoLoad.id_ventana = id
 		Win.Ajax.load(document.querySelector('#win_window_'+id),obj.autoLoad)
 
 	tbar: (obj) ->
@@ -138,6 +139,32 @@ Win = do ->
 
 		element: ->
 			return document.getElementById(element_id)
+
+	loading: (obj) ->
+		if typeof(obj)=='undefined'
+			console.warn("Para hacer uso de la ventana modal debe enviar el objeto con los paramteros Win.loading(obj) \nParametro Obligatorios: id_ventana ,estado")
+			return
+		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
+			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
+			return
+		if !document.getElementById('win_window_'+obj.id_ventana)
+			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
+			return
+		mask = document.getElementById('win_modal_window_'+obj.id_ventana)
+
+		text = obj.text or 'Cargando'
+		loader = obj.loader or 'default'
+
+		if obj.estado == 'on'
+			mask.style.visibility = 'visible'
+			document.getElementById('win_loader_'+obj.id_ventana).setAttribute('class','win-loader-'+loader)
+			document.getElementById('label_cargando_'+obj.id_ventana).innerHTML = text
+		else if obj.estado == 'off'
+			mask.style.visibility = 'hidden'
+
+
+
+
 
 # @Win = Win
 

@@ -3,6 +3,7 @@
 		<title></title>
 		<link rel="stylesheet" href="css/normalize.css" />
 		<link rel="stylesheet" href="css/Win.css" />
+		<link rel="stylesheet" href="css/Win-loaders.css" />
 		<link rel="stylesheet" href="css/icon.css" />
 
 		<!-- STYLE -->
@@ -155,6 +156,7 @@
 								xtype : 'button',
 								id    : 'btn_2',
 								cls   : 'prueba',
+								handler: function () { ajax_load();	}
 								// text  : 'guardar'
 							},
 						]
@@ -234,6 +236,7 @@
 			function ajax_load () {
 				Win.get('win_window_Win_ventana_1').load({
 					url: 'bd.php',
+					id_ventana : 'Win_ventana_1',
 					params: {
 						opc: 'prueba_ajax_load',
 						prueba: 1

@@ -5,8 +5,8 @@
  * @namespeace Win
  *
  * @version 0.1
- * @author Jhon Marroquin  || @jhon3rick
- * @author Jonatan Herran  || @jonatan2874
+ * @author Jhon Marroquin || @jhon3rick
+ * @author Jonatan Herran || @jonatan2874
  *
  */
 "use strict";
@@ -44,12 +44,12 @@ Win = (function() {
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"document.querySelector('body').removeChild(document.querySelector('#win_modal_" + id + "'));\"></div>\n	</div>\n	<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body\" id=\"win_window_" + id + "\">Contenido</div>\n</div>\n<script onload>alert(1);</script>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-modal-parent\" id=\"win_modal_window_" + id + "\"><div class=\"win-modal-content\"><div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div><div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div></div></div>\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"document.querySelector('body').removeChild(document.querySelector('#win_modal_" + id + "'));\"></div>\n	</div>\n	<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body\" id=\"win_window_" + id + "\">Contenido</div>\n</div>\n<script onload>alert(1);</script>";
       body.appendChild(winModal);
       obj.tbar.id = id;
       Win.tbar(obj.tbar);
-      obj.autoLoad.id = id;
-      return Win.autoLoad(obj.autoLoad);
+      obj.autoLoad.id_ventana = id;
+      return Win.Ajax.load(document.querySelector('#win_window_' + id), obj.autoLoad);
     },
     tbar: function(obj) {
       var align, objDiv;
@@ -127,100 +127,6 @@ Win = (function() {
       };
       return id;
     },
-
-    /*
-    	 * Request XHR
-     */
-    autoLoad: function(obj) {
-      var bodyXhr, xhr;
-      xhr = new XMLHttpRequest;
-      bodyXhr = 'bd.php?nameFileUpload=prueba&opc=cancelUploadFile';
-      xhr.open('POST', bodyXhr, true);
-      xhr.onreadystatechange = function() {
-        var response;
-        if (xhr.readyState === 4) {
-          response = xhr.responseText;
-          document.getElementById('win_window_' + obj.id).innerHTML = response;
-          if (response === 'true') {
-
-          } else {
-
-          }
-        }
-      };
-      return xhr.send(null);
-    },
-    Ajax: (function() {
-      return {
-        request: function(obj) {
-          var bodyXhr, method, parametros, value, xhr;
-          parametros = '';
-          if (typeof obj === 'undefined') {
-            console.warn("Para hacer uso del ajax debe enviar el objeto con los paramteros Win.Ajax.request(obj) \nConsulte la documentacion del proyecto");
-          }
-          if (typeof obj.params !== 'undefined') {
-            for (value in obj.params) {
-              parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
-            }
-          }
-          xhr = new XMLHttpRequest;
-          bodyXhr = obj.url + '?' + parametros;
-          method = obj.method || 'POST';
-          xhr.open(method, bodyXhr, true);
-          xhr.onreadystatechange = function() {
-            var response;
-            if (xhr.readyState === 4) {
-              response = xhr.responseText;
-              return obj.success(response, xhr);
-            } else {
-              return obj.failure(xhr);
-            }
-          };
-          return xhr.send(null);
-        },
-        load: function(dom_element, obj) {
-          var bodyXhr, eval_script, extract_script, method, parametros, tagScript, value, xhr;
-          parametros = '';
-          tagScript = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)';
-          if (typeof obj === 'undefined') {
-            console.warn("Para hacer uso del ajax debe enviar el objeto con los paramteros Win.Ajax.load(obj) \nConsulte la documentacion del proyecto");
-          }
-          if (typeof obj.params !== 'undefined') {
-            for (value in obj.params) {
-              parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
-            }
-          }
-          xhr = new XMLHttpRequest;
-          bodyXhr = obj.url + '?' + parametros;
-          method = obj.method || 'POST';
-          xhr.open(method, bodyXhr, true);
-          xhr.onreadystatechange = function() {
-            var html, response;
-            if (xhr.readyState === 4) {
-              response = xhr.responseText;
-              html = extract_script(response);
-              dom_element.innerHTML = html;
-              return eval_script(response);
-            }
-          };
-          xhr.send(null);
-          extract_script = function(string) {
-            var SearchExp;
-            SearchExp = new RegExp(tagScript, 'img');
-            return string.replace(SearchExp, '');
-          };
-          return eval_script = function(string) {
-            var script, scripts;
-            scripts = string.match(new RegExp(tagScript, 'img')) || [];
-            script = '';
-            scripts.map(function(script_map) {
-              return script += (script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1];
-            });
-            return eval(script);
-          };
-        }
-      };
-    })(),
     get: function(element_id) {
       return {
         load: function(obj) {
@@ -232,6 +138,31 @@ Win = (function() {
           return document.getElementById(element_id);
         }
       };
+    },
+    loading: function(obj) {
+      var loader, mask, text;
+      if (typeof obj === 'undefined') {
+        console.warn("Para hacer uso de la ventana modal debe enviar el objeto con los paramteros Win.loading(obj) \nParametro Obligatorios: id_ventana ,estado");
+        return;
+      }
+      if (typeof obj.id_ventana === 'undefined' || typeof obj.estado === 'undefined') {
+        console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
+        return;
+      }
+      if (!document.getElementById('win_window_' + obj.id_ventana)) {
+        console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana ' + id_ventana);
+        return;
+      }
+      mask = document.getElementById('win_modal_window_' + obj.id_ventana);
+      text = obj.text || 'Cargando';
+      loader = obj.loader || 'default';
+      if (obj.estado === 'on') {
+        mask.style.visibility = 'visible';
+        document.getElementById('win_loader_' + obj.id_ventana).setAttribute('class', 'win-loader-' + loader);
+        return document.getElementById('label_cargando_' + obj.id_ventana).innerHTML = text;
+      } else if (obj.estado === 'off') {
+        return mask.style.visibility = 'hidden';
+      }
     }
   };
 })();
