@@ -98,9 +98,16 @@
 					{
 						xtype : 'button',
 						id    : 'btn_2',
-						handler: function () { ajax_load();	}
-						// cls   : 'prueba',
-						// text  : 'guardar'
+						handler: function () { ajax_load();	},
+						cls   : 'ic_autorenew_black_36dp',
+						text  : 'ajax load'
+					},
+					{
+						xtype : 'button',
+						id    : 'btn_2',
+						handler: function () { ajax_request();	},
+						cls   : 'ic_autorenew_black_36dp',
+						text  : 'ajax request'
 					},'->','-',
 					{
 						xtype : 'button',
@@ -156,7 +163,7 @@
 								xtype : 'button',
 								id    : 'btn_2',
 								cls   : 'prueba',
-								handler: function () { ajax_load();	}
+								handler: function () { ajax_load_2();	}
 								// text  : 'guardar'
 							},
 						]
@@ -232,19 +239,62 @@
 			// })
 
 
+// text = TEXTO DEL LOADING
 
-			function ajax_load () {
-				Win.get('win_window_Win_ventana_1').load({
-					url: 'bd.php',
-					id_ventana : 'Win_ventana_1',
-					params: {
-						opc: 'prueba_ajax_load',
-						prueba: 1
-					}
-				})
+// LOADING DISPONIBLES ELEMENTO loader
+// default
+// loader1
+// loader2
+// loader3
+
+// duracion : segundos o infinito
+
+	function ajax_load () {
+		Win.get('win_window_Win_ventana_1').load({
+			url        : 'bd.php',
+			id_ventana : 'Win_ventana_1',
+			text       : 'ajax load text',
+			loader     : 'loader2',
+			modal      : true,
+			params: {
+				opc    : 'prueba_ajax_load',
+				prueba : 1
 			}
+		})
+	}
 
-		</script>
+	function ajax_request() {
+		Win.Ajax.request({
+			url        : 'bd.php',
+			id_ventana : 'Win_ventana_1',
+			text       : 'ajax request text',
+			loader     : 'loader1',
+			autoClose  : false,
+			modal      : true,
+			params: {
+				opc    : 'prueba_ajax_request',
+				prueba : 1
+			},
+			success : function (result,xhr){
+		                if(result == 'true'){ console.log("true"); }
+		                else{ console.log("false"); }
+		            },
+		    failure : function(xhr){ console.log("fail"); }
+		})
+	}
+
+	function ajax_load_2 () {
+		Win.get('win_window_Win_ventana_1').load({
+			url        : 'bd.php',
+			id_ventana : 'Win_ventana_2',
+			params: {
+				opc    : 'prueba_ajax_load',
+				prueba : 1
+			}
+		})
+	}
+
+</script>
 
 	</body>
 </html>
