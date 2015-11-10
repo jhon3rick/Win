@@ -80,8 +80,13 @@
   });
 
   gulp.task('default', function() {
-    gulp.watch(path.coffee, ['coffee', 'minCoffee']);
-    return gulp.watch(path.stylus, ['stylus', 'minStylus']);
+    gulp.watch(path.coffee, ['coffee']);
+    return gulp.watch(path.stylus, ['stylus']);
+  });
+
+  gulp.task('compile', function() {
+    gulp.watch(path.coffee, ['minCoffee']);
+    return gulp.watch(path.stylus, ['minStylus']);
   });
 
 }).call(this);

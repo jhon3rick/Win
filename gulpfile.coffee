@@ -60,6 +60,8 @@ gulp.task 'minStylus', ->
 		.pipe(rename({extname: '.min.css'}))
 		.pipe gulp.dest path.distStylus
 
+
+# TAREAS EJECUTADAS
 gulp.task "validate", ->
      gulp.src path.jshint
         .pipe(jshint())
@@ -67,7 +69,10 @@ gulp.task "validate", ->
         .pipe(notify({ message: 'JSHints task complete' }));
 
 gulp.task 'default', ->
-	gulp.watch path.coffee, ['coffee', 'minCoffee']
-	gulp.watch path.stylus, ['stylus', 'minStylus']
+	gulp.watch path.coffee, ['coffee']
+	gulp.watch path.stylus, ['stylus']
 
 
+gulp.task 'compile', ->
+	gulp.watch path.coffee, ['minCoffee']
+	gulp.watch path.stylus, ['minStylus']

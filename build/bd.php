@@ -15,7 +15,29 @@
 	}
 
 	function prueba_ajax(){
-		echo "true";
+		echo'<input type="text" id="inputText" placeholder="inputText"/><br><br>
+			<input type="text" id="inputNumber" placeholder="inputNumber"/><br><br>
+			<input type="text" id="inputDouble" placeholder="inputDouble"/><br><br>
+			<input type="text" id="inputEmail" placeholder="inputEmail"/><br><br>
+			<script>
+
+				new Win.form.intField({
+					applyTo : \'inputNumber\'
+				});
+
+				new Win.form.textField({
+					applyTo : \'inputText\',
+					type: \'lowercase\'
+				});
+
+				new Win.form.emailField({
+					applyTo : \'inputEmail\'
+				});
+
+				new Win.form.doubleField({
+					applyTo : \'inputDouble\'
+				});
+			</script>';
 	}
 
 	function prueba_ajax_load(){

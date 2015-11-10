@@ -11,8 +11,8 @@
  * @namespeace Win
  *
  * @version 0.1
- * @author Jhon Marroquin  || @jhon3rick
- * @author Jonatan Herran  || @jonatan2874
+ * @author Jhon Marroquin || @jhon3rick
+ * @author Jonatan Herran || @jonatan2874
  *
  */
 "use strict";
@@ -54,8 +54,7 @@ Win = (function() {
       body.appendChild(winModal);
       obj.tbar.id = id;
       Win.tbar(obj.tbar);
-      obj.autoLoad.id = id;
-      return Win.autoLoad(obj.autoLoad);
+      return Win.Ajax.load(document.querySelector('#win_window_' + id), obj.autoLoad);
     },
     tbar: function(obj) {
       var align, objDiv;
@@ -133,100 +132,6 @@ Win = (function() {
       };
       return id;
     },
-
-    /*
-    	 * Request XHR
-     */
-    autoLoad: function(obj) {
-      var bodyXhr, xhr;
-      xhr = new XMLHttpRequest;
-      bodyXhr = 'bd.php?nameFileUpload=prueba&opc=cancelUploadFile';
-      xhr.open('POST', bodyXhr, true);
-      xhr.onreadystatechange = function() {
-        var response;
-        if (xhr.readyState === 4) {
-          response = xhr.responseText;
-          document.getElementById('win_window_' + obj.id).innerHTML = response;
-          if (response === 'true') {
-
-          } else {
-
-          }
-        }
-      };
-      return xhr.send(null);
-    },
-    Ajax: (function() {
-      return {
-        request: function(obj) {
-          var bodyXhr, method, parametros, value, xhr;
-          parametros = '';
-          if (typeof obj === 'undefined') {
-            console.warn("Para hacer uso del ajax debe enviar el objeto con los paramteros Win.Ajax.request(obj) \nConsulte la documentacion del proyecto");
-          }
-          if (typeof obj.params !== 'undefined') {
-            for (value in obj.params) {
-              parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
-            }
-          }
-          xhr = new XMLHttpRequest;
-          bodyXhr = obj.url + '?' + parametros;
-          method = obj.method || 'POST';
-          xhr.open(method, bodyXhr, true);
-          xhr.onreadystatechange = function() {
-            var response;
-            if (xhr.readyState === 4) {
-              response = xhr.responseText;
-              return obj.success(response, xhr);
-            } else {
-              return obj.failure(xhr);
-            }
-          };
-          return xhr.send(null);
-        },
-        load: function(dom_element, obj) {
-          var bodyXhr, eval_script, extract_script, method, parametros, tagScript, value, xhr;
-          parametros = '';
-          tagScript = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)';
-          if (typeof obj === 'undefined') {
-            console.warn("Para hacer uso del ajax debe enviar el objeto con los paramteros Win.Ajax.load(obj) \nConsulte la documentacion del proyecto");
-          }
-          if (typeof obj.params !== 'undefined') {
-            for (value in obj.params) {
-              parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
-            }
-          }
-          xhr = new XMLHttpRequest;
-          bodyXhr = obj.url + '?' + parametros;
-          method = obj.method || 'POST';
-          xhr.open(method, bodyXhr, true);
-          xhr.onreadystatechange = function() {
-            var html, response;
-            if (xhr.readyState === 4) {
-              response = xhr.responseText;
-              html = extract_script(response);
-              dom_element.innerHTML = html;
-              return eval_script(response);
-            }
-          };
-          xhr.send(null);
-          extract_script = function(string) {
-            var SearchExp;
-            SearchExp = new RegExp(tagScript, 'img');
-            return string.replace(SearchExp, '');
-          };
-          return eval_script = function(string) {
-            var script, scripts;
-            scripts = string.match(new RegExp(tagScript, 'img')) || [];
-            script = '';
-            scripts.map(function(script_map) {
-              return script += (script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1];
-            });
-            return eval(script);
-          };
-        }
-      };
-    })(),
     get: function(element_id) {
       return {
         load: function(obj) {
