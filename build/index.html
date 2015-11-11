@@ -96,6 +96,29 @@
 						handler : function(){ nueva_ventana(); }
 					},'-',
 					{
+				items	:
+				[
+					{
+						xtype     : 'panel',
+						width     : 260,
+						height    : 56,
+						bodyStyle : 'background-color:rgb(208, 205, 205)',
+						html      : '<div>contenido por parametro</div>',
+						autoLoad  :
+						{
+							url		: 'bd.php',
+							params	:
+							{
+								opc    : 'prueba_ajax_load',
+								prueba : 1
+
+							}
+						}
+					}
+				]
+
+					},
+					{
 						xtype : 'button',
 						id    : 'btn_2',
 						handler: function () { ajax_load();	},
@@ -252,9 +275,7 @@
 	function ajax_load () {
 		Win.get('win_window_Win_ventana_1').load({
 			url        : 'bd.php',
-			id_ventana : 'Win_ventana_1',
 			text       : 'ajax load text',
-			loader     : 'loader2',
 			modal      : true,
 			params: {
 				opc    : 'prueba_ajax_load',
@@ -265,12 +286,15 @@
 
 	function ajax_request() {
 		Win.Ajax.request({
-			url        : 'bd.php',
-			id_ventana : 'Win_ventana_1',
-			text       : 'ajax request text',
-			loader     : 'loader1',
-			autoClose  : false,
-			modal      : true,
+			url            : 'bd.php',
+			modal          : true,
+			id_ventana     : 'Win_ventana_1',
+			text           : 'ajax request text',
+			loader         : 'default',
+			autoClose      : true,
+			textFinish     : 'ajax finalizado',
+			iconFinish     : 'warn',
+			duracionFinish : '3000',
 			params: {
 				opc    : 'prueba_ajax_request',
 				prueba : 1

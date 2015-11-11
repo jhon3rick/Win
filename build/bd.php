@@ -49,7 +49,25 @@
 		for ($i=0; $i < 50000000; $i++) {
 			$temp++;
 		}
-		echo "<script>alert('Load!!!');</script> Contenido Load <script>console.log('in');</script>";
+		echo "<style>
+					.MySelect{
+						width : 100px;
+						padding : 0;
+					}
+				</style>
+
+				<select class='MySelect' id='MySelect'>
+					<option>Datos</option>
+					<option>Datos</option>
+					<option>Datos</option>
+					<option>Datos</option>
+				</select>
+
+				<script>
+					console.log('ajax load!!!!');
+					var style = document.getElementById('MySelect').parentNode.getAttribute('style');
+					document.getElementById('MySelect').parentNode.setAttribute('style','text-align:center;padding-top:5px;'+style);
+				</script>";
 	}
 
 	function prueba_ajax_request(){
