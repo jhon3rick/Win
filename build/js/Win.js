@@ -225,6 +225,24 @@ Win = (function() {
           }), duracion);
         }
       }
+    },
+    MessageBox: function(obj) {
+      var MessageBox_DOM, bodyStyle, height, id, text, title, width;
+      if (typeof obj === 'undefined') {
+        console.warn('Para utiliza el objeto MessageBox debe enviar el objeto con los parametros\nConsulte la documentacion');
+        return;
+      }
+      title = obj.title || 'Aviso';
+      text = obj.title || 'texto';
+      id = obj.id || '';
+      width = obj.width || 'auto';
+      height = obj.height || 'auto';
+      bodyStyle = obj.bodyStyle || '';
+      MessageBox_DOM = document.createElement('div');
+      MessageBox_DOM.setAttribute("id", id);
+      MessageBox_DOM.setAttribute("class", "win-modal");
+      MessageBox_DOM.setAttribute("style", 'width:' + width + ';height:' + height + ';' + bodyStyle);
+      return document.body.appendChild(MessageBox_DOM);
     }
   };
 })();

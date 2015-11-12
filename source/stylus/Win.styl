@@ -2,6 +2,8 @@
 $fSize      = 12px
 $fSizeBody  = 13px
 $fSizeInput = 12px
+$color_min_load_ajax = #000
+
 
 body
 	margin 0
@@ -212,3 +214,24 @@ input, select
 .win-content-min-load-label
 	line-height  1.5
 	padding-left 5px
+
+.win-min-load-ajax
+	width              18px
+	height             18px
+	clear              both
+	float 			   left
+	border             4px rgba( $color_min_load_ajax ,0.25) solid
+	border-top         4px rgba( $color_min_load_ajax ,1) solid
+	border-radius      50%
+	-webkit-animation  win-min-load-ajax .6s infinite linear
+	animation          win-min-load-ajax .6s infinite linear
+
+@-webkit-keyframes win-min-load-ajax {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(359deg); }
+}
+@keyframes win-min-load-ajax {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(359deg); }
+}
+

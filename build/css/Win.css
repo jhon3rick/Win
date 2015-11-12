@@ -214,3 +214,54 @@ select:focus {
   line-height: 1.5;
   padding-left: 5px;
 }
+.win-min-load-ajax {
+  width: 18px;
+  height: 18px;
+  clear: both;
+  float: left;
+  border: 4px rgba(0,0,0,0.25) solid;
+  border-top: 4px #000 solid;
+  border-radius: 50%;
+  -webkit-animation: win-min-load-ajax 0.6s infinite linear;
+  animation: win-min-load-ajax 0.6s infinite linear;
+}
+@-webkit-keyframes win-min-load-ajax {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-moz-keyframes win-min-load-ajax {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes win-min-load-ajax {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes win-min-load-ajax {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+@keyframes win-min-load-ajax {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

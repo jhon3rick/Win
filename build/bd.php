@@ -62,7 +62,7 @@
 					<option>Datos</option>
 					<option>Datos</option>
 				</select>
-
+				<div class='win-content-min-load' ><div class='win-content-min-load-img'><div class='win-min-load-ajax'></div></div><div class='win-content-min-load-label'>loading style</div></div>
 				<script>
 					console.log('ajax load!!!!');
 					var style = document.getElementById('MySelect').parentNode.getAttribute('style');
