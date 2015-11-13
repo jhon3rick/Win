@@ -16,27 +16,34 @@ Win = do ->
 	# Widges ventana
 	###
 	Window: (obj) ->
-		width           = obj.width or 300
-		height          = obj.height or 300
-		id              = obj.id or ''
-		title           = obj.title or ''
-		titleStyle      = obj.titleStyle or ''
-		modal           = obj.modal or ''
-		autoScroll      = obj.autoScroll or ''
-		closable        = obj.closable or ''
-		autoDestroy     = obj.autoDestroy or ''
-		autoLoad        = obj.autoLoad or ''
-		drag            = obj.drag or ''
-		resize          = obj.resize or ''
-		theme           = obj.theme or ''
-		bodyStyle       = obj.bodyStyle or ''
-		bodyColor       = obj.bodyColor or '#FFF'
-		body            = document.querySelector('body')
-		winModal        = document.createElement('div')
-		win 			= this
+		if typeof(obj) == 'undefined'
+			console.warn('Para utiliza la propiedad Window debe enviar el objeto con los parametros\nConsulte la documentacion')
+			return
+
+		width       = obj.width or 300
+		height      = obj.height or 300
+		id          = obj.id or ''
+		title       = obj.title or ''
+		titleStyle  = obj.titleStyle or ''
+		modal       = obj.modal or ''
+		autoScroll  = obj.autoScroll or ''
+		closable    = obj.closable or ''
+		autoDestroy = obj.autoDestroy or ''
+		autoLoad    = obj.autoLoad or ''
+		html        = obj.html or ''
+		drag        = obj.drag or ''
+		resize      = if typeof(obj.resize)!= 'undefined' then obj.resize else true
+		theme       = obj.theme or ''
+		bodyStyle   = obj.bodyStyle or ''
+		bodyColor   = obj.bodyColor or '#FFF'
+		body        = document.querySelector('body')
+		winModal    = document.createElement('div')
+		win         = this
+		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
 
 		bgBody  = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
+		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win_div_resize_#{id}"></div>""" else ''
 
 		winModal.setAttribute("id","win_modal_#{id}")
 		winModal.setAttribute("class","win-modal")
@@ -48,21 +55,27 @@ Win = do ->
 									<div class="win-modal-parent" id="win_modal_window_#{id}"><div class="win-modal-content"><div class="win-loader-default" id="win_loader_#{id}"></div><div class="win-modal-label" id="label_cargando_#{id}"></div></div></div>
 									<div class="win-title" id="win_title_#{id}" style="#{bgTitle} #{titleStyle}">
 										<div class="win-title-txt">#{title}</div>
-										<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="document.querySelector('body').removeChild(document.querySelector('#win_modal_#{id}'));"></div>
+										<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>
 									</div>
-									<div class="win-div-resize" id="win_div_resize_#{id}"></div>
+									#{divResize}
 									<div class="win-tbar" id="win_tbar_#{id}"></div>
-									<div class="win-window-body" id="win_window_#{id}">Contenido</div>
+									<div class="win-window-body #{clsBody}" id="win_window_#{id}">Contenido #{html}</div>
 								</div>
 								<script onload>alert(1);</script>"""
 
 		body.appendChild(winModal)
 
-		obj.tbar.id = id
-		Win.tbar(obj.tbar)
+		if typeof(obj.tbar) != 'undefined'
+			obj.tbar.id = id
+			Win.tbar(obj.tbar)
+		else
+			document.getElementById('win_tbar_'+id).parentNode.removeChild(document.getElementById('win_tbar_'+id))
 
 		if typeof(obj.autoLoad) != 'undefined'
 			Win.Ajax.load(document.querySelector('#win_window_'+id),obj.autoLoad)
+
+		close: ()->
+			document.getElementById("#{id}").parentNode.parentNode.removeChild(document.getElementById("#{id}").parentNode)
 
 	tbar: (obj) ->
 		if typeof(obj) == 'object'
@@ -222,24 +235,57 @@ Win = do ->
 				  mask.style.visibility = 'hidden'
 				), duracion
 
-	MessageBox: (obj) ->
+	Alert: (obj) ->
 
 		if typeof(obj) == 'undefined'
-			console.warn('Para utiliza el objeto MessageBox debe enviar el objeto con los parametros\nConsulte la documentacion')
+			console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion')
 			return
 
-		title     = obj.title or 'Aviso'
-		text      = obj.title or 'texto'
-		id        = obj.id or ''
-		width     = obj.width or 'auto'
-		height    = obj.height or 'auto'
-		bodyStyle = obj.bodyStyle or ''
+		width     = 250
+		height    = 140
+		title = obj.title or 'Alert'
+		text  = obj.text or 'ventana de alerta de win'
+		text += '<div class="content-btn"><input type="button" value="Aceptar" onclick="Win_ventana_alert.close()"></div>'
 
-		MessageBox_DOM = document.createElement('div')
-		MessageBox_DOM.setAttribute("id",id)
-		MessageBox_DOM.setAttribute("class","win-modal")
-		MessageBox_DOM.setAttribute("style",'width:'+width+';height:'+height+';'+bodyStyle)
-		document.body.appendChild(MessageBox_DOM)
+		Win_ventana_alert = new Win.Window({
+											width       : width,
+											height      : height,
+											id          : 'Win_ventana_alert',
+											title       : title,
+											html        : text,
+											type        : 'alert',
+											modal       : true,
+											autoScroll  : true,
+											closable    : true,
+											autoDestroy : true,
+											drag        : false,
+											resize      : false
+										});
+
+	Confirm: (obj) ->
+
+		if typeof(obj) == 'undefined'
+			console.warn('Para utiliza el objeto alert debe enviar el objeto con los parametros\nConsulte la documentacion')
+			return
+
+		width     = 250
+		height    = 140
+		title = obj.title or 'Alert'
+		text  = obj.text or 'ventana de alerta de win'
+
+		Win.Window({
+						width       : width,
+						height      : height,
+						id          : 'Win_ventana_msgbox',
+						title       : title,
+						modal       : true,
+						autoScroll  : true,
+						closable    : true,
+						autoDestroy : true,
+						html        : text
+						drag        : false,
+						resize      : false
+					});
 
 
 

@@ -35,6 +35,12 @@ select:focus {
   box-sizing: border-box;
   font-family: arial, sans-serif;
 }
+input[type=button] {
+  padding: 3;
+}
+input[type=button]:hover {
+  background-color: #e6e6e6;
+}
 .win-modal {
   position: absolute;
   width: 100%;
@@ -100,6 +106,15 @@ select:focus {
   height: calc(100% - 3px - 106px);
   overflow: auto;
   font-size: 13px;
+}
+.alert {
+  height: calc(100% - 60px);
+}
+.alert .content-btn {
+  position: absolute;
+  bottom: 5px;
+  text-align: center;
+  width: 100%;
 }
 .win-div-resize {
   width: 16px;

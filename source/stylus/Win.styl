@@ -31,6 +31,12 @@ input, select
 	box-sizing border-box
 	font-family arial,sans-serif
 
+input[type=button]
+	padding 3
+
+input[type=button]&:hover
+	background-color #E6E6E6
+
 .win-modal
 	position absolute
 	width 100%
@@ -96,6 +102,15 @@ input, select
 	height calc(100% - 3px - 106px)
 	overflow auto
 	font-size $fSizeBody
+
+.alert
+	height calc(100% - 60px)
+
+.alert .content-btn
+		position absolute
+		bottom 5px
+		text-align center
+		width 100%
 
 .win-div-resize
 	width 16px

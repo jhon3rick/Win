@@ -104,7 +104,7 @@
 				[
 					{
 						xtype     : 'panel',
-						width     : 260,
+						width     : 160,
 						height    : 56,
 						// bodyStyle : 'background-color:rgb(208, 205, 205)',
 						bodyStyle : 'border:1px solid #2a80b9;',
@@ -136,7 +136,8 @@
 						handler: function () { ajax_request();	},
 						cls   : 'ic_autorenew_black_36dp',
 						text  : 'ajax request'
-					},'->','-',
+					}
+					,'->','-',
 					{
 						xtype : 'button',
 						id    : 'btn_1',
@@ -296,10 +297,10 @@
 			id_ventana     : 'Win_ventana_1',
 			text           : 'ajax request text',
 			loader         : 'default',
-			autoClose      : false,
+			autoClose      : true,
 			textFinish     : 'ajax finalizado',
 			iconFinish     : 'warn',
-			duracionFinish : 'infinito',
+			duracionFinish : '2000',
 			params: {
 				opc    : 'prueba_ajax_request',
 				prueba : 1

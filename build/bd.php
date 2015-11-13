@@ -17,13 +17,15 @@
 	}
 
 	function prueba_ajax(){
-		for ($i=0; $i < 50000000; $i++) {
-			$temp++;
-		}
+		// for ($i=0; $i < 50000000; $i++) {
+		// 	$temp++;
+		// }
 		echo'<input type="text" id="inputText" placeholder="inputText"/><br><br>
 			<input type="text" id="inputNumber" placeholder="inputNumber"/><br><br>
 			<input type="text" id="inputDouble" placeholder="inputDouble"/><br><br>
 			<input type="text" id="inputEmail" placeholder="inputEmail"/><br><br>
+			<input type="button" onclick="Win.Alert({title:\'title de alert\', text:\'Mensaje de alerta\'})" value="Alert Win">
+
 			<script>
 
 				new Win.form.intField({
