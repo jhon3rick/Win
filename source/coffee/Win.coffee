@@ -27,7 +27,7 @@ Win = do ->
 		titleStyle  = obj.titleStyle or ''
 		modal       = obj.modal or ''
 		autoScroll  = obj.autoScroll or ''
-		closable    = obj.closable or ''
+		closable      = if typeof(obj.closable)!= 'undefined' then obj.closable else true
 		autoDestroy = obj.autoDestroy or ''
 		autoLoad    = obj.autoLoad or ''
 		html        = obj.html or ''
@@ -43,6 +43,7 @@ Win = do ->
 
 		bgBody  = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
+		divClose = if resize==true or resize == '' then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
 		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win_div_resize_#{id}"></div>""" else ''
 
 		winModal.setAttribute("id","win_modal_#{id}")
@@ -55,7 +56,7 @@ Win = do ->
 									<div class="win-modal-parent" id="win_modal_window_#{id}"><div class="win-modal-content"><div class="win-loader-default" id="win_loader_#{id}"></div><div class="win-modal-label" id="label_cargando_#{id}"></div></div></div>
 									<div class="win-title" id="win_title_#{id}" style="#{bgTitle} #{titleStyle}">
 										<div class="win-title-txt">#{title}</div>
-										<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>
+										#{divClose}
 									</div>
 									#{divResize}
 									<div class="win-tbar" id="win_tbar_#{id}"></div>
@@ -241,11 +242,11 @@ Win = do ->
 			console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion')
 			return
 
-		width     = 250
-		height    = 140
-		title = obj.title or 'Alert'
-		text  = obj.text or 'ventana de alerta de win'
-		text += '<div class="content-btn"><input type="button" value="Aceptar" onclick="Win_ventana_alert.close()"></div>'
+		width  = 250
+		height = 120
+		title  = obj.title or 'Alert'
+		text   = obj.text or ''
+		text   += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_alert\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_alert\').parentNode)"></div>'
 
 		Win_ventana_alert = new Win.Window({
 											width       : width,
@@ -256,7 +257,7 @@ Win = do ->
 											type        : 'alert',
 											modal       : true,
 											autoScroll  : true,
-											closable    : true,
+											closable    : false,
 											autoDestroy : true,
 											drag        : false,
 											resize      : false
@@ -265,27 +266,29 @@ Win = do ->
 	Confirm: (obj) ->
 
 		if typeof(obj) == 'undefined'
-			console.warn('Para utiliza el objeto alert debe enviar el objeto con los parametros\nConsulte la documentacion')
+			console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion')
 			return
 
-		width     = 250
-		height    = 140
-		title = obj.title or 'Alert'
-		text  = obj.text or 'ventana de alerta de win'
+		width  = 250
+		height = 120
+		title  = obj.title or 'Confirm'
+		text   = obj.text or ''
+		text   += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode)"> <input type="button" value="Cancelar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode)"></div>'
 
-		Win.Window({
-						width       : width,
-						height      : height,
-						id          : 'Win_ventana_msgbox',
-						title       : title,
-						modal       : true,
-						autoScroll  : true,
-						closable    : true,
-						autoDestroy : true,
-						html        : text
-						drag        : false,
-						resize      : false
-					});
+		Win_ventana_confirm = new Win.Window({
+											width       : width,
+											height      : height,
+											id          : 'Win_ventana_confirm',
+											title       : title,
+											html        : text,
+											type        : 'alert',
+											modal       : true,
+											autoScroll  : true,
+											closable    : false,
+											autoDestroy : true,
+											drag        : false,
+											resize      : false
+										});
 
 
 

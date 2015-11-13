@@ -25,6 +25,7 @@
 			<input type="text" id="inputDouble" placeholder="inputDouble"/><br><br>
 			<input type="text" id="inputEmail" placeholder="inputEmail"/><br><br>
 			<input type="button" onclick="Win.Alert({title:\'title de alert\', text:\'Mensaje de alerta\'})" value="Alert Win">
+			<input type="button" onclick="Win.Confirm({title:\'title de Confirm\', text:\'Mensaje de Confirm\',okEvt:\'\'})" value="Confirm Win">
 
 			<script>
 

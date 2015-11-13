@@ -37,6 +37,9 @@ select:focus {
 }
 input[type=button] {
   padding: 3;
+  width: 100px;
+  height: 30px;
+  border: 0px;
 }
 input[type=button]:hover {
   background-color: #e6e6e6;

@@ -19,7 +19,7 @@ Win = (function() {
     	 * Widges ventana
      */
     Window: function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, closable, clsBody, divResize, drag, height, html, id, left, modal, resize, theme, title, titleStyle, top, width, win, winModal;
+      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, closable, clsBody, divClose, divResize, drag, height, html, id, left, modal, resize, theme, title, titleStyle, top, width, win, winModal;
       if (typeof obj === 'undefined') {
         console.warn('Para utiliza la propiedad Window debe enviar el objeto con los parametros\nConsulte la documentacion');
         return;
@@ -31,7 +31,7 @@ Win = (function() {
       titleStyle = obj.titleStyle || '';
       modal = obj.modal || '';
       autoScroll = obj.autoScroll || '';
-      closable = obj.closable || '';
+      closable = typeof obj.closable !== 'undefined' ? obj.closable : true;
       autoDestroy = obj.autoDestroy || '';
       autoLoad = obj.autoLoad || '';
       html = obj.html || '';
@@ -46,12 +46,13 @@ Win = (function() {
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
+      divClose = resize === true || resize === '' ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
       divResize = resize === true || resize === '' ? "<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>" : '';
       winModal.setAttribute("id", "win_modal_" + id);
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-modal-parent\" id=\"win_modal_window_" + id + "\"><div class=\"win-modal-content\"><div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div><div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div></div></div>\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>\n	</div>\n	" + divResize + "\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">Contenido " + html + "</div>\n</div>\n<script onload>alert(1);</script>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-modal-parent\" id=\"win_modal_window_" + id + "\"><div class=\"win-modal-content\"><div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div><div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div></div></div>\n	<div class=\"win-title\" id=\"win_title_" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		" + divClose + "\n	</div>\n	" + divResize + "\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">Contenido " + html + "</div>\n</div>\n<script onload>alert(1);</script>";
       body.appendChild(winModal);
       if (typeof obj.tbar !== 'undefined') {
         obj.tbar.id = id;
@@ -243,10 +244,10 @@ Win = (function() {
         return;
       }
       width = 250;
-      height = 140;
+      height = 120;
       title = obj.title || 'Alert';
-      text = obj.text || 'ventana de alerta de win';
-      text += '<div class="content-btn"><input type="button" value="Aceptar" onclick="Win_ventana_alert.close()"></div>';
+      text = obj.text || '';
+      text += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_alert\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_alert\').parentNode)"></div>';
       return Win_ventana_alert = new Win.Window({
         width: width,
         height: height,
@@ -256,32 +257,34 @@ Win = (function() {
         type: 'alert',
         modal: true,
         autoScroll: true,
-        closable: true,
+        closable: false,
         autoDestroy: true,
         drag: false,
         resize: false
       });
     },
     Confirm: function(obj) {
-      var height, text, title, width;
+      var Win_ventana_confirm, height, text, title, width;
       if (typeof obj === 'undefined') {
-        console.warn('Para utiliza el objeto alert debe enviar el objeto con los parametros\nConsulte la documentacion');
+        console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion');
         return;
       }
       width = 250;
-      height = 140;
-      title = obj.title || 'Alert';
-      text = obj.text || 'ventana de alerta de win';
-      return Win.Window({
+      height = 120;
+      title = obj.title || 'Confirm';
+      text = obj.text || '';
+      text += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode)"> <input type="button" value="Cancelar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode)"></div>';
+      return Win_ventana_confirm = new Win.Window({
         width: width,
         height: height,
-        id: 'Win_ventana_msgbox',
+        id: 'Win_ventana_confirm',
         title: title,
+        html: text,
+        type: 'alert',
         modal: true,
         autoScroll: true,
-        closable: true,
+        closable: false,
         autoDestroy: true,
-        html: text,
         drag: false,
         resize: false
       });
