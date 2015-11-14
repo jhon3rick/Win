@@ -16,12 +16,21 @@
 		<!-- <link rel="stylesheet" href="css/Win-theme-red.css" /> -->
 
 		<script src="js/Win.js"></script>
+		<script src="js/Win.ini.js"></script>
 		<script src="js/Win.ajax.js"></script>
 		<script src="js/Win.form.js"></script>
 		<script src="js/Win.desktop.js"></script>
 	</head>
 	<body>
 		<script type="text/javascript">
+
+		 window.addEventListener('keydown', function(e){
+		 	console.log(e)
+		    // show chrome devtools on f12 or commmand+option+j
+		    if (e.keyIdentifier === 'F12' || e.keyCode === 74 && e.metaKey && e.altKey) {
+		      window.frame.openDevTools();
+		    }
+		  });
 
 			Win.Desktop({
 				background : '#000',

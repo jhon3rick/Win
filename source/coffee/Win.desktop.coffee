@@ -4,8 +4,8 @@
 
 Win.Desktop = (obj) ->
 
-	widthIcon           = obj.widthIcon or 20
-	heightIcon          = obj.heightIcon or 20
+	widthIcon       = obj.widthIcon or 20
+	heightIcon      = obj.heightIcon or 20
 
 	background      = if obj.background then 'background-color:'+obj.background+';' else ''
 	backgroundImage = if obj.backgroundImage then 'background-image:'+obj.background+';' else ''
@@ -18,11 +18,11 @@ Win.Desktop = (obj) ->
 
 		obj.forEach (array,index,element)->
 			div += """
-							<div class="desk-modulo" style="width:#{widthIcon}; height:#{heightIcon};">
-								<div></div>
-								<div>#{obj.text}</div>
-							</div>
-						"""
+						<div class="desk-modulo" style="width:#{widthIcon}; height:#{heightIcon};">
+							<div></div>
+							<div>#{obj.text}</div>
+						</div>
+					"""
 			# console.log(index)
 			# console.log(element)
 		div += '</div></div>';
