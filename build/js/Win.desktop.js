@@ -10,17 +10,21 @@
  * Desktop
  */
 Win.Desktop = function(obj) {
-  var background, backgroundImage;
+  var background, backgroundImage, heightIcon, widthIcon;
+  widthIcon = obj.widthIcon || 20;
+  heightIcon = obj.heightIcon || 20;
   background = obj.background ? 'background-color:' + obj.background + ';' : '';
   backgroundImage = obj.backgroundImage ? 'background-image:' + obj.background + ';' : '';
-  if (typeof obj.modulos === 'object') {
-    this.modulos(obj);
-  }
-  return this.modulos = function(obj) {
-    return obj.forEach(function(obj, index, element) {
-      console.log(obj);
-      console.log(index);
-      return console.log(element);
+  this.modulos = function(obj) {
+    var div;
+    div = '<div style="height:100%"> <div class="desk-content-modulos">';
+    obj.forEach(function(array, index, element) {
+      return div += "<div class=\"desk-modulo\" style=\"width:" + widthIcon + "; height:" + heightIcon + ";\">\n	<div></div>\n	<div>" + obj.text + "</div>\n</div>";
     });
+    div += '</div></div>';
+    return document.querySelector('body').innerHTML = div;
   };
+  if (typeof obj.modulos === 'object') {
+    return this.modulos(obj.modulos);
+  }
 };
