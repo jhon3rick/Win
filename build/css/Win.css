@@ -251,6 +251,46 @@ input[type=button]:hover {
     -webkit-transform: rotate(359deg);
   }
 }
+.win-calendar #closeCalendarhover {
+  background-color: #f00 !important;
+  color: #fff;
+}
+.win-calendar #calendarDiv #linksTable td {
+  background: #000;
+}
+.win-calendar #linksTable a {
+  display: block;
+  color: #fff;
+  letter-spacing: 1px;
+  font-weight: bold;
+  font-size: 80%;
+  padding: 2px 5px;
+}
+.win-calendar #linksTable ahover {
+  background: #ddd;
+  color: #333;
+}
+.win-calendar #prevMonth {
+  float: left;
+}
+.win-calendar #nextMonth {
+  float: right;
+}
+.win-calendar #today {
+  background: #999;
+}
+.win-calendar #calendar_cover {
+  position: absolute /*must have*/;
+  z-index: -1 /*must have*/;
+  filter: mask() /*must have*/;
+  top: -4px /*must have*/;
+  left: -4px /*must have*/;
+  width: 193px /*must have to match width and borders*/;
+  height: 200px /*must have to match maximum height*/;
+}
+.win-calendar #calendar {
+  color: #f00;
+}
 @-moz-keyframes win-min-load-ajax {
   from {
     transform: rotate(0deg);

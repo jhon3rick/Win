@@ -253,3 +253,45 @@ input[type=button]&:hover
 	to { transform: rotate(359deg); }
 }
 
+// CALENDAR
+.win-calendar
+	#closeCalendarhover
+		background-color red !important
+		color #fff
+
+	#calendarDiv #linksTable td
+		background #000
+
+	#linksTable a
+		display block
+		color #fff
+		letter-spacing 1px
+		font-weight bold
+		font-size 80%
+		padding 2px 5px
+
+	#linksTable ahover
+		background #ddd
+		color #333
+
+	#prevMonth
+		float left
+
+	#nextMonth
+		float right
+
+	#today
+		background #999
+
+	#calendar_cover
+		position absolute /*must have*/
+		z-index -1 /*must have*/
+		filter mask() /*must have*/
+		top -4px /*must have*/
+		left -4px /*must have*/
+		width 193px /*must have to match width and borders*/
+		height 200px /*must have to match maximum height*/
+
+	#calendar
+		color red
+

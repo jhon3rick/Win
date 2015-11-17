@@ -17,10 +17,26 @@
 		<script src="js/Win.js"></script>
 		<script src="js/Win.ajax.js"></script>
 		<script src="js/Win.form.js"></script>
+		<script src="js/Win.calendar.js"></script>
 		<script src="js/Win.desktop.js"></script>
 	</head>
 	<body>
+
+		<input type="text" id="calendario1"/><br></br>
+		<input type="text" id="calendario2"/>
+		<div id="calendarDiv" class="win-calendar"></div>
+
 		<script type="text/javascript">
+
+		new Win.form.Calendar({
+		    applyTo    : 'calendario1',
+		    listeners  : { select: function() {   } }
+		});
+
+		new Win.form.Calendar({
+		    applyTo    : 'calendario2',
+		    listeners  : { select: function() {   } }
+		});
 
 			// var myalto  = Ext.getBody().getHeight();
 			// var myancho = Ext.getBody().getWidth();
@@ -71,88 +87,88 @@
 			// }).show();
 
 
-			Win_ventana_1 = new Win.Window({
-				bodyStyle   : '',
-				width       : 800,
-				height      : 700,
-				id          : 'Win_ventana_1',
-				title       : 'VENTANA 1',
-				titleStyle  : '',
-				modal       : true,
-				closable    : true,
-				drag        : true,
-				resize      : true,
-				autoLoad    :
-				{
-			        url     : 'bd.php',
-			        params  :
-			        {
-			            opc : 'prueba_ajax',
-			            var2 : 'var2',
-			        }
-			    },
-				tbar        :
-				[
-					{
-						xtype : 'button',
-						id    : 'btn_1',
-						cls   : 'user_black_36',
-						text  : 'Nuevo Usuario',
-						handler : function(){ nueva_ventana(); }
-					},'-',
-					{
-				items	:
-				[
-					{
-						xtype     : 'panel',
-						width     : 160,
-						height    : 56,
-						// bodyStyle : 'background-color:rgb(208, 205, 205)',
-						bodyStyle : 'border:1px solid #2a80b9;',
-						html      : '<div>contenido por parametro</div>',
-						autoLoad  :
-						{
-							url		: 'bd.php',
-							params	:
-							{
-								opc    : 'prueba_ajax_load',
-								prueba : 1
+			// Win_ventana_1 = new Win.Window({
+			// 	bodyStyle   : '',
+			// 	width       : 800,
+			// 	height      : 700,
+			// 	id          : 'Win_ventana_1',
+			// 	title       : 'VENTANA 1',
+			// 	titleStyle  : '',
+			// 	modal       : true,
+			// 	closable    : true,
+			// 	drag        : true,
+			// 	resize      : true,
+			// 	autoLoad    :
+			// 	{
+			//         url     : 'bd.php',
+			//         params  :
+			//         {
+			//             opc : 'prueba_ajax',
+			//             var2 : 'var2',
+			//         }
+			//     },
+			// 	tbar        :
+			// 	[
+			// 		{
+			// 			xtype : 'button',
+			// 			id    : 'btn_1',
+			// 			cls   : 'user_black_36',
+			// 			text  : 'Nuevo Usuario',
+			// 			handler : function(){ nueva_ventana(); }
+			// 		},'-',
+			// 		{
+			// 	items	:
+			// 	[
+			// 		{
+			// 			xtype     : 'panel',
+			// 			width     : 160,
+			// 			height    : 56,
+			// 			// bodyStyle : 'background-color:rgb(208, 205, 205)',
+			// 			bodyStyle : 'border:1px solid #2a80b9;',
+			// 			html      : '<div>contenido por parametro</div>',
+			// 			autoLoad  :
+			// 			{
+			// 				url		: 'bd.php',
+			// 				params	:
+			// 				{
+			// 					opc    : 'prueba_ajax_load',
+			// 					prueba : 1
 
-							}
-						}
-					}
-				]
+			// 				}
+			// 			}
+			// 		}
+			// 	]
 
-					},
-					{
-						xtype : 'button',
-						id    : 'btn_2',
-						handler: function () { ajax_load();	},
-						cls   : 'ic_autorenew_black_36dp',
-						text  : 'ajax load'
-					},
-					{
-						xtype : 'button',
-						id    : 'btn_2',
-						handler: function () { ajax_request();	},
-						cls   : 'ic_autorenew_black_36dp',
-						text  : 'ajax request'
-					}
-					,'->','-',
-					{
-						xtype : 'button',
-						id    : 'btn_1',
-						cls   : 'icon-action-black-ic_perm_identity_black_24dp',
-						text  : 'Salir',
-						handler : function(){ alert(4); nueva_ventana(); }
-					},'-',
-					{
-						xtype : 'tbtext',
-						id    : 'btn_1',
-						text  : 'una demostracion de un texto largo<br>con salto de linea',
-					}
-				]
-			});
+			// 		},
+			// 		{
+			// 			xtype : 'button',
+			// 			id    : 'btn_2',
+			// 			handler: function () { ajax_load();	},
+			// 			cls   : 'ic_autorenew_black_36dp',
+			// 			text  : 'ajax load'
+			// 		},
+			// 		{
+			// 			xtype : 'button',
+			// 			id    : 'btn_2',
+			// 			handler: function () { ajax_request();	},
+			// 			cls   : 'ic_autorenew_black_36dp',
+			// 			text  : 'ajax request'
+			// 		}
+			// 		,'->','-',
+			// 		{
+			// 			xtype : 'button',
+			// 			id    : 'btn_1',
+			// 			cls   : 'icon-action-black-ic_perm_identity_black_24dp',
+			// 			text  : 'Salir',
+			// 			handler : function(){ alert(4); nueva_ventana(); }
+			// 		},'-',
+			// 		{
+			// 			xtype : 'tbtext',
+			// 			id    : 'btn_1',
+			// 			text  : 'una demostracion de un texto largo<br>con salto de linea',
+			// 		}
+			// 	]
+			// });
 
 				function nueva_ventana(){
 
