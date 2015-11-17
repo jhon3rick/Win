@@ -25,8 +25,8 @@
 			<input type="text" id="inputDouble" placeholder="inputDouble"/><br><br>
 			<input type="text" id="inputEmail" placeholder="inputEmail"/><br><br>
 			<input type="button" onclick="Win.Alert({title:\'title de alert\', text:\'Mensaje de alerta\'})" value="Alert Win">
-			<input type="button" onclick="Win.Confirm({title:\'title de Confirm\', text:\'Mensaje de Confirm\',okEvt:\'\'})" value="Confirm Win">
-
+			<input type="button" onclick="confirm_win()" value="Confirm Win">
+			<br><input type="date" name="fecha">
 			<script>
 
 				new Win.form.intField({

@@ -60,7 +60,7 @@ Win = do ->
 									</div>
 									#{divResize}
 									<div class="win-tbar" id="win_tbar_#{id}"></div>
-									<div class="win-window-body #{clsBody}" id="win_window_#{id}">Contenido #{html}</div>
+									<div class="win-window-body #{clsBody}" id="win_window_#{id}">#{html}</div>
 								</div>
 								<script onload>alert(1);</script>"""
 
@@ -273,7 +273,7 @@ Win = do ->
 		height = 120
 		title  = obj.title or 'Confirm'
 		text   = obj.text or ''
-		text   += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode)"> <input type="button" value="Cancelar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode)"></div>'
+		text   += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode);'+obj.functionOK+';"> <input type="button" value="Cancelar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode);return false;"></div>'
 
 		Win_ventana_confirm = new Win.Window({
 											width       : width,

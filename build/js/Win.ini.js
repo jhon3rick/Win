@@ -9,13 +9,4 @@
 /*
  * Desktop
  */
-Win.ini = (function(obj) {
-  if (obj == null) {
-    obj = {};
-  }
-  window.addEventListener('keydown', function(e) {});
-  console.log(e.keyIdentifier);
-  if (e.keyIdentifier === 'F12' || e.keyCode === 74 && e.metaKey && e.altKey) {
-    return console.log(e.keyIdentifier);
-  }
-});
+
