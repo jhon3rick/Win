@@ -21,7 +21,7 @@ input, select, textarea, select
 input, select
 	height 23px
 
-	&:focus
+	&focus
 		outline none
 		border solid 1px #0995F9
 		box-shadow 0 0 5px 1px #BFE4FF
@@ -37,7 +37,7 @@ input[type=button]
 	height 30px
 	border 0px
 
-input[type=button]&:hover
+input[type=button]&hover
 	background-color #E6E6E6
 
 .win-modal
@@ -58,7 +58,7 @@ input[type=button]&:hover
 		-khtml-user-select none
 		user-select none
 
-		&:hover .win-div-resize
+		&hover .win-div-resize
 			visibility visible
 
 .win-title
@@ -94,7 +94,7 @@ input[type=button]&:hover
 		background-repeat no-repeat
 		background-position center
 
-		&:hover
+		&hover
 			color #f00
 			background-color #AB0000
 
@@ -244,54 +244,110 @@ input[type=button]&:hover
 	-webkit-animation  win-min-load-ajax .6s infinite linear
 	animation          win-min-load-ajax .6s infinite linear
 
-@-webkit-keyframes win-min-load-ajax {
-	from { -webkit-transform: rotate(0deg); }
-	to { -webkit-transform: rotate(359deg); }
-}
-@keyframes win-min-load-ajax {
-	from { transform: rotate(0deg); }
-	to { transform: rotate(359deg); }
-}
+@-webkit-keyframes win-min-load-ajax
+	from -webkit-transform rotate(0deg)
+	to -webkit-transform rotate(359deg)
+
+@keyframes win-min-load-ajax
+	from transform rotate(0deg)
+	to transform rotate(359deg)
+
 
 // CALENDAR
-.win-calendar
-	#closeCalendarhover
-		background-color red !important
-		color #fff
+#calendarDiv
+	display block
+	display none
+	position relative
+	border 1px solid #777
 
-	#calendarDiv #linksTable td
+	table, th, td, a
+		margin 0
+		padding 0
+		border 0
+		outline 0
+		font-weight inherit
+		font-style inherit
+		font-size 12px
+		font-family inherit
+		vertical-align baseline
+
+	#linksTable td
 		background #000
 
-	#linksTable a
-		display block
-		color #fff
-		letter-spacing 1px
-		font-weight bold
-		font-size 80%
-		padding 2px 5px
+	a
+		cursor pointer
+		cursor hand
+		color #000
 
-	#linksTable ahover
-		background #ddd
-		color #333
+#calendar
+	background #ddd
+	clear both
+	text-align center
+	font-size 105%
 
-	#prevMonth
-		float left
+#calendar, #linksTable
+	width 180px
 
-	#nextMonth
-		float right
+#calendar .calendarHeader
+	background #0F0A0A url(../../img/fadeto333.gif) top repeat-x
+	border-bottom 1px solid #444
+	color #fff
 
-	#today
-		background #999
+#calendar tr.weekDaysTitleRow td
+	background #777
+	color #fff
 
-	#calendar_cover
-		position absolute /*must have*/
-		z-index -1 /*must have*/
-		filter mask() /*must have*/
-		top -4px /*must have*/
-		left -4px /*must have*/
-		width 193px /*must have to match width and borders*/
-		height 200px /*must have to match maximum height*/
+#calendar tr.weekDaysRow
+	background #eee
+	color #666
 
-	#calendar
-		color red
+#calendar td:hover
+	background #fff
 
+#closeCalender
+	position absolute
+	right 0
+	bottom 100%
+	margin-bottom 1px
+	display block
+	padding 2px
+	cursor pointer
+	cursor hand
+	font-size 60%
+	letter-spacing 1px
+
+#closeCalenderhover
+	background #000
+	color #fff
+
+#linksTable a
+	display block
+	color #fff
+	letter-spacing 1px
+	font-weight bold
+	font-size 80%
+	padding 2px 5px
+
+#linksTable ahover
+	background #ddd
+	color #333
+
+#prevMonth
+	float left
+
+#nextMonth
+	float right
+
+#today
+	background #999
+
+#calendar_cover
+	display none /*sorry for IE5*/
+	display/**/ block /*sorry for IE5*/
+	position absolute /*must have*/
+	z-index -1 /*must have*/
+	filter mask() /*must have*/
+	top -4px /*must have*/
+	left -4px /*must have*/
+	width 193px /*must have to match width and borders*/
+	height 200px /*must have to match maximum height*/

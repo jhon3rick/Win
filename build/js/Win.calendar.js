@@ -10,17 +10,32 @@
  * Calendar
  */
 Win.form.Calendar = function(obj) {
-  var calendarDiv, calendarId, drawCalendar, findPos, formatDate, getDayName, getDaysInMonth, getFirstDayofMonth, getMonthName, inputCalendar, inputClass, selectedDay, selectedMonth, selectedYear, setPos, setupLinks;
+  var arrayDate, calendarDiv, calendarId, drawCalendar, findPos, format, formatDate, formatField, getDayName, getDaysInMonth, getFirstDayofMonth, getMonthName, inputCalendar, inputClass, selected, selectedDay, selectedMonth, selectedYear, separator, setPos, setupLinks, valueField;
+  separator = '-';
   calendarId = obj.applyTo;
-  selectedMonth = new Date().getMonth();
-  selectedYear = new Date().getFullYear();
-  selectedDay = new Date().getDate();
   inputClass = 'calendarSelectDate';
+  format = obj.format || 'Y-m-d';
+  selected = obj.listeners.select || '';
   inputCalendar = document.getElementById(calendarId);
   calendarDiv = document.getElementById('calendarDiv');
+  arrayDate = [];
+  separator = (format.replace(/[a-zA-Z\d\s]/g, ''))[0];
+  formatField = format.replace(/[^a-zA-Z\d\s]/g, '');
+  valueField = inputCalendar.value.replace(/[^\d]/g, '');
+  if (inputCalendar.value === '') {
+    selectedYear = new Date().getFullYear();
+    selectedMonth = new Date().getMonth();
+    selectedDay = new Date().getDate();
+  } else {
+    arrayDate[formatField[0]] = valueField[0];
+    arrayDate[formatField[1]] = valueField[1];
+    arrayDate[formatField[2]] = valueField[2];
+    selectedYear = new Date(arrayDate.y).getFullYear();
+    selectedMonth = new Date(arrayDate.m).getMonth();
+    selectedDay = new Date(arrayDate.d).getDate();
+  }
   inputCalendar.readOnly = true;
   inputCalendar.onfocus = function() {
-    selectedMonth = new Date().getMonth();
     setPos(this, calendarDiv);
     calendarDiv.style.display = 'block';
     drawCalendar(this);
@@ -28,7 +43,7 @@ Win.form.Calendar = function(obj) {
   };
   drawCalendar = function(inputObj) {
     var day, daysInMonth, e, f, html, j, k, l, len, noPrintDays, numRows, printDate, ref, startDay, thisMonth, thisYear, today, weekDays;
-    html = "<a id=\"closeCalendar\">Close Calendar</a>\n<table cellpadding=\"0\" cellspacing=\"0\" id=\"linksTable\">\n	<tr>\n		<td><a id=\"prevMonth\"><<</a></td>\n		<td><a id=\"nextMonth\">>></a></td>\n	</tr>\n</table>\n<table id=\"calendar\" cellpadding=\"0\" cellspacing=\"0\"`class=\"win-calendar\">\n	<tr>\n		<th colspan=\"7\" class=\"calendarHeader\">" + getMonthName(selectedMonth) + ' ' + selectedYear + "</th>\n</tr>\n<tr class=\"weekDaysTitleRow\">";
+    html = "<a id=\"closeCalendar\">Close Calendar</a>\n<table cellpadding=\"0\" cellspacing=\"0\" id=\"linksTable\">\n	<tr>\n		<td><a id=\"prevMonth\"><</a></td>\n		<td><a id=\"nextMonth\">></a></td>\n	</tr>\n</table>\n<table id=\"calendar\" cellpadding=\"0\" cellspacing=\"0\"`class=\"win-calendar\">\n	<tr>\n		<th colspan=\"7\" class=\"calendarHeader\">" + getMonthName(selectedMonth) + ' ' + selectedYear + "</th>\n</tr>\n<tr class=\"weekDaysTitleRow\">";
     weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
     for (j = 0, len = weekDays.length; j < len; j++) {
       day = weekDays[j];
@@ -40,8 +55,6 @@ Win.form.Calendar = function(obj) {
     printDate = 1;
     if (startDay !== 7) {
       numRows = Math.ceil((startDay + 1 + daysInMonth) / 7);
-    }
-    if (startDay !== 7) {
       noPrintDays = startDay + 1;
     } else {
       noPrintDays = 0;
@@ -101,22 +114,17 @@ Win.form.Calendar = function(obj) {
     results = [];
     for (j = 0, len = x.length; j < len; j++) {
       i = x[j];
-      i.onmouseover = function() {
-        return this.parentNode.className = 'weekDaysCellOver';
-      };
-      i.onmouseout = function() {
-        return this.parentNode.className = 'weekDaysCell';
-      };
       results.push(i.onclick = function() {
         document.getElementById('calendarDiv').style.display = 'none';
         selectedDay = this.innerHTML;
-        return inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear);
+        inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear);
+        return selected;
       });
     }
     return results;
   };
   formatDate = function(Day, Month, Year) {
-    var dateString;
+    var array, dateString;
     Month++;
     if (Month < 10) {
       Month = '0' + Month;
@@ -124,7 +132,11 @@ Win.form.Calendar = function(obj) {
     if (Day < 10) {
       Day = '0' + Day;
     }
-    return dateString = Month + '/' + Day + '/' + Year;
+    array = [];
+    array['y'] = Year;
+    array['m'] = Month;
+    array['d'] = Day;
+    return dateString = array[formatField[0]] + separator + array[formatField[1]] + separator + array[formatField[2]];
   };
   getMonthName = function(month) {
     var monthNames;

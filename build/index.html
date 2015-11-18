@@ -29,8 +29,9 @@
 		<script type="text/javascript">
 
 		new Win.form.Calendar({
-		    applyTo    : 'calendario1',
-		    listeners  : { select: function() {   } }
+			applyTo    : 'calendario1',
+			format : 'd/m/y',
+			listeners  : { select: function() { console.log(1) } }
 		});
 
 		new Win.form.Calendar({

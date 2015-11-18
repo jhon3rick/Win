@@ -3,20 +3,39 @@
 ###
 
 Win.form.Calendar = (obj) ->
-	calendarId    = obj.applyTo
-	selectedMonth = new Date().getMonth()
-	selectedYear  = new Date().getFullYear()	# 0-11
-	selectedDay   = new Date().getDate()	# 4-digit year
-	inputClass    = 'calendarSelectDate'
+	separator  = '-'
+	calendarId = obj.applyTo
+	inputClass = 'calendarSelectDate'
+	format     = obj.format or 'Y-m-d'
+	selected   = obj.listeners.select or ''
 
 	# ATRAPA EL ELEMENTO
 	inputCalendar = document.getElementById(calendarId)
 	calendarDiv   = document.getElementById('calendarDiv')
 
+	arrayDate   = []
+	separator   = (format.replace(/[a-zA-Z\d\s]/g ,''))[0]
+	formatField = (format.replace(/[^a-zA-Z\d\s]/g ,''))
+	valueField  = (inputCalendar.value.replace(/[^\d]/g ,''))
+
+	if inputCalendar.value == ''
+		selectedYear  = new Date().getFullYear()	# 0-11
+		selectedMonth = new Date().getMonth()
+		selectedDay   = new Date().getDate()	# 4-digit year
+	else
+		arrayDate[formatField[0]] = valueField[0]
+		arrayDate[formatField[1]] = valueField[1]
+		arrayDate[formatField[2]] = valueField[2]
+
+		# arrayDate = inputCalendar.value.split(separator)
+		selectedYear  = new Date(arrayDate.y).getFullYear()
+		selectedMonth = new Date(arrayDate.m).getMonth()
+		selectedDay   = new Date(arrayDate.d).getDate()	# 4-digit year
+
 	inputCalendar.readOnly = true
 
 	inputCalendar.onfocus = () ->
-		selectedMonth = new Date().getMonth()
+		# selectedMonth = inputCalendar.value == '' then new Date().getMonth() else new Date(inputCalendar.value).getDate()
 		setPos(this, calendarDiv)
 		calendarDiv.style.display = 'block'
 		drawCalendar(this)
@@ -28,8 +47,8 @@ Win.form.Calendar = (obj) ->
 		html = """<a id="closeCalendar">Close Calendar</a>
 				<table cellpadding="0" cellspacing="0" id="linksTable">
 					<tr>
-						<td><a id="prevMonth"><<</a></td>
-						<td><a id="nextMonth">>></a></td>
+						<td><a id="prevMonth"><</a></td>
+						<td><a id="nextMonth">></a></td>
 					</tr>
 				</table>
 				<table id="calendar" cellpadding="0" cellspacing="0"`class="win-calendar">
@@ -52,8 +71,6 @@ Win.form.Calendar = (obj) ->
 
 		if startDay != 7
 			numRows = Math.ceil (startDay + 1 + daysInMonth) / 7
-
-		if startDay != 7
 			noPrintDays = startDay + 1
 		else
 			noPrintDays = 0
@@ -64,16 +81,12 @@ Win.form.Calendar = (obj) ->
 
 		# CALENDAR ROWS
 		for e in [0...numRows]
-		# for e = 0 e < numRows e++
 			html += '<tr class="weekDaysRow">'
 
 			for f in [0...7]
-			# for (f = 0 f < 7 f++) {
 				if printDate == today and selectedYear == thisYear and selectedMonth == thisMonth and noPrintDays == 0
 					html += '<td id="today" class="weekDaysCell">'
-
-				else
-					html += '<td class="weekDaysCell">'
+				else html += '<td class="weekDaysCell">'
 
 				if noPrintDays == 0
 					if printDate <= daysInMonth then html += "<a>#{printDate}</a>"
@@ -118,14 +131,14 @@ Win.form.Calendar = (obj) ->
 		y = document.getElementById('calendar')
 		x = y.getElementsByTagName('a')
 
-		# console.log(x[0]) return
 		for i in x
-			i.onmouseover = () -> this.parentNode.className = 'weekDaysCellOver'
-			i.onmouseout  = () -> this.parentNode.className = 'weekDaysCell'
-			i.onclick     = () ->
+			i.onclick = () ->
 				document.getElementById('calendarDiv').style.display = 'none'
 				selectedDay = this.innerHTML
 				inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear)
+
+				# console.log(selected)
+				selected
 
 	# Functions Dealing with Dates
 	formatDate = (Day, Month, Year) ->
@@ -135,7 +148,12 @@ Win.form.Calendar = (obj) ->
 		# add a zero if less than 10
 		if (Day < 10) then Day = '0' + Day
 		# add a zero if less than 10
-		dateString = Month + '/' + Day + '/' + Year
+		array = []
+		array['y'] = Year
+		array['m'] = Month
+		array['d'] = Day
+
+		dateString = array[formatField[0]] + separator + array[formatField[1]] + separator + array[formatField[2]]
 
 	getMonthName = (month) ->
 		monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']

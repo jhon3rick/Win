@@ -41,9 +41,9 @@ Win = do ->
 		win         = this
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
 
-		bgBody  = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
-		bgTitle = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
-		divClose = if resize==true or resize == '' then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
+		bgBody    = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
+		bgTitle   = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
+		divClose  = if resize==true or resize == '' then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
 		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win_div_resize_#{id}"></div>""" else ''
 
 		winModal.setAttribute("id","win_modal_#{id}")
@@ -137,7 +137,6 @@ Win = do ->
 		height = obj.height or '100%'
 		bodyStyle = obj.bodyStyle or ''
 
-
 		panel = document.createElement('div')
 		panel.setAttribute("id",id)
 		panel.setAttribute("class","win-panel ")
@@ -149,7 +148,6 @@ Win = do ->
 
 		else if typeof(obj.html) != 'undefined'
 			panel.innerHTML = obj.html
-
 
 	tbtext: (obj) ->
 		text     = document.createElement('div')

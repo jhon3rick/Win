@@ -24,8 +24,8 @@ input,
 select {
   height: 23px;
 }
-input:focus,
-select:focus {
+inputfocus,
+selectfocus {
   outline: none;
   border: solid 1px #0995f9;
   box-shadow: 0 0 5px 1px #bfe4ff;
@@ -41,7 +41,7 @@ input[type=button] {
   height: 30px;
   border: 0px;
 }
-input[type=button]:hover {
+input[type=button]hover {
   background-color: #e6e6e6;
 }
 .win-modal {
@@ -62,7 +62,7 @@ input[type=button]:hover {
   -khtml-user-select: none;
   user-select: none;
 }
-.win-modal > div:hover .win-div-resize {
+.win-modal > divhover .win-div-resize {
   visibility: visible;
 }
 .win-title {
@@ -98,7 +98,7 @@ input[type=button]:hover {
   background-repeat: no-repeat;
   background-position: center;
 }
-.win-title-btn:hover {
+.win-title-btnhover {
   color: #f00;
   background-color: #ab0000;
 }
@@ -243,22 +243,77 @@ input[type=button]:hover {
   -webkit-animation: win-min-load-ajax 0.6s infinite linear;
   animation: win-min-load-ajax 0.6s infinite linear;
 }
-@-webkit-keyframes win-min-load-ajax {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(359deg);
-  }
+#calendarDiv {
+  display: block;
+  display: none;
+  position: relative;
+  border: 1px solid #777;
 }
-.win-calendar #closeCalendarhover {
-  background-color: #f00 !important;
-  color: #fff;
+#calendarDiv table,
+#calendarDiv th,
+#calendarDiv td,
+#calendarDiv a {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 12px;
+  font-family: inherit;
+  vertical-align: baseline;
 }
-.win-calendar #calendarDiv #linksTable td {
+#calendarDiv #linksTable td {
   background: #000;
 }
-.win-calendar #linksTable a {
+#calendarDiv a {
+  cursor: pointer;
+  cursor: hand;
+  color: #000;
+}
+#calendar {
+  background: #ddd;
+  clear: both;
+  text-align: center;
+  font-size: 105%;
+}
+#calendar,
+#linksTable {
+  width: 180px;
+}
+#calendar .calendarHeader {
+  background: #0f0a0a url("../../img/fadeto333.gif") top repeat-x;
+  border-bottom: 1px solid #444;
+  color: #fff;
+}
+#calendar tr.weekDaysTitleRow td {
+  background: #777;
+  color: #fff;
+}
+#calendar tr.weekDaysRow {
+  background: #eee;
+  color: #666;
+}
+#calendar td:hover {
+  background: #fff;
+}
+#closeCalender {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 1px;
+  display: block;
+  padding: 2px;
+  cursor: pointer;
+  cursor: hand;
+  font-size: 60%;
+  letter-spacing: 1px;
+}
+#closeCalenderhover {
+  background: #000;
+  color: #fff;
+}
+#linksTable a {
   display: block;
   color: #fff;
   letter-spacing: 1px;
@@ -266,20 +321,22 @@ input[type=button]:hover {
   font-size: 80%;
   padding: 2px 5px;
 }
-.win-calendar #linksTable ahover {
+#linksTable ahover {
   background: #ddd;
   color: #333;
 }
-.win-calendar #prevMonth {
+#prevMonth {
   float: left;
 }
-.win-calendar #nextMonth {
+#nextMonth {
   float: right;
 }
-.win-calendar #today {
+#today {
   background: #999;
 }
-.win-calendar #calendar_cover {
+#calendar_cover {
+  display: none /*sorry for IE5*/;
+  display: /**/ block /*sorry for IE5*/;
   position: absolute /*must have*/;
   z-index: -1 /*must have*/;
   filter: mask() /*must have*/;
@@ -287,39 +344,4 @@ input[type=button]:hover {
   left: -4px /*must have*/;
   width: 193px /*must have to match width and borders*/;
   height: 200px /*must have to match maximum height*/;
-}
-.win-calendar #calendar {
-  color: #f00;
-}
-@-moz-keyframes win-min-load-ajax {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
-@-webkit-keyframes win-min-load-ajax {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
-@-o-keyframes win-min-load-ajax {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
-@keyframes win-min-load-ajax {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
 }
