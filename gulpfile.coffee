@@ -11,11 +11,12 @@ uglify      = require 'gulp-uglify'
 rename      = require 'gulp-rename'
 jshint      = require 'gulp-jshint'
 notify      = require 'gulp-notify'
+closure     = require 'gulp-closure-compiler-service'
 pkg         = require './package.json'
 
 path =
-	distCoffee  : './dist/coffee'
-	distStylus  : './dist/stylus'
+	distCoffee  : './dist/js'
+	distStylus  : './dist/css'
 	buildCoffee : './build/js'
 	buildStylus : './build/css'
 	coffee      : ['./source/coffee/*.coffee']
@@ -60,6 +61,14 @@ gulp.task 'minStylus', ->
 		.pipe(rename({extname: '.min.css'}))
 		.pipe gulp.dest path.distStylus
 
+gulp.task 'closure', ->
+	gulp.src path.coffee
+		.pipe concat('Win.min.js')
+		.pipe coffee({bare: true}).on 'error', gutil.log
+		.pipe closure()
+		.pipe header banner, pkg: pkg
+		.pipe gulp.dest path.distCoffee
+
 
 # TAREAS EJECUTADAS
 gulp.task "validate", ->
@@ -73,6 +82,8 @@ gulp.task 'default', ->
 	gulp.watch path.stylus, ['stylus']
 
 
-gulp.task 'compile', ->
+gulp.task 'compile_watch', ->
 	gulp.watch path.coffee, ['minCoffee']
 	gulp.watch path.stylus, ['minStylus']
+
+gulp.task 'compile', ['closure','minStylus']

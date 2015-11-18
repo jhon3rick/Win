@@ -7,12 +7,8 @@ Win.Ajax = do ->
 
 		parametros = ''
 
-		if typeof(obj)=='undefined'
-			console.warn("Para hacer uso del ajax debe enviar el objeto con los paramteros Win.Ajax.request(obj) \nConsulte la documentacion del proyecto")
-			return
-
 		if typeof(obj.id_ventana)=='undefined'
-			console.warn("Debe enviar el paramtro id_ventana, para poder mostrar el loading")
+			console.warn("Debe enviar el parametro id_ventana, para poder mostrar el loading")
 			return
 
 		if typeof(obj.params)!='undefined'
@@ -54,10 +50,6 @@ Win.Ajax = do ->
 		xhr.send(null)
 
 	load: (dom_element,obj) ->
-		if typeof(obj) == 'undefined'
-			console.warn("Para hacer uso del ajax load debe enviar el objeto con los paramteros Win.Ajax.load(DOM_ELEMENT,obj) \nConsulte la documentacion del proyecto")
-			return
-
 		parametros = ''
 		tagScript  = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)'
 

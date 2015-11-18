@@ -1,6 +1,9 @@
 ###
-# Desktop
+# CONFIG INI
 ###
+
+# W = (obj)->
+# 	return document.querySelectorAll(obj)
 
 # Win.ini = ((obj={}) ->
 

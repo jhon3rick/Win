@@ -17,7 +17,6 @@
 		<script src="js/Win.js"></script>
 		<script src="js/Win.ajax.js"></script>
 		<script src="js/Win.form.js"></script>
-		<script src="js/Win.calendar.js"></script>
 		<script src="js/Win.desktop.js"></script>
 	</head>
 	<body>
@@ -28,15 +27,30 @@
 
 		<script type="text/javascript">
 
-		new Win.form.Calendar({
-			applyTo    : 'calendario1',
-			format : 'd/m/y',
-			listeners  : { select: function() { console.log(1) } }
+		// new Ext.form.DateField({
+		//     emptyText  : 'Insert a date...',    //PLACEHOLDER
+		//     fieldLabel : 'Date from today',     //SI TIENE LABEL
+		//     format     : 'Y-m-d',               //FORMATO
+		//     width      : 130,                   //ANCHO
+		//     allowBlank : false,
+		//     showToday  : false,
+		//     applyTo    : '',
+		//     editable   : false,                 //EDITABLE
+		//     maxValue   : '2009-08-28',          //MAXIMO
+		//     minValue   : '2009-08-28',          //MINIMO
+		//     value      : new Date(),             //VALOR POR DEFECTO
+		//     listeners  : { select: function() {   } }
+		// });
+
+		new Win.form.DateField({
+			applyTo   : 'calendario1',
+			format    : 'y.m.d',
+			listeners : { select: function() { console.log(this); alert('prueba input 1') } }
 		});
 
-		new Win.form.Calendar({
-		    applyTo    : 'calendario2',
-		    listeners  : { select: function() {   } }
+		new Win.form.DateField({
+			applyTo   : 'calendario2',
+			listeners : { select: function() { alert('prueba input 2') } }
 		});
 
 			// var myalto  = Ext.getBody().getHeight();

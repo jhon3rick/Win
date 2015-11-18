@@ -7,6 +7,6 @@
  */
 
 /*
- * Desktop
+ * CONFIG INI
  */
 
