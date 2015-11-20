@@ -17,8 +17,8 @@ pkg         = require './package.json'
 path =
 	distCoffee  : './dist/js'
 	distStylus  : './dist/css'
-	buildCoffee : './build/js'
-	buildStylus : './build/css'
+	buildCoffee : './example/js'
+	buildStylus : './example/css'
 	coffee      : ['./source/coffee/*.coffee']
 	stylus      : ['./source/stylus/*.styl']
 	jshint      : ['./build/js/*.js']
@@ -83,8 +83,12 @@ gulp.task "validate", ->
         .pipe(jshint.reporter('default'))
         .pipe(notify({ message: 'JSHints task complete' }));
 
+# gulp.task 'default', ->
+# 	gulp.watch path.coffee, ['coffee']
+# 	gulp.watch path.stylus, ['stylus']
+
 gulp.task 'default', ->
-	gulp.watch path.coffee, ['coffee']
+	gulp.watch path.coffee, ['minCoffee']
 	gulp.watch path.stylus, ['stylus']
 
 

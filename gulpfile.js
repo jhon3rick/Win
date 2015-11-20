@@ -32,8 +32,8 @@
   path = {
     distCoffee: './dist/js',
     distStylus: './dist/css',
-    buildCoffee: './build/js',
-    buildStylus: './build/css',
+    buildCoffee: './example/js',
+    buildStylus: './example/css',
     coffee: ['./source/coffee/*.coffee'],
     stylus: ['./source/stylus/*.styl'],
     jshint: ['./build/js/*.js'],
@@ -85,7 +85,7 @@
   });
 
   gulp.task('default', function() {
-    gulp.watch(path.coffee, ['coffee']);
+    gulp.watch(path.coffee, ['minCoffee']);
     return gulp.watch(path.stylus, ['stylus']);
   });
 

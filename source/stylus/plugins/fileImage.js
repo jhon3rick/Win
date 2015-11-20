@@ -15,7 +15,7 @@ var classImage = function(){
 	return function(style){
 		style.define('loadImages', function() {
 
-			var nameDir    = 'C:\\PROYECTOS\\WWW\\Win\\build\\img\\icons';
+			var nameDir    = 'C:\\PROYECTOS\\WWW\\Win\\example\\img\\icons';
 			var loadDir    = fs.readdirSync(nameDir);
 			var arrayImage = [];
 
