@@ -2,7 +2,7 @@
 # Request XHR
 ###
 
-Win.Ajax = do ->
+$W.Ajax = do ->
 	request: (obj) ->
 
 		parametros = ''
@@ -16,16 +16,15 @@ Win.Ajax = do ->
 				parametros += if parametros=='' then value+"="+obj.params[value] else "&"+value+"="+obj.params[value]
 
 		if obj.modal == true or obj.modal==''
-			obj_loading = {
-							id_ventana : obj.id_ventana,
-							text       : obj.text,
-							loader     : obj.loader,
-							icono      : obj.iconFinish,
-							icono      : obj.iconFinish,
-							texto      : obj.textFinish,
-							duracion   : obj.duracionFinish,
-							estado     : 'on'
-						}
+			obj_loading =
+				id_ventana : obj.id_ventana,
+				text       : obj.text,
+				loader     : obj.loader,
+				icono      : obj.iconFinish,
+				icono      : obj.iconFinish,
+				texto      : obj.textFinish,
+				duracion   : obj.duracionFinish,
+				estado     : 'on'
 
 			Win.loading(obj_loading)
 

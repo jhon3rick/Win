@@ -14,20 +14,22 @@
 		<!-- <link rel="stylesheet" href="css/Win-theme-green.css" /> -->
 		<!-- <link rel="stylesheet" href="css/Win-theme-red.css" /> -->
 
-		<script src="js/Win.js"></script>
-		<script src="js/Win.ajax.js"></script>
-		<script src="js/Win.form.js"></script>
-		<script src="js/Win.desktop.js"></script>
+		<script src="../dist/js/Win.min.js"></script>
+		<!-- <script src="js/Win.js"></script>
+		// <script src="js/Win.ajax.js"></script>
+		// <script src="js/Win.form.js"></script>
+		// <script src="js/Win.desktop.js"></script> -->
 	</head>
 	<body>
 
 		<input type="text" id="calendario1"/><br></br>
 		<input type="text" id="calendario2"/>
-		<div id="calendarDiv" class="win-calendar"></div>
+		<div id="calendarDiv" class="win-calendar" style="display: block">ddfdsfdsfsdfds</div>
+
 
 		<script type="text/javascript">
 
-		// new Ext.form.DateField({
+		// new Ext.form.dateField({
 		//     emptyText  : 'Insert a date...',    //PLACEHOLDER
 		//     fieldLabel : 'Date from today',     //SI TIENE LABEL
 		//     format     : 'Y-m-d',               //FORMATO
@@ -42,16 +44,16 @@
 		//     listeners  : { select: function() {   } }
 		// });
 
-		new Win.form.DateField({
-			applyTo   : 'calendario1',
-			format    : 'y.m.d',
-			listeners : { select: function() { console.log(this); alert('prueba input 1') } }
-		});
+		// new $W.form.dateField({
+		// 	applyTo   : 'calendario1',
+		// 	format    : 'y.m.d',
+		// 	listeners : { select: function() { console.log(this); alert('prueba input 1') } }
+		// });
 
-		new Win.form.DateField({
-			applyTo   : 'calendario2',
-			listeners : { select: function() { alert('prueba input 2') } }
-		});
+		// new $W.form.dateField({
+		// 	applyTo   : 'calendario2',
+		// 	listeners : { select: function() { alert('prueba input 2') } }
+		// });
 
 			// var myalto  = Ext.getBody().getHeight();
 			// var myancho = Ext.getBody().getWidth();
@@ -102,176 +104,176 @@
 			// }).show();
 
 
-			// Win_ventana_1 = new Win.Window({
-			// 	bodyStyle   : '',
-			// 	width       : 800,
-			// 	height      : 700,
-			// 	id          : 'Win_ventana_1',
-			// 	title       : 'VENTANA 1',
-			// 	titleStyle  : '',
-			// 	modal       : true,
-			// 	closable    : true,
-			// 	drag        : true,
-			// 	resize      : true,
-			// 	autoLoad    :
-			// 	{
-			//         url     : 'bd.php',
-			//         params  :
-			//         {
-			//             opc : 'prueba_ajax',
-			//             var2 : 'var2',
-			//         }
-			//     },
-			// 	tbar        :
-			// 	[
-			// 		{
-			// 			xtype : 'button',
-			// 			id    : 'btn_1',
-			// 			cls   : 'user_black_36',
-			// 			text  : 'Nuevo Usuario',
-			// 			handler : function(){ nueva_ventana(); }
-			// 		},'-',
-			// 		{
-			// 	items	:
-			// 	[
-			// 		{
-			// 			xtype     : 'panel',
-			// 			width     : 160,
-			// 			height    : 56,
-			// 			// bodyStyle : 'background-color:rgb(208, 205, 205)',
-			// 			bodyStyle : 'border:1px solid #2a80b9;',
-			// 			html      : '<div>contenido por parametro</div>',
-			// 			autoLoad  :
-			// 			{
-			// 				url		: 'bd.php',
-			// 				params	:
-			// 				{
-			// 					opc    : 'prueba_ajax_load',
-			// 					prueba : 1
-
-			// 				}
-			// 			}
-			// 		}
-			// 	]
-
-			// 		},
-			// 		{
-			// 			xtype : 'button',
-			// 			id    : 'btn_2',
-			// 			handler: function () { ajax_load();	},
-			// 			cls   : 'ic_autorenew_black_36dp',
-			// 			text  : 'ajax load'
-			// 		},
-			// 		{
-			// 			xtype : 'button',
-			// 			id    : 'btn_2',
-			// 			handler: function () { ajax_request();	},
-			// 			cls   : 'ic_autorenew_black_36dp',
-			// 			text  : 'ajax request'
-			// 		}
-			// 		,'->','-',
-			// 		{
-			// 			xtype : 'button',
-			// 			id    : 'btn_1',
-			// 			cls   : 'icon-action-black-ic_perm_identity_black_24dp',
-			// 			text  : 'Salir',
-			// 			handler : function(){ alert(4); nueva_ventana(); }
-			// 		},'-',
-			// 		{
-			// 			xtype : 'tbtext',
-			// 			id    : 'btn_1',
-			// 			text  : 'una demostracion de un texto largo<br>con salto de linea',
-			// 		}
-			// 	]
-			// });
-
-				function nueva_ventana(){
-
-					Win_ventana_2 = new Win.Window({
-						apply       : 'prueba',
-						bodyStyle   : '',
-						width       : 600,
-						height      : 500,
-						id          : 'Win_ventana_2',
-						title       : 'VENTANA 3',
-						modal       : true,
-						autoScroll  : true,
-						closable    : true,
-						autoDestroy : true,
-						tabPanel    :
-						[
-							{
-						        xtype     : '',
-						        scripts : true,
-						        nocache : true,
-						        params  :
-						        {
-						            var1 : 'var1',
-						            var2 : 'var2',
-						        }
-						    },
-						],
-						tbar        :
-						[
-							{
-								xtype : 'button',
-								id    : 'btn_1',
-								cls   : 'prueba',
-								text  : 'guardar<br>archivo',
-								handler : function(){ nueva_ventana2(); }
-							},
-							{
-								xtype : 'button',
-								id    : 'btn_2',
-								cls   : 'prueba',
-								handler: function () { ajax_load_2();	}
-								// text  : 'guardar'
-							},
-						]
-					});
-				}
-
-				function nueva_ventana2(){
-					Win_ventana_3 = new Win.Window({
-						apply       : 'prueba',
-						bodyStyle   : '',
-						width       : 400,
-						height      : 300,
-						id          : 'Win_ventana_3',
-						title       : 'VENTANA 3',
-						modal       : true,
-						autoScroll  : true,
-						closable    : true,
-						autoDestroy : true,
-						autoLoad    :
+			Win_ventana_1 = new $W.Window({
+				bodyStyle   : '',
+				width       : 800,
+				height      : 700,
+				id          : 'Win_ventana_1',
+				title       : 'VENTANA 1',
+				titleStyle  : '',
+				modal       : true,
+				closable    : true,
+				drag        : true,
+				resize      : true,
+				autoLoad    :
+				{
+			        url     : 'bd.php',
+			        params  :
+			        {
+			            opc : 'prueba_ajax',
+			            var2 : 'var2',
+			        }
+			    },
+				tbar        :
+				[
+					{
+						xtype : 'button',
+						id    : 'btn_1',
+						cls   : 'user_black_36',
+						text  : 'Nuevo Usuario',
+						handler : function(){ nueva_ventana(); }
+					},'-',
+					{
+				items	:
+				[
+					{
+						xtype     : 'panel',
+						width     : 160,
+						height    : 56,
+						// bodyStyle : 'background-color:rgb(208, 205, 205)',
+						bodyStyle : 'border:1px solid #2a80b9;',
+						html      : '<div>contenido por parametro</div>',
+						autoLoad  :
 						{
-					        url     : '.php',
-					        params  :
-					        {
-					            var1 : 'var1',
-					            var2 : 'var2',
-					        }
-					    },
-						drag        : true,
-						resize      : true,
-						tbar        :
-						[
+							url		: 'bd.php',
+							params	:
 							{
-								xtype : 'button',
-								id    : 'btn_1',
-								cls   : 'prueba',
-								text  : 'guardar<br>archivo',
-								handler : function(){ nueva_ventana2(); }
-							},
-							{
-								xtype : 'button',
-								id    : 'btn_2',
-								cls   : 'prueba',
-								// text  : 'guardar'
-							},
-						]
-					});
-				}
+								opc    : 'prueba_ajax_load',
+								prueba : 1
+
+							}
+						}
+					}
+				]
+
+					},
+					{
+						xtype : 'button',
+						id    : 'btn_2',
+						handler: function () { ajax_load();	},
+						cls   : 'ic_autorenew_black_36dp',
+						text  : 'ajax load'
+					},
+					{
+						xtype : 'button',
+						id    : 'btn_2',
+						handler: function () { ajax_request();	},
+						cls   : 'ic_autorenew_black_36dp',
+						text  : 'ajax request'
+					}
+					,'->','-',
+					{
+						xtype : 'button',
+						id    : 'btn_1',
+						cls   : 'icon-action-black-ic_perm_identity_black_24dp',
+						text  : 'Salir',
+						handler : function(){ alert(4); nueva_ventana(); }
+					},'-',
+					{
+						xtype : 'tbtext',
+						id    : 'btn_1',
+						text  : 'una demostracion de un texto largo<br>con salto de linea',
+					}
+				]
+			});
+
+			// 	function nueva_ventana(){
+
+			// 		Win_ventana_2 = new Win.Window({
+			// 			apply       : 'prueba',
+			// 			bodyStyle   : '',
+			// 			width       : 600,
+			// 			height      : 500,
+			// 			id          : 'Win_ventana_2',
+			// 			title       : 'VENTANA 3',
+			// 			modal       : true,
+			// 			autoScroll  : true,
+			// 			closable    : true,
+			// 			autoDestroy : true,
+			// 			tabPanel    :
+			// 			[
+			// 				{
+			// 			        xtype     : '',
+			// 			        scripts : true,
+			// 			        nocache : true,
+			// 			        params  :
+			// 			        {
+			// 			            var1 : 'var1',
+			// 			            var2 : 'var2',
+			// 			        }
+			// 			    },
+			// 			],
+			// 			tbar        :
+			// 			[
+			// 				{
+			// 					xtype : 'button',
+			// 					id    : 'btn_1',
+			// 					cls   : 'prueba',
+			// 					text  : 'guardar<br>archivo',
+			// 					handler : function(){ nueva_ventana2(); }
+			// 				},
+			// 				{
+			// 					xtype : 'button',
+			// 					id    : 'btn_2',
+			// 					cls   : 'prueba',
+			// 					handler: function () { ajax_load_2();	}
+			// 					// text  : 'guardar'
+			// 				},
+			// 			]
+			// 		});
+			// 	}
+
+			// 	function nueva_ventana2(){
+			// 		Win_ventana_3 = new Win.Window({
+			// 			apply       : 'prueba',
+			// 			bodyStyle   : '',
+			// 			width       : 400,
+			// 			height      : 300,
+			// 			id          : 'Win_ventana_3',
+			// 			title       : 'VENTANA 3',
+			// 			modal       : true,
+			// 			autoScroll  : true,
+			// 			closable    : true,
+			// 			autoDestroy : true,
+			// 			autoLoad    :
+			// 			{
+			// 		        url     : '.php',
+			// 		        params  :
+			// 		        {
+			// 		            var1 : 'var1',
+			// 		            var2 : 'var2',
+			// 		        }
+			// 		    },
+			// 			drag        : true,
+			// 			resize      : true,
+			// 			tbar        :
+			// 			[
+			// 				{
+			// 					xtype : 'button',
+			// 					id    : 'btn_1',
+			// 					cls   : 'prueba',
+			// 					text  : 'guardar<br>archivo',
+			// 					handler : function(){ nueva_ventana2(); }
+			// 				},
+			// 				{
+			// 					xtype : 'button',
+			// 					id    : 'btn_2',
+			// 					cls   : 'prueba',
+			// 					// text  : 'guardar'
+			// 				},
+			// 			]
+			// 		});
+			// 	}
 
 				// Win.getButton('btn_1').hiden;
 				// prueba = new Win.getButton('btn_1').hiden

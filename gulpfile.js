@@ -36,23 +36,20 @@
     buildStylus: './build/css',
     coffee: ['./source/coffee/*.coffee'],
     stylus: ['./source/stylus/*.styl'],
-    jshint: ['./build/js/*.js']
+    jshint: ['./build/js/*.js'],
+    modules: ['./source/coffee/Win.coffee', './source/coffee/Win.form.coffee', './source/coffee/Win.ajax.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.desktop.coffee']
   };
 
   banner = ["/**", " * <%= pkg.name %> - <%= pkg.description %>", " * @version v<%= pkg.version %>", " * @link    <%= pkg.homepage %>", " * @author  <%= pkg.author.name %> (Twitter <%= pkg.author.twitter %> || email <%= pkg.author.mail %>)", " * @license <%= pkg.license %>", " */", ""].join("\n");
 
   gulp.task('coffee', function() {
-    return gulp.src(path.coffee).pipe(coffee({
-      bare: true
-    }).on('error', gutil.log)).pipe(header(banner, {
+    return gulp.src(path.coffee).pipe(coffee().on('error', gutil.log)).pipe(header(banner, {
       pkg: pkg
     })).pipe(gulp.dest(path.buildCoffee));
   });
 
   gulp.task('minCoffee', function() {
-    return gulp.src(path.coffee).pipe(concat('Win.min.js')).pipe(coffee({
-      bare: true
-    }).on('error', gutil.log)).pipe(uglify({
+    return gulp.src(path.modules).pipe(concat('Win.min.js')).pipe(coffee().on('error', gutil.log)).pipe(uglify({
       mangle: true
     })).pipe(header(banner, {
       pkg: pkg
@@ -76,9 +73,7 @@
   });
 
   gulp.task('closure', function() {
-    return gulp.src(path.coffee).pipe(concat('Win.min.js')).pipe(coffee({
-      bare: true
-    }).on('error', gutil.log)).pipe(closure()).pipe(header(banner, {
+    return gulp.src(path.modules).pipe(concat('Win.min.js')).pipe(coffee().on('error', gutil.log)).pipe(closure()).pipe(header(banner, {
       pkg: pkg
     })).pipe(gulp.dest(path.distCoffee));
   });
@@ -99,6 +94,8 @@
     return gulp.watch(path.stylus, ['minStylus']);
   });
 
-  gulp.task('compile', ['closure', 'minStylus']);
+  gulp.task('compile_google', ['closure', 'minStylus']);
+
+  gulp.task('compile', ['minCoffee', 'minStylus']);
 
 }).call(this);

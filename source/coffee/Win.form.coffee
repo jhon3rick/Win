@@ -8,34 +8,34 @@
 #
 ###
 
-Win.form = do->
+$W.form = do->
 	intField: (obj) ->
-		document.getElementById(obj.applyTo).className += " win-input-number";
+		$W('#'+obj.applyTo).className += " win-input-number";
 
-		document.getElementById(obj.applyTo).onkeypress = (event)->
+		$W('#'+obj.applyTo).onkeypress = (event)->
 			return Win.form.validateIntField({ event:event, eventType:'keypress', input:this })
 
-		document.getElementById(obj.applyTo).onchange = (event)->
+		$W('#'+obj.applyTo).onchange = (event)->
 			return Win.form.validateIntField({ event:event, eventType:'change', input:this })
 
 	doubleField: (obj) ->
-		document.getElementById(obj.applyTo).className += " win-input-number";
+		$W('#'+obj.applyTo).className += " win-input-number";
 
-		document.getElementById(obj.applyTo).onkeypress = (event)->
+		$W('#'+obj.applyTo).onkeypress = (event)->
 			return Win.form.validateDoubleField({ event:event, eventType:'keypress', input:this })
 
-		document.getElementById(obj.applyTo).onchange = (event)->
+		$W('#'+obj.applyTo).onchange = (event)->
 			return Win.form.validateDoubleField({ event:event, eventType:'change', input:this })
 
 	textField: (obj) ->
-		document.getElementById(obj.applyTo).onkeyup = (event)->
+		$W('#'+obj.applyTo).onkeyup = (event)->
 			return Win.form.validateTextField({ event:event, eventType:'keyup', input:this, type:obj.type })
 
-		document.getElementById(obj.applyTo).onchange = (event)->
+		$W('#'+obj.applyTo).onchange = (event)->
 			return Win.form.validateTextField({ event:event, eventType:'change', input:this, type:obj.type })
 
 	emailField: (obj) ->
-		document.getElementById(obj.applyTo).onchange = (event)->
+		$W('#'+obj.applyTo).onchange = (event)->
 			return Win.form.validateEmailField({ event:event, input:this })
 
 	globalField: (obj) ->
@@ -84,19 +84,19 @@ Win.form = do->
 	###
 	# Calendar
 	###
-	DateField: (obj) ->
+	dateField: (obj) ->
 		separator  = '-'
 		calendarId = obj.applyTo
 		inputClass = 'calendarSelectDate'
 		format     = obj.format or 'y-m-d'
 		selected   = obj.listeners.select or ''
 
-		console.log(W('body'))
+		# console.log(HTML_CONTAINERS)
 
 
 		# ATRAPA EL ELEMENTO
-		inputCalendar = document.getElementById(calendarId)
-		calendarDiv   = document.getElementById('calendarDiv')
+		inputCalendar = $W('#'+calendarId)
+		calendarDiv   = $W('#calendarDiv')
 
 		if typeof(obj.value)!='undefined' then inputCalendar.value = obj.value
 
@@ -188,10 +188,10 @@ Win.form = do->
 			calendarDiv.innerHTML = html
 
 			# close button link
-			document.getElementById('closeCalendar').onclick = () -> calendarDiv.style.display = 'none'
+			$W('#closeCalendar').onclick = () -> calendarDiv.style.display = 'none'
 
 			# setup next and previous links
-			document.getElementById('prevMonth').onclick = () ->
+			$W('#prevMonth').onclick = () ->
 				selectedMonth--
 
 				if selectedMonth < 0
@@ -201,7 +201,7 @@ Win.form = do->
 				drawCalendar(inputObj)
 				setupLinks(inputObj)
 
-			document.getElementById('nextMonth').onclick = () ->
+			$W('#nextMonth').onclick = () ->
 				selectedMonth++
 
 				if selectedMonth > 11
@@ -213,7 +213,7 @@ Win.form = do->
 
 		setupLinks= (inputObj) ->
 			# set up link events on calendar table
-			y = document.getElementById('calendar')
+			y = $W('#calendar')
 			x = y.getElementsByTagName('a')
 
 			for i in x
@@ -222,7 +222,7 @@ Win.form = do->
 					inputCalendar.selected = selected
 					inputCalendar.selected()
 
-					document.getElementById('calendarDiv').style.display = 'none'
+					$W('#calendarDiv').style.display = 'none'
 					selectedDay = this.innerHTML
 					inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear)
 
@@ -250,7 +250,6 @@ Win.form = do->
 			dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 			dayNames[day]
 
-
 		getDaysInMonth = (year, month) ->
 			return 32 - new Date(year, month, 32).getDate()
 
@@ -274,5 +273,3 @@ Win.form = do->
 					curtop  += obj.offsetTop
 
 			return [curleft, curtop]
-
-

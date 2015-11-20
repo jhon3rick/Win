@@ -22,6 +22,11 @@ path =
 	coffee      : ['./source/coffee/*.coffee']
 	stylus      : ['./source/stylus/*.styl']
 	jshint      : ['./build/js/*.js']
+	modules     : ['./source/coffee/Win.coffee',
+					'./source/coffee/Win.form.coffee',
+					'./source/coffee/Win.ajax.coffee',
+					'./source/coffee/Win.ini.coffee',
+					'./source/coffee/Win.desktop.coffee']
 
 banner = [
 	"/**"
@@ -36,14 +41,15 @@ banner = [
 
 gulp.task 'coffee', ->
 	gulp.src path.coffee
-		.pipe coffee({bare: true}).on 'error', gutil.log
+		# .pipe coffee({bare: true}).on 'error', gutil.log
+		.pipe coffee().on 'error', gutil.log
 		.pipe header banner, pkg: pkg
 		.pipe gulp.dest path.buildCoffee
 
 gulp.task 'minCoffee', ->
-	gulp.src path.coffee
+	gulp.src path.modules
 		.pipe(concat('Win.min.js'))
-		.pipe coffee({bare: true}).on 'error', gutil.log
+		.pipe coffee().on 'error', gutil.log
 		.pipe uglify mangle: true
 		.pipe header banner, pkg: pkg
 		.pipe gulp.dest path.distCoffee
@@ -62,9 +68,9 @@ gulp.task 'minStylus', ->
 		.pipe gulp.dest path.distStylus
 
 gulp.task 'closure', ->
-	gulp.src path.coffee
+	gulp.src path.modules
 		.pipe concat('Win.min.js')
-		.pipe coffee({bare: true}).on 'error', gutil.log
+		.pipe coffee().on 'error', gutil.log
 		.pipe closure()
 		.pipe header banner, pkg: pkg
 		.pipe gulp.dest path.distCoffee
@@ -86,4 +92,5 @@ gulp.task 'compile_watch', ->
 	gulp.watch path.coffee, ['minCoffee']
 	gulp.watch path.stylus, ['minStylus']
 
-gulp.task 'compile', ['closure','minStylus']
+gulp.task 'compile_google', ['closure','minStylus']
+gulp.task 'compile', ['minCoffee','minStylus']

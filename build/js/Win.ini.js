@@ -10,3 +10,7 @@
  * CONFIG INI
  */
 
+(function() {
+
+
+}).call(this);
