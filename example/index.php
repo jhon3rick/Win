@@ -158,7 +158,7 @@ $contenido ='
 
 					<div style="overflow:hidden; margin: 10px 0;">
 						<div class="textForm">Input Integer</div>
-						<input type="text" id="inputInteger" class="inputForm" placeholder="inputInteger"/>
+						<input type="text" id="inputInteger" class="inputForm" placeholder="inputInteger" data-icon="add" />
 					</div>
 					<div>
 						<pre><code class="html">
@@ -177,7 +177,7 @@ $contenido ='
 
 					<div style="overflow:hidden; margin: 10px 0;">
 						<div class="textForm">Input Double</div>
-						<input type="text" id="inputDouble" class="inputForm" placeholder="inputDouble"/>
+						<input type="text" id="inputDouble" class="inputForm" placeholder="inputDouble" data-icon="error"/>
 					</div>
 					<div>
 						<pre><code class="html">
@@ -196,7 +196,7 @@ $contenido ='
 
 					<div style="overflow:hidden; margin: 10px 0;">
 						<div class="textForm">Input Email</div>
-						<input type="text" id="inputEmail" class="inputForm" placeholder="inputEmail"/>
+						<input type="text" id="inputEmail" class="inputForm" placeholder="inputEmail" data-icon="email"/>
 					</div>
 					<div>
 						<pre><code class="html">
@@ -215,7 +215,7 @@ $contenido ='
 
 					<div style="overflow:hidden; margin: 10px 0;">
 						<div class="textForm">Input Text</div>
-						<input type="text" id="inputText" class="inputForm" placeholder="inputText" data-icon="date"/>
+						<input type="text" id="inputText" class="inputForm" placeholder="inputText" data-icon="telephone"/>
 					</div>
 					<div>
 						<pre><code class="html">

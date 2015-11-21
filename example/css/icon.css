@@ -5,8 +5,47 @@
  * @author  Jhon Marroquin (Twitter @jhon3rick || email jhon3rick@gmail.com)
  * @license (MIT)
  */
-.ic_check_circle_black_18dp {
-  background-image: url("../img/icons/36dp/ic_check_circle_black_18dp.png");
+.add {
+  background-image: url("../img/icons/36dp/add.png");
+}
+.calendar {
+  background-image: url("../img/icons/36dp/calendar.png");
+}
+.call {
+  background-image: url("../img/icons/36dp/call.png");
+}
+.cellphone {
+  background-image: url("../img/icons/36dp/cellphone.png");
+}
+.check {
+  background-image: url("../img/icons/36dp/check.png");
+}
+.clock {
+  background-image: url("../img/icons/36dp/clock.png");
+}
+.done {
+  background-image: url("../img/icons/36dp/done.png");
+}
+.download {
+  background-image: url("../img/icons/36dp/download.png");
+}
+.edit {
+  background-image: url("../img/icons/36dp/edit.png");
+}
+.email {
+  background-image: url("../img/icons/36dp/email.png");
+}
+.error {
+  background-image: url("../img/icons/36dp/error.png");
+}
+.find {
+  background-image: url("../img/icons/36dp/find.png");
+}
+.grocery {
+  background-image: url("../img/icons/36dp/grocery.png");
+}
+.help {
+  background-image: url("../img/icons/36dp/help.png");
 }
 .ic_check_circle_white_18dp {
   background-image: url("../img/icons/36dp/ic_check_circle_white_18dp.png");
@@ -70,6 +109,45 @@
 }
 .ic_warning_black_24dp {
   background-image: url("../img/icons/36dp/ic_warning_black_24dp.png");
+}
+.info {
+  background-image: url("../img/icons/36dp/info.png");
+}
+.key {
+  background-image: url("../img/icons/36dp/key.png");
+}
+.lock {
+  background-image: url("../img/icons/36dp/lock.png");
+}
+.note {
+  background-image: url("../img/icons/36dp/note.png");
+}
+.person {
+  background-image: url("../img/icons/36dp/person.png");
+}
+.print {
+  background-image: url("../img/icons/36dp/print.png");
+}
+.remove {
+  background-image: url("../img/icons/36dp/remove.png");
+}
+.settings {
+  background-image: url("../img/icons/36dp/settings.png");
+}
+.share {
+  background-image: url("../img/icons/36dp/share.png");
+}
+.truck {
+  background-image: url("../img/icons/36dp/truck.png");
+}
+.update {
+  background-image: url("../img/icons/36dp/update.png");
+}
+.url {
+  background-image: url("../img/icons/36dp/url.png");
+}
+.warning {
+  background-image: url("../img/icons/36dp/warning.png");
 }
 .ic_highlight_off_black_24dp {
   background-image: url("../img/icons/36dp/ic_highlight_off_black_24dp.png");
