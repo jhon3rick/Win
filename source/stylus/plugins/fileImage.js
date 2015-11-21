@@ -1,13 +1,3 @@
-// var classImage = function(){
-// 	return function(style){
-// 		style.define('loadImages', function(a, b) {
-// 			// return a.operate('+', b);
-// 			return ['user_black_36', 'user_black_36'];
-// 		});
-// 	};
-// };
-// module.exports = classImage;
-
 var fs   = require('fs');
 var path = require('path');
 

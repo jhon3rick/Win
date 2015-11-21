@@ -8,7 +8,6 @@
 		<link rel="stylesheet" href="css/icon.css" />
 
 		<link rel="stylesheet" href="css/Win-theme-dark.css" />
-		<!-- <link rel="stylesheet" href="css/Win-theme-light.css" /> -->
 
 		<script src="../dist/js/Win.min.js"></script>
 
@@ -102,7 +101,11 @@ $contenido ='
 							<?php
 $contenido ='
 <link rel="stylesheet" href="css/Win-theme-dark.css" />
-<link rel="stylesheet" href="css/Win-theme-light.css" />';
+<link rel="stylesheet" href="css/Win-theme-light.css" />
+<link rel="stylesheet" href="css/Win-theme-blue.css" />
+<link rel="stylesheet" href="css/Win-theme-dark-blue.css" />
+<link rel="stylesheet" href="css/Win-theme-green.css" />
+<link rel="stylesheet" href="css/Win-theme-red.css" />';
 								echo htmlentities($contenido);
 							?>
 						</code></pre>
