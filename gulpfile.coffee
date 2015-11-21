@@ -50,7 +50,7 @@ gulp.task 'minCoffee', ->
 	gulp.src path.modules
 		.pipe(concat('Win.min.js'))
 		.pipe coffee().on 'error', gutil.log
-		.pipe uglify mangle: true
+		# .pipe uglify mangle: true
 		.pipe header banner, pkg: pkg
 		.pipe gulp.dest path.distCoffee
 

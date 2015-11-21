@@ -85,18 +85,17 @@ $W.form = do->
 	# Calendar
 	###
 	dateField: (obj) ->
-		separator  = '-'
-		calendarId = obj.applyTo
-		inputClass = 'calendarSelectDate'
-		format     = obj.format or 'y-m-d'
-		selected   = obj.listeners.select or ''
+		separator    = '-'
+		calendarId   = obj.applyTo
+		format       = obj.format or 'y-m-d'
+		selected     = obj.listeners.select or ''
 
 		# console.log(HTML_CONTAINERS)
 
 
 		# ATRAPA EL ELEMENTO
 		inputCalendar = $W('#'+calendarId)
-		calendarDiv   = $W('#calendarDiv')
+		inputCalendar.dataset.icon = 'date'
 
 		if typeof(obj.value)!='undefined' then inputCalendar.value = obj.value
 
@@ -120,9 +119,12 @@ $W.form = do->
 
 		inputCalendar.readOnly = true
 
-		inputCalendar.onfocus = () ->
-			setPos(this, calendarDiv)
-			calendarDiv.style.display = 'block'
+		inputCalendar.onclick = () ->
+
+			if $W('#date_'+calendarId)
+				$W('#date_'+calendarId).parentNode.removeChild($W('#date_'+calendarId));
+				return;
+
 			drawCalendar(this)
 			setupLinks(this)
 
@@ -185,10 +187,15 @@ $W.form = do->
 			html += '</table>'
 
 			# add calendar to element to calendar Div
+			# calendarDiv.innerHTML = html
+			calendarDiv = document.createElement("div")
 			calendarDiv.innerHTML = html
+			calendarDiv.setAttribute("id", "date_"+calendarId)
+			$W('#'+calendarId).parentNode.insertBefore(calendarDiv, $W('#'+calendarId).nextSibling)
+			setPos(inputCalendar, calendarDiv)
 
 			# close button link
-			$W('#closeCalendar').onclick = () -> calendarDiv.style.display = 'none'
+			$W('#closeCalendar').onclick = () -> removeCalendar(calendarDiv)
 
 			# setup next and previous links
 			$W('#prevMonth').onclick = () ->
@@ -211,7 +218,9 @@ $W.form = do->
 				drawCalendar(inputObj)
 				setupLinks(inputObj)
 
-		setupLinks= (inputObj) ->
+		removeCalendar = (obj) -> obj.parentNode.removeChild(obj);
+
+		setupLinks = (inputObj) ->
 			# set up link events on calendar table
 			y = $W('#calendar')
 			x = y.getElementsByTagName('a')
@@ -222,9 +231,10 @@ $W.form = do->
 					inputCalendar.selected = selected
 					inputCalendar.selected()
 
-					$W('#calendarDiv').style.display = 'none'
 					selectedDay = this.innerHTML
 					inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear)
+
+					removeCalendar($W('#date_'+calendarId))
 
 		# Functions Dealing with Dates
 		formatDate = (Day, Month, Year) ->

@@ -212,7 +212,7 @@ $contenido ='
 
 					<div style="overflow:hidden; margin: 10px 0;">
 						<div class="textForm">Input Text</div>
-						<input type="text" id="inputText" class="inputForm" placeholder="inputText"/>
+						<input type="text" id="inputText" class="inputForm" placeholder="inputText" data-icon="date"/>
 					</div>
 					<div>
 						<pre><code class="html">
@@ -235,8 +235,6 @@ $contenido ='
 						<div class="textForm">Input Date</div>
 						<input type="text" id="inputDate" class="inputForm" placeholder="inputDate"/>
 					</div>
-					<div id="calendarDiv" class="win-calendar"></div>
-
 					<div>
 						<pre><code class="html">
 							<?php
@@ -261,7 +259,7 @@ $contenido ='
 
 					<div style="overflow:hidden; margin: 10px 0;">
 						<div class="textForm">Elemento Windows</div>
-						<input type="button" onclick="ventana1()" value="Nueva Ventana" style="width:120px;"/>
+						<input type="button" onclick="ventana1()" value="Nueva Ventana" data-icon="date"/>
 					</div>
 					<div>
 						<pre><code class="html">

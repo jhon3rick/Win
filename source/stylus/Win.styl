@@ -20,11 +20,13 @@ input, select, textarea, select
 
 input, select
 	height 23px
+	width auto
 
-	&focus
+	&:focus
 		outline none
 		border solid 1px #0995F9
 		box-shadow 0 0 5px 1px #BFE4FF
+		background-color #F0F8FF
 
 *
 	font-size $fSize
@@ -32,13 +34,12 @@ input, select
 	font-family arial,sans-serif
 
 input[type=button]
-	padding 3
-	width 100px
-	height 30px
+	padding 3px 10px
+	min-height 30px
 	border 0px
 
-input[type=button]&hover
-	background-color #E6E6E6
+	&:hover
+		background-color #E6E6E6
 
 .win-modal
 	position fixed
@@ -351,3 +352,54 @@ input[type=button]&hover
 	left -4px /*must have*/
 	width 193px /*must have to match width and borders*/
 	height 200px /*must have to match maximum height*/
+
+// ATRIBUTOS
+input[data-icon="email"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="money"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="date"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="time"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="home"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="user"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="telephone"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+input[data-icon="check"]
+	background-position right center
+	padding-right 20px
+	background-image url(../img/icons/18dp/ic_help_black_18dp.png)
+	background-repeat no-repeat
+
+

@@ -35,11 +35,11 @@ Win = do ->
 			elements = document.getElementsByTagName(selector)
 		else if ID_SELECTOR.test(selector)
 			elements = document.getElementById selector.replace("#", "")
-			unless elements then elements = []
+			# unless elements then elements = []
 		else
 			elements = document.querySelectorAll selector
 		return elements
-		if elements.nodeType then [elements] else Array::slice.call(elements)
+		# if elements.nodeType then [elements] else Array::slice.call(elements)
 
 
 	###

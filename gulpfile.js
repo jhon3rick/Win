@@ -49,9 +49,7 @@
   });
 
   gulp.task('minCoffee', function() {
-    return gulp.src(path.modules).pipe(concat('Win.min.js')).pipe(coffee().on('error', gutil.log)).pipe(uglify({
-      mangle: true
-    })).pipe(header(banner, {
+    return gulp.src(path.modules).pipe(concat('Win.min.js')).pipe(coffee().on('error', gutil.log)).pipe(header(banner, {
       pkg: pkg
     })).pipe(gulp.dest(path.distCoffee));
   });
