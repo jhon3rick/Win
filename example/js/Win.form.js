@@ -173,7 +173,7 @@
       };
       drawCalendar = function(inputObj) {
         var calendarDiv, day, daysInMonth, e, f, html, j, k, l, len, noPrintDays, numRows, printDate, ref, startDay, thisMonth, thisYear, today, weekDays;
-        html = "<a id=\"closeCalendar\">Close Calendar</a>\n<table cellpadding=\"0\" cellspacing=\"0\" id=\"linksTable\">\n	<tr>\n		<td><a id=\"prevMonth\"><</a></td>\n		<td><a id=\"nextMonth\">></a></td>\n	</tr>\n</table>\n<table id=\"calendar\" cellpadding=\"0\" cellspacing=\"0\"`class=\"win-calendar\">\n	<tr>\n		<th colspan=\"7\" class=\"calendarHeader\">" + getMonthName(selectedMonth) + ' ' + selectedYear + "</th>\n</tr>\n<tr class=\"weekDaysTitleRow\">";
+        html = "<a id=\"closeCalendar\">Close Calendar</a>\n<table cellpadding=\"0\" cellspacing=\"0\" id=\"linksTable\">\n	<tr>\n\n\n	</tr>\n</table>\n<table id=\"calendar\" cellpadding=\"0\" cellspacing=\"0\"`class=\"win-calendar\">\n	<tr>\n		<td id=\"prevMonth\"> < </td> <th colspan=\"5\" class=\"calendarHeader\">" + getMonthName(selectedMonth) + ' ' + selectedYear + "</th><td id=\"nextMonth\">> </td>\n</tr>\n<tr class=\"weekDaysTitleRow\">";
         weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
         for (j = 0, len = weekDays.length; j < len; j++) {
           day = weekDays[j];

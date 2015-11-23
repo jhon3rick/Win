@@ -262,7 +262,7 @@ input[type=button]:hover {
   color: #000;
 }
 #calendar {
-  background: #ddd;
+  background: rgba(88,88,88,0.82);
   clear: both;
   text-align: center;
   font-size: 105%;
@@ -272,20 +272,24 @@ input[type=button]:hover {
   width: 180px;
 }
 #calendar .calendarHeader {
-  background: #0f0a0a url("../../img/fadeto333.gif") top repeat-x;
-  border-bottom: 1px solid #444;
+  padding: 5px;
   color: #fff;
+  cursor: default;
 }
 #calendar tr.weekDaysTitleRow td {
-  background: #777;
+  padding: 5px;
   color: #fff;
+  cursor: default;
 }
 #calendar tr.weekDaysRow {
-  background: #eee;
-  color: #666;
+  color: #fff;
 }
-#calendar td:hover {
-  background: #fff;
+#calendar tr.weekDaysRow td.weekDaysCell {
+  cursor: pointer;
+  box-sizing: border-box;
+}
+#calendar tr.weekDaysRow td.weekDaysCell:hover {
+  background: rgba(183,182,182,0.52);
 }
 #closeCalender {
   position: absolute;

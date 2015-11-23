@@ -133,13 +133,13 @@ do ($W = Win) ->
 			html = """<a id="closeCalendar">Close Calendar</a>
 					<table cellpadding="0" cellspacing="0" id="linksTable">
 						<tr>
-							<td><a id="prevMonth"><</a></td>
-							<td><a id="nextMonth">></a></td>
+
+
 						</tr>
 					</table>
 					<table id="calendar" cellpadding="0" cellspacing="0"`class="win-calendar">
 						<tr>
-							<th colspan="7" class="calendarHeader">"""+getMonthName(selectedMonth)+' ' +selectedYear+"""</th>
+							<td id="prevMonth"> < </td> <th colspan="5" class="calendarHeader">"""+getMonthName(selectedMonth)+' ' +selectedYear+"""</th><td id="nextMonth">> </td>
 						</tr>
 						<tr class="weekDaysTitleRow">"""
 
