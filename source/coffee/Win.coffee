@@ -12,318 +12,109 @@
 
 Win = do ->
 
+	EMPTY_ARRAY = []
+	OBJECT_PROTOTYPE  = Object::
+
+	IS_HTML_FRAGMENT  = /^\s*<(\w+|!)[^>]*>/
+
+	ELEMENT_TYPES     = [ 1, 9, 11 ]
 	CLASS_SELECTOR    = /^\.([\w-]+)$/
 	ID_SELECTOR       = /^#[\w\d-]+$/
 	TAG_SELECTOR      = /^[\w-]+$/
 
-	TABLE     = document.createElement('table')
-	TABLE_ROW = document.createElement('tr')
+	###
+		Basic Instance of WinJs
+		@method $W
+		@param  {string/instance} [OPTIONAL] Selector for handler
+		@param  {string} [OPTIONAL] Children in selector
+	###
+	$W = (selector, children) ->
+		unless selector
+			_instance()
+		else if $W.toType(selector) is "function"
+			$W(document).ready selector
+		else
+			dom = _getDOMObject(selector, children)
+			_instance(dom, selector)
 
-	HTML_CONTAINERS =
-		"tr"    : document.createElement("tbody")
-		"tbody" : TABLE
-		"thead" : TABLE
-		"tfoot" : TABLE
-		"td"    : TABLE_ROW
-		"th"    : TABLE_ROW
-		"div"   : document.createElement("div")
-
-	$W = (selector) ->
+	$W.query = (domain, selector) ->
 		if CLASS_SELECTOR.test(selector)
-			elements = document.getElementsByClassName selector.replace(".", "")
+			elements = domain.getElementsByClassName selector.replace(".", "")
 		else if TAG_SELECTOR.test(selector)
-			elements = document.getElementsByTagName(selector)
-		else if ID_SELECTOR.test(selector)
-			elements = document.getElementById selector.replace("#", "")
-			# unless elements then elements = []
+			elements = domain.getElementsByTagName(selector)
+		else if ID_SELECTOR.test(selector) and domain is document
+			elements = domain.getElementById selector.replace("#", "")
+			unless elements then elements = []
+			# unless elements then elements else false
 		else
-			elements = document.querySelectorAll selector
-		return elements
-		# if elements.nodeType then [elements] else Array::slice.call(elements)
+			elements = domain.querySelectorAll selector
+		if elements.nodeType then [elements] else Array::slice.call(elements)
 
+	$W.toType = (obj) ->
+		match = OBJECT_PROTOTYPE.toString.call(obj).match(/\s([a-z|A-Z]+)/)
+		if match.length > 1 then match[1].toLowerCase() else "object"
 
-	###
-	# Widges ventana
-	###
-	$W.Window = (obj) ->
-		width       = obj.width or 300
-		height      = obj.height or 300
-		id          = obj.id or ''
-		title       = obj.title or ''
-		titleStyle  = obj.titleStyle or ''
-		modal       = obj.modal or ''
-		autoScroll  = obj.autoScroll or ''
-		closable      = if typeof(obj.closable)!= 'undefined' then obj.closable else true
-		autoDestroy = obj.autoDestroy or ''
-		autoLoad    = obj.autoLoad or ''
-		html        = obj.html or ''
-		drag        = obj.drag or ''
-		resize      = if typeof(obj.resize)!= 'undefined' then obj.resize else true
-		theme       = obj.theme or ''
-		bodyStyle   = obj.bodyStyle or ''
-		bodyColor   = obj.bodyColor or '#FFF'
-		body        = $W('body')[0]
-		winModal    = document.createElement('div')
-		win         = this
-		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
-
-		bgBody    = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
-		bgTitle   = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
-		divClose  = if resize==true or resize == '' then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
-		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win_div_resize_#{id}"></div>""" else ''
-
-		winModal.setAttribute("id","win_modal_#{id}")
-		winModal.setAttribute("class","win-modal")
-
-		left = if body.offsetWidth < width then 0 else (body.offsetWidth - width)/2
-		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
-
-		winModal.innerHTML = """<div style="width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}" id="#{id}" class="win-marco">
-									<div class="win-modal-parent" id="win_modal_window_#{id}"><div class="win-modal-content"><div class="win-loader-default" id="win_loader_#{id}"></div><div class="win-modal-label" id="label_cargando_#{id}"></div></div></div>
-									<div class="win-title" id="win_title_#{id}" style="#{bgTitle} #{titleStyle}">
-										<div class="win-title-txt">#{title}</div>
-										#{divClose}
-									</div>
-									#{divResize}
-									<div class="win-tbar" id="win_tbar_#{id}"></div>
-									<div class="win-window-body #{clsBody}" id="win_window_#{id}">#{html}</div>
-								</div>
-								<script onload>alert(1);</script>"""
-
-		body.appendChild(winModal)
-
-		if typeof(obj.tbar) != 'undefined'
-			obj.tbar.id = id
-			$W.tbar(obj.tbar)
+	$W.each = (elements, callback) ->
+		i = undefined
+		key = undefined
+		if $W.toType(elements) is "array"
+			for element, i in elements
+				elements if callback.call(element, i, element) is false
 		else
-			$W('#win_tbar_'+id).parentNode.removeChild($W('#win_tbar_'+id))
+			for key of elements
+				elements if callback.call(elements[key], key, elements[key]) is false
+		elements
 
-		if typeof(obj.autoLoad) != 'undefined'
-			$W.Ajax.load($W('#win_window_'+id),obj.autoLoad)
 
-		close: ()->
-			document.getElementById("#{id}").parentNode.parentNode.removeChild(document.getElementById("#{id}").parentNode)
+	_instance = (dom, selector = "") ->
+		dom = dom or EMPTY_ARRAY
+		dom.selector = selector
+		dom.__proto__ = _instance::
+		dom
 
-	$W.tbar = (obj) ->
-		if typeof(obj) == 'object'
-			align  = ''
-			objDiv = $W('#win_tbar_'+obj.id)
+	_getDOMObject = (selector, children) ->
+		domain = null
+		type = $W.toType selector
 
-			obj.forEach (json,index,element)->
-				# console.log(json)
-				if json.xtype == 'button'
-					$W.button({ tbar:objDiv, align: align, json:json })
+		if type is "array"
+			domain = _compact selector
 
-				else if json.xtype == 'buttongroup'
-					json.tbar = objDiv
-					$W.buttongroup(json)
+		else if type is "string" and IS_HTML_FRAGMENT.test(selector)
+			domain = _fragment(selector.trim(), RegExp.$1)
+			selector = null
 
-				else if typeof(json.items) != 'undefined'
-					json.items.tbar = objDiv
-					$W.items(json.items)
+		else if type is "string"
+			domain = $W.query(document, selector)
+			if children
+				if domain.length is 1
+					domain = $W.query(domain[0], children)
+				else
+					#@TODO: BUG if selector count > 1
+					domain = $W.map(-> $W.query domain, children)
 
-				else if json.xtype == 'tbtext'
-					$W.tbtext({ tbar:objDiv, align: align, json:json })
+		else if ELEMENT_TYPES.indexOf(selector.nodeType) >= 0 or selector is window
+			domain = [selector]
+			selector = null
 
-				else if json == '-'
-					$W.separator({ tbar:objDiv, align: align })
+		domain
 
-				else if json == '->'
-					align = 'right'
 
-	$W.items = (obj) ->
-		if typeof(obj) == 'object'
+	_instance:: = $W.fn = {}
 
-			obj.forEach (json,index,element)->
-				# console.log(json)
-				if json.xtype == 'panel'
-					json.tbar = obj.tbar
-					$W.panel(json)
+	$W.fn.each = (callback) ->
+		@forEach (element, index) -> callback.call element, index, element
+		@
 
-	$W.buttongroup = (obj) ->
-
-	$W.button = (obj) ->
-		text     = obj.json.text or ''
-		id       = obj.json.id or ''
-		cls      = obj.json.cls or ''
-		clsAling = if obj.align == 'right' then 'widge-right' else ''
-
-		boton = document.createElement('div')
-		boton.setAttribute("id",id)
-		boton.setAttribute("class","win-btn "+clsAling)
-
-		boton.innerHTML = """<button class="#{cls}">#{text}</button>"""
-		boton.onclick   = obj.json.handler
-
-		(obj.tbar).appendChild(boton)
-
-	$W.panel = (obj) ->
-		id        = obj.id or ''
-		width     = obj.width or 'auto'
-		height    = obj.height or '100%'
-		bodyStyle = obj.bodyStyle or ''
-
-		panel = document.createElement('div')
-		panel.setAttribute("id",id)
-		panel.setAttribute("class","win-panel ")
-		panel.setAttribute("style",'width:'+width+';height:'+height+';'+bodyStyle)
-		(obj.tbar).appendChild(panel)
-
-		if typeof(obj.autoLoad) != 'undefined'
-			$W.Ajax.load(panel,obj.autoLoad)
-
-		else if typeof(obj.html) != 'undefined'
-			panel.innerHTML = obj.html
-
-	$W.tbtext = (obj) ->
-		text     = document.createElement('div')
-		clsAling = if obj.align == 'right' then 'widge-right' else ''
-
-		text.setAttribute("id","win_tbtext_"+obj.json.id)
-		text.setAttribute("class","win-tbtext "+clsAling)
-
-		text.innerHTML = """<div>#{obj.json.text}</div>"""
-		(obj.tbar).appendChild(text)
-
-	$W.separator = (obj) ->
-		div      = document.createElement('div')
-		clsAling = if obj.align == 'right' then 'widge-right' else ''
-
-		div.setAttribute("class","win-separator "+clsAling)
-		div.innerHTML = "<div>|</div>"
-		obj.tbar.appendChild(div)
-
-	###
-	# Get Elements
-	###
-	$W.getButton = (id) ->
-		@hiden = (id) ->
-			$W('#id').style.display = 'none'
-
-		@show = (id) ->
-			$W('#id').style.display = 'block';
-
-		return id
-
-	$W.get = (element_id) ->
-		load: (obj) ->
-			dom_element = $W(element_id)
-			$W.Ajax.load(dom_element,obj)
-
-		element: ->
-			return $W(element_id)
-
-	$W.loading = (obj) ->
-
-		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
-			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
-			return
-		if !$W('#win_window_'+obj.id_ventana)
-			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
-			return
-		mask = $W('#win_modal_window_'+obj.id_ventana)
-
-		text   = obj.text or 'Cargando...'
-		loader = obj.loader or 'default'
-
-		if obj.estado == 'on'
-			$W('#win_modal_window_'+obj.id_ventana).innerHTML= '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_'+obj.id_ventana+'"></div><div class="win-modal-label" id="label_cargando_'+obj.id_ventana+'"></div></div>'
-			mask.style.visibility = 'visible'
-			$W('#win_loader_'+obj.id_ventana).setAttribute('class','win-loader-'+loader)
-			$W('#label_cargando_'+obj.id_ventana).innerHTML = text
-		else if obj.estado == 'off'
-			iconos =
-				sucess : '',
-				fail   : '',
-				warm   : ''
-
-			if obj
-				icono        = iconos[obj.icono] or iconos['sucess']
-				evento_icono = obj.evento_icono or ''
-				texto        = obj.texto or 'Informacion Almacenada'
-				duracion     = obj.duracion or '2000'
-				estilo_texto = obj.estilo_texto or 'padding-top: 10px;font-size: 12px;color:#FFF;'
-			else
-				icono        = iconos.sucess
-				evento_icono = ''
-				texto        = 'Informacion Almacenada'
-				duracion     = '2000'
-				estilo_texto = 'padding-top: 10px;font-size: 12px;color:#FFF;'
-
-			if duracion=='infinito'
-				$W('#win_modal_window_'+obj.id_ventana).innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
-			else
-				$W('#win_modal_window_'+obj.id_ventana).innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
-				setTimeout ( ->
-				  mask.style.visibility = 'hidden'
-				), duracion
-
-	$W.Alert = (obj) ->
-
-		if typeof(obj) == 'undefined'
-			console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion')
-			return
-
-		width  = 250
-		height = 120
-		title  = obj.title or 'Alert'
-		text   = obj.text or ''
-		text   += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_alert\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_alert\').parentNode)"></div>'
-
-		Win_ventana_alert = new $W.Window({
-											width       : width,
-											height      : height,
-											id          : 'Win_ventana_alert',
-											title       : title,
-											html        : text,
-											type        : 'alert',
-											modal       : true,
-											autoScroll  : true,
-											closable    : false,
-											autoDestroy : true,
-											drag        : false,
-											resize      : false
-										});
-
-	$W.Confirm = (obj) ->
-
-		if typeof(obj) == 'undefined'
-			console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion')
-			return
-
-		width  = 250
-		height = 120
-		title  = obj.title or 'Confirm'
-		text   = obj.text or ''
-		text   += '<div class="content-btn"><input type="button" value="Aceptar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode);'+obj.functionOK+';"> <input type="button" value="Cancelar" onclick="document.getElementById(\'Win_ventana_confirm\').parentNode.parentNode.removeChild(document.getElementById(\'Win_ventana_confirm\').parentNode);return false;"></div>'
-
-		new $W.Window(
-			width       : width,
-			height      : height,
-			id          : 'Win_ventana_confirm',
-			title       : title,
-			html        : text,
-			type        : 'alert',
-			modal       : true,
-			autoScroll  : true,
-			closable    : false,
-			autoDestroy : true,
-			drag        : false,
-			resize      : false
-		);
-
+	$W.fn.forEach = EMPTY_ARRAY.forEach
 
 
 	$W.version = "0.0.1"
 
 	$W
 
-
-# @Win = Win
-
 @Win = @$W = Win
 
-# module?.exports = Win
+module?.exports = Win
 
-# module?.exports = Win
-# return
+# retur
+

@@ -37,7 +37,7 @@
     coffee: ['./source/coffee/*.coffee'],
     stylus: ['./source/stylus/*.styl'],
     jshint: ['./build/js/*.js'],
-    modules: ['./source/coffee/Win.coffee', './source/coffee/Win.form.coffee', './source/coffee/Win.ajax.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.desktop.coffee']
+    modules: ['./source/coffee/*.coffee']
   };
 
   banner = ["/**", " * <%= pkg.name %> - <%= pkg.description %>", " * @version v<%= pkg.version %>", " * @link    <%= pkg.homepage %>", " * @author  <%= pkg.author.name %> (Twitter <%= pkg.author.twitter %> || email <%= pkg.author.mail %>)", " * @license <%= pkg.license %>", " */", ""].join("\n");
@@ -49,7 +49,9 @@
   });
 
   gulp.task('minCoffee', function() {
-    return gulp.src(path.modules).pipe(concat('Win.min.js')).pipe(coffee().on('error', gutil.log)).pipe(header(banner, {
+    return gulp.src(path.modules).pipe(concat('Win.min.js')).pipe(coffee().on('error', gutil.log)).pipe(uglify({
+      mangle: true
+    })).pipe(header(banner, {
       pkg: pkg
     })).pipe(gulp.dest(path.distCoffee));
   });
@@ -84,6 +86,7 @@
 
   gulp.task('default', function() {
     gulp.watch(path.coffee, ['minCoffee']);
+    gulp.watch(path.coffee, ['coffee']);
     return gulp.watch(path.stylus, ['stylus']);
   });
 

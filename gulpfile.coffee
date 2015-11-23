@@ -22,11 +22,16 @@ path =
 	coffee      : ['./source/coffee/*.coffee']
 	stylus      : ['./source/stylus/*.styl']
 	jshint      : ['./build/js/*.js']
-	modules     : ['./source/coffee/Win.coffee',
-					'./source/coffee/Win.form.coffee',
-					'./source/coffee/Win.ajax.coffee',
-					'./source/coffee/Win.ini.coffee',
-					'./source/coffee/Win.desktop.coffee']
+	# modules     : ['./source/coffee/Win.coffee',
+	# 				'./source/coffee/Win.element.coffee',
+	# 				'./source/coffee/Win.css.coffee',
+	# 				'./source/coffee/Win.widget.coffee',
+	# 				'./source/coffee/Win.form.coffee',
+	# 				'./source/coffee/Win.ajax.coffee',
+	# 				'./source/coffee/Win.ini.coffee',
+	# 				'./source/coffee/Win.desktop.coffee']
+
+	modules     : ['./source/coffee/*.coffee']
 
 banner = [
 	"/**"
@@ -50,7 +55,7 @@ gulp.task 'minCoffee', ->
 	gulp.src path.modules
 		.pipe(concat('Win.min.js'))
 		.pipe coffee().on 'error', gutil.log
-		# .pipe uglify mangle: true
+		.pipe uglify mangle: true
 		.pipe header banner, pkg: pkg
 		.pipe gulp.dest path.distCoffee
 
@@ -89,6 +94,7 @@ gulp.task "validate", ->
 
 gulp.task 'default', ->
 	gulp.watch path.coffee, ['minCoffee']
+	gulp.watch path.coffee, ['coffee']
 	gulp.watch path.stylus, ['stylus']
 
 

@@ -22,11 +22,13 @@
 }
 .win-btn:hover {
   background-color: #2b2b36;
-  border: 1px solid #b7b7b7;
 }
 .win-btn:active {
-  border: 1px solid #8dabd3;
+  background-color: #4d4d56;
 }
 .win-separator {
   color: #d6d6d6;
+}
+.win-separatorHeight {
+  border-color: #d6d6d6;
 }

@@ -9,7 +9,21 @@
 
 		<link rel="stylesheet" href="css/Win-theme-dark.css" />
 
-		<script src="../dist/js/Win.min.js"></script>
+		<!-- // <script src="../dist/js/Win.min.js"></script> -->
+		<script src="js/Win.js"></script>
+		<script src="js/Win.element.js"></script>
+		<script src="js/Win.css.js"></script>
+		<script src="js/Win.events.js"></script>
+		<script src="js/Win.query.js"></script>
+		<script src="js/Win.output.js"></script>
+
+
+		<script src="js/Win.form.js"></script>
+
+		<!-- // <script src="js/Win.widget.js"></script> -->
+		// <!-- <script src="js/Win.ini.js"></script>
+		// <script src="js/Win.ajax.js"></script>
+		// <script src="js/Win.desktop.js"></script> -->
 
 		<link rel="stylesheet" href="js/highlight/styles/androidstudio.css">
 		<script src="js/highlight/highlight.pack.js"></script>
@@ -130,21 +144,17 @@ $contenido ='
 					</div>
 				</div>
 
-<!-- ===================== OBJECT DOM ===================== -->
-				<div class="subtitle2">OBJECT DOM</div>
+<!-- ===================== OBJECT CORE ===================== -->
+				<div class="subtitle2">OBJECT CORE</div>
 				<div class="parrafo">
-					<div>Acceder a los elementos del DOM</div>
+					<div>HTML</div>
 					<div>
 						<pre><code class="html">
 							<?php
 $contenido ='
-<div id="contenedor">
-  <p class="parrafo">Lorem insu...</p>
-</div>
 <script>
-    $W("#contenedor").style.backgroundColor = "red";
-    $W("p","#contenedor")
-    $W(".parrafo").innerHTML="true";
+    $W(".parrafo > div").html("tapquo");						// Captura varios nodes que cumplen la condicion
+    $W(".parrafo > div").html("tapquo").style("color", "red")	// Anidacion de funciones
 </script>';
 								echo htmlentities($contenido);
 							?>
@@ -426,15 +436,13 @@ $contenido ='
 					</div>
 				</div>
 
-
-
-
-
 			</div>
 		</div>
 
 		<script type="text/javascript">
-			console.log($W.version);
+
+			// $W("#pruebas").addClass()
+			// console.log($W.version);
 
 			$W.form.intField({
 				applyTo : "inputInteger"
@@ -459,247 +467,244 @@ $contenido ='
 				listeners : { select: function() { console.log(this); alert("prueba input 1") } }
 			});
 
-			function ventana1(){
-				Win_ventana_1 = new $W.Window({
-					bodyStyle   : "",
-					width       : 800,
-					height      : 700,
-					id          : "Win_ventana_1",
-					title       : "VENTANA 1",
-					titleStyle  : "",
-					modal       : true,
-					closable    : true,
-					drag        : true,
-					resize      : true,
-					autoLoad    :
-					{
-				        url     : "bd.php",
-				        params  :
-				        {
-				            opc : "prueba_ajax",
-				            var2 : "var2",
-				        }
-				    },
-					tbar        :
-					[
-						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "user_black_36",
-							text  : "Nueva Ventana",
-							handler : function(){ ventana2(); }
-						},"-",
-						{
-							items	:
-							[
-								{
-									xtype     : "panel",
-									width     : 160,
-									height    : 56,
-									bodyStyle : "background-color:rgb(208, 205, 205)",
-									bodyStyle : "border:1px solid #2a80b9;",
-									html      : "<div>contenido por parametro</div>",
-									autoLoad  :
-									{
-										url		: "bd.php",
-										params	:
-										{
-											opc    : "prueba_ajax_load",
-											prueba : 1
-										}
-									}
-								}
-							]
-						},
-						{
-							xtype : "button",
-							id    : "btn_2",
-							handler: function () { ajax_load();	},
-							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax load"
-						},
-						{
-							xtype : "button",
-							id    : "btn_2",
-							handler: function () { ajax_request();	},
-							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax request"
-						}
-						,"->","-",
-						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "icon-action-black-ic_perm_identity_black_24dp",
-							text  : "Salir",
-							handler : function(){ alert(4); ventana2(); }
-						},"-",
-						{
-							xtype : "tbtext",
-							id    : "btn_1",
-							text  : "una demostracion de un texto largo<br>con salto de linea",
-						}
-					]
-				});
-			}
+			// function ventana1(){
+			// 	Win_ventana_1 = new $W.Window({
+			// 		bodyStyle   : "",
+			// 		width       : 800,
+			// 		height      : 700,
+			// 		id          : "Win_ventana_1",
+			// 		title       : "VENTANA 1",
+			// 		titleStyle  : "",
+			// 		modal       : true,
+			// 		closable    : true,
+			// 		drag        : true,
+			// 		resize      : true,
+			// 		autoLoad    :
+			// 		{
+			// 	        url     : "bd.php",
+			// 	        params  :
+			// 	        {
+			// 	            opc : "prueba_ajax",
+			// 	            var2 : "var2",
+			// 	        }
+			// 	    },
+			// 		tbar        :
+			// 		[
+			// 			{
+			// 				xtype : "button",
+			// 				id    : "btn_1",
+			// 				cls   : "user_black_36",
+			// 				text  : "Nueva Ventana",
+			// 				handler : function(){ ventana2(); }
+			// 			},"-",
+			// 			{
+			// 				xtype     : "panel",
+			// 				width     : 160,
+			// 				// bodyStyle : "background-color:rgb(208, 205, 205)",
+			// 				bodyStyle : "",
+			// 				html      : "<div>contenido por parametro</div>",
+			// 				autoLoad  :
+			// 				{
+			// 					url		: "bd.php",
+			// 					params	:
+			// 					{
+			// 						opc    : "prueba_ajax_load",
+			// 						prueba : 1
+			// 					}
+			// 				}
 
-			function ventana2(){
+			// 			},"-",
+			// 			{
+			// 				xtype : "button",
+			// 				id    : "btn_2",
+			// 				cls   : "ic_autorenew_black_36dp",
+			// 				text  : "ajax load",
+			// 				width : 60,
+			// 				handler: function () { ajax_load();	}
+			// 			},"->","-",
+			// 			{
+			// 				xtype : "button",
+			// 				id    : "btn_1",
+			// 				cls   : "icon-action-black-ic_perm_identity_black_24dp",
+			// 				text  : "Salir",
+			// 				width : 60,
+			// 				handler : function(){ alert(4); ventana2(); }
+			// 			},"-",
+			// 			{
+			// 				xtype : "tbtext",
+			// 				id    : "btn_1",
+			// 				text  : "una demostracion de un texto largo<br>con salto de linea",
+			// 			},"--",
+			// 			{
+			// 				xtype : "button",
+			// 				id    : "btn_2",
+			// 				cls   : "ic_autorenew_black_36dp",
+			// 				text  : "ajax request",
+			// 				width : 60,
+			// 				handler: function () { ajax_request(); }
+			// 			}
+			// 		]
+			// 	});
+			// }
 
-				Win_ventana_2 = new Win.Window({
-					apply       : "prueba",
-					bodyStyle   : "",
-					width       : 600,
-					height      : 500,
-					id          : "Win_ventana_2",
-					title       : "VENTANA 2",
-					modal       : true,
-					autoScroll  : true,
-					closable    : true,
-					autoDestroy : true,
-					tabPanel    :
-					[
-						{
-					        xtype     : "",
-					        scripts : true,
-					        nocache : true,
-					        params  :
-					        {
-					            var1 : "var1",
-					            var2 : "var2",
-					        }
-					    },
-					],
-					tbar        :
-					[
-						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "prueba",
-							text  : "Nueva<br>Ventana",
-							handler : function(){ ventana3(); }
-						},
-						{
-							xtype : "button",
-							id    : "btn_2",
-							cls   : "prueba",
-							// text  : "guardar"
-							handler: function () { ajax_load_2();	}
-						},
-					]
-				});
-			}
+			// function ventana2(){
 
-			function ventana3(){
-				Win_ventana_3 = new Win.Window({
-					apply       : "prueba",
-					bodyStyle   : "",
-					width       : 400,
-					height      : 300,
-					id          : "Win_ventana_3",
-					title       : "VENTANA 3",
-					modal       : true,
-					autoScroll  : true,
-					closable    : true,
-					autoDestroy : true,
-					drag        : true,
-					resize      : true,
-					autoLoad    :
-					{
-				        url     : ".php",
-				        params  :
-				        {
-				            var1 : "var1",
-				            var2 : "var2",
-				        }
-				    },
-				});
-			}
+			// 	Win_ventana_2 = new Win.Window({
+			// 		apply       : "prueba",
+			// 		bodyStyle   : "",
+			// 		width       : 600,
+			// 		height      : 500,
+			// 		id          : "Win_ventana_2",
+			// 		title       : "VENTANA 2",
+			// 		modal       : true,
+			// 		autoScroll  : true,
+			// 		closable    : true,
+			// 		autoDestroy : true,
+			// 		tabPanel    :
+			// 		[
+			// 			{
+			// 		        xtype     : "",
+			// 		        scripts : true,
+			// 		        nocache : true,
+			// 		        params  :
+			// 		        {
+			// 		            var1 : "var1",
+			// 		            var2 : "var2",
+			// 		        }
+			// 		    },
+			// 		],
+			// 		tbar        :
+			// 		[
+			// 			{
+			// 				xtype : "button",
+			// 				id    : "btn_1",
+			// 				cls   : "prueba",
+			// 				text  : "Nueva<br>Ventana",
+			// 				handler : function(){ ventana3(); }
+			// 			},
+			// 			{
+			// 				xtype : "button",
+			// 				id    : "btn_2",
+			// 				cls   : "prueba",
+			// 				// text  : "guardar"
+			// 				handler: function () { ajax_load_2();	}
+			// 			},
+			// 		]
+			// 	});
+			// }
 
-			// Win.getButton('btn_1').hiden;
-			// prueba = new Win.getButton('btn_1').hiden
-			// console.log(prueba)
-			// console.log(Win.getButton('btn_1'))
+			// function ventana3(){
+			// 	Win_ventana_3 = new Win.Window({
+			// 		apply       : "prueba",
+			// 		bodyStyle   : "",
+			// 		width       : 400,
+			// 		height      : 300,
+			// 		id          : "Win_ventana_3",
+			// 		title       : "VENTANA 3",
+			// 		modal       : true,
+			// 		autoScroll  : true,
+			// 		closable    : true,
+			// 		autoDestroy : true,
+			// 		drag        : true,
+			// 		resize      : true,
+			// 		autoLoad    :
+			// 		{
+			// 	        url     : ".php",
+			// 	        params  :
+			// 	        {
+			// 	            var1 : "var1",
+			// 	            var2 : "var2",
+			// 	        }
+			// 	    },
+			// 	});
+			// }
+
+			// // Win.getButton('btn_1').hiden;
+			// // prueba = new Win.getButton('btn_1').hiden
+			// // console.log(prueba)
+			// // console.log(Win.getButton('btn_1'))
 
 
-			// array.forEach(function(value,index,element){
-			//     console.log(value+'-'+index);
-			// });
+			// // array.forEach(function(value,index,element){
+			// //     console.log(value+'-'+index);
+			// // });
 
-			// return;
-			// AJAX REQUEST
-			// Win.Ajax.request({
-			// 	url: 'bd.php',
-			// 	params: {
-			// 		opc: 'prueba_ajax',
-			// 		prueba: 1
-			// 	},
-			// 	success :function (result,xhr){
+			// // return;
+			// // AJAX REQUEST
+			// // Win.Ajax.request({
+			// // 	url: 'bd.php',
+			// // 	params: {
+			// // 		opc: 'prueba_ajax',
+			// // 		prueba: 1
+			// // 	},
+			// // 	success :function (result,xhr){
 
-			//                 if(result == 'true'){ console.log("true"); }
-			//                 else{ console.log("false"); }
-			//             },
-			//           failure : function(xhr){ console.log("fail"); }
-			// })
+			// //                 if(result == 'true'){ console.log("true"); }
+			// //                 else{ console.log("false"); }
+			// //             },
+			// //           failure : function(xhr){ console.log("fail"); }
+			// // })
 
 
-			// text = TEXTO DEL LOADING
+			// // text = TEXTO DEL LOADING
 
-			// LOADING DISPONIBLES ELEMENTO loader
-			// default
-			// loader1
-			// loader2
-			// loader3
+			// // LOADING DISPONIBLES ELEMENTO loader
+			// // default
+			// // loader1
+			// // loader2
+			// // loader3
 
-			// duracion : segundos o infinito
+			// // duracion : segundos o infinito
 
-			function ajax_load () {
-				Win.get('win_window_Win_ventana_1').load({
-					url        : 'bd.php',
-					text       : 'ajax load text',
-					modal      : true,
-					params: {
-						opc    : 'prueba_ajax_load',
-						prueba : 1
-					}
-				})
-			}
+			// function ajax_load () {
+			// 	Win.get('win_window_Win_ventana_1').load({
+			// 		url        : 'bd.php',
+			// 		text       : 'ajax load text',
+			// 		modal      : true,
+			// 		params: {
+			// 			opc    : 'prueba_ajax_load',
+			// 			prueba : 1
+			// 		}
+			// 	})
+			// }
 
-			function ajax_request() {
-				Win.Ajax.request({
-					url            : 'bd.php',
-					modal          : true,
-					id_ventana     : 'Win_ventana_1',
-					text           : 'ajax request text',
-					loader         : 'default',
-					autoClose      : true,
-					textFinish     : 'ajax finalizado',
-					iconFinish     : 'warn',
-					duracionFinish : '2000',
-					params: {
-						opc    : 'prueba_ajax_request',
-						prueba : 1
-					},
-					success : function (result,xhr){
-				                if(result == 'true'){ console.log("true"); }
-				                else{ console.log("false"); }
-				            },
-				    failure : function(xhr){ console.log("fail"); }
-				})
-			}
+			// function ajax_request() {
+			// 	Win.Ajax.request({
+			// 		url            : 'bd.php',
+			// 		modal          : true,
+			// 		id_ventana     : 'Win_ventana_1',
+			// 		text           : 'ajax request text',
+			// 		loader         : 'default',
+			// 		autoClose      : true,
+			// 		textFinish     : 'ajax finalizado',
+			// 		iconFinish     : 'warn',
+			// 		duracionFinish : '2000',
+			// 		params: {
+			// 			opc    : 'prueba_ajax_request',
+			// 			prueba : 1
+			// 		},
+			// 		success : function (result,xhr){
+			// 	                if(result == 'true'){ console.log("true"); }
+			// 	                else{ console.log("false"); }
+			// 	            },
+			// 	    failure : function(xhr){ console.log("fail"); }
+			// 	})
+			// }
 
-			function ajax_load_2 () {
-				Win.get('win_window_Win_ventana_1').load({
-					url        : 'bd.php',
-					id_ventana : 'Win_ventana_2',
-					params: {
-						opc    : 'prueba_ajax_load',
-						prueba : 1
-					}
-				})
-			}
+			// function ajax_load_2 () {
+			// 	Win.get('win_window_Win_ventana_1').load({
+			// 		url        : 'bd.php',
+			// 		id_ventana : 'Win_ventana_2',
+			// 		params: {
+			// 			opc    : 'prueba_ajax_load',
+			// 			prueba : 1
+			// 		}
+			// 	})
+			// }
 
-			function confirm_win() {
-				Win.Confirm({title:'title de Confirm', text:'Mensaje de Confirm',functionOK : 'Win.Alert({title:\'Success\', text:\'Ha clickeado en ok buttom\'})'})
-			}
+			// function confirm_win() {
+			// 	Win.Confirm({title:'title de Confirm', text:'Mensaje de Confirm',functionOK : 'Win.Alert({title:\'Success\', text:\'Ha clickeado en ok buttom\'})'})
+			// }
 
 		</script>
 	</body>

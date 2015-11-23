@@ -8,6 +8,7 @@ $bgColorTbar = #696969
 
 	// BOTON
 	$BgBtnHover    = #2B2B36
+	$BgBtnActive   = #4D4D56
 	$bordeBtnHover = #B7B7B7
 
 	// SEPARATOR
@@ -35,10 +36,12 @@ $wMarco = #FFF
 
 			&:hover
 				background-color $BgBtnHover
-				border 1px solid $bordeBtnHover
 
 			&:active
-				border 1px solid #8DABD3
+				background-color $BgBtnActive
 
 		/.win-separator
 			color $colorSeparator
+
+		/.win-separatorHeight
+			border-color $colorSeparator

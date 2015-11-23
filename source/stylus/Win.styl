@@ -59,7 +59,7 @@ input[type=button]
 		-khtml-user-select none
 		user-select none
 
-		&hover .win-div-resize
+		&:hover .win-div-resize
 			visibility visible
 
 .win-title
@@ -89,15 +89,16 @@ input[type=button]
 		float right
 		cursor pointer
 		overflow hidden
-		padding 0
 		line-height 17px
 		margin-left -27px
 		background-repeat no-repeat
 		background-position center
 
-		&hover
-			color #f00
+		&:hover
 			background-color #AB0000
+
+		&:active
+			background-color #900000
 
 .win-window-body
 	float left
@@ -130,24 +131,22 @@ input[type=button]
 	overflow hidden
 	display table
 	width 100%
-	padding 3px
+	padding 0
 
-	// > div
-	// 	margin 7px 0
+	> div
+		display table-cell
+		vertical-align middle
 
 	/.win-btn
+		padding 1px 5px
 		background-color rgba(0,0,0,0)
 		min-height 56px
-		min-width 50
+		min-width 65px
+		width 65px
 		cursor pointer
-		font-size 11px
-		float left
-		padding 1px
-		border 1px solid transparent
 
 		> button
 			background-color rgba(0,0,0,0)
-			// background-image url("../img/guardar.png")
 			background-size 30px
 			background-repeat no-repeat
 			background-position center top
@@ -161,37 +160,22 @@ input[type=button]
 			outline none
 
 	/.win-separator
-		display table
-		float left
-		height 60px
+		width 1px
+		letter-spacing -1px
+		transform scale(1 ,2)
 
-		> div
-			height 40px
-			display table-cell
-			vertical-align middle
-			letter-spacing -1px
-			transform scale(1 ,2)
-			// font-size 30px
+	/.win-separatorHeight
+		width 1px
+		border-right 1px solid
 
 	/.win-tbtext
-		float left
+		padding 5px
 		height 60px
-		padding 2px 7px
-		display table
 
-		> div
-			display table-cell
-			vertical-align middle
-
-.win-panel
-	float left
-
+	/.win-panel
+		padding 5px 10px
 
 .win-input-number
-	text-align right
-
-.widge-right
-	float right
 	text-align right
 
 .win-modal-parent
@@ -242,17 +226,12 @@ input[type=button]
 	border             4px rgba( $color_min_load_ajax ,0.25) solid
 	border-top         4px rgba( $color_min_load_ajax ,1) solid
 	border-radius      50%
-	-webkit-animation  win-min-load-ajax .6s infinite linear
 	animation          win-min-load-ajax .6s infinite linear
 
-@-webkit-keyframes win-min-load-ajax
-	from -webkit-transform rotate(0deg)
-	to -webkit-transform rotate(359deg)
-
-@keyframes win-min-load-ajax
-	from transform rotate(0deg)
-	to transform rotate(359deg)
-
+@keyframes win-min-load-ajax {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(359deg); }
+}
 
 // CALENDAR
 #calendarDiv

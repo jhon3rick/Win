@@ -8,39 +8,42 @@
 #
 ###
 
-$W.form = do->
-	intField: (obj) ->
-		$W('#'+obj.applyTo).className += " win-input-number";
+"use strict"
 
-		$W('#'+obj.applyTo).onkeypress = (event)->
-			return Win.form.validateIntField({ event:event, eventType:'keypress', input:this })
+do ($W = Win) ->
 
-		$W('#'+obj.applyTo).onchange = (event)->
-			return Win.form.validateIntField({ event:event, eventType:'change', input:this })
+	$W.form = {}
 
-	doubleField: (obj) ->
-		$W('#'+obj.applyTo).className += " win-input-number";
+	$W.form.intField = (obj) ->
+		$W('#'+obj.applyTo).addClass += " win-input-number";
 
-		$W('#'+obj.applyTo).onkeypress = (event)->
-			return Win.form.validateDoubleField({ event:event, eventType:'keypress', input:this })
+		$W('#'+obj.applyTo)[0].onkeypress = (event)->
+			return _validateIntField({ event:event, eventType:'keypress', input:this })
 
-		$W('#'+obj.applyTo).onchange = (event)->
-			return Win.form.validateDoubleField({ event:event, eventType:'change', input:this })
+		$W('#'+obj.applyTo)[0].onchange = (event)->
+			return _validateIntField({ event:event, eventType:'change', input:this })
 
-	textField: (obj) ->
-		$W('#'+obj.applyTo).onkeyup = (event)->
-			return Win.form.validateTextField({ event:event, eventType:'keyup', input:this, type:obj.type })
+	$W.form.doubleField = (obj) ->
+		$W('#'+obj.applyTo).addClass += " win-input-number";
 
-		$W('#'+obj.applyTo).onchange = (event)->
-			return Win.form.validateTextField({ event:event, eventType:'change', input:this, type:obj.type })
+		$W('#'+obj.applyTo)[0].onkeypress = (event)->
+			return _validateDoubleField({ event:event, eventType:'keypress', input:this })
 
-	emailField: (obj) ->
-		$W('#'+obj.applyTo).onchange = (event)->
-			return Win.form.validateEmailField({ event:event, input:this })
+		$W('#'+obj.applyTo)[0].onchange = (event)->
+			return _validateDoubleField({ event:event, eventType:'change', input:this })
 
-	globalField: (obj) ->
+	$W.form.textField = (obj) ->
+		$W('#'+obj.applyTo)[0].onkeyup = (event)->
+			return _validateTextField({ event:event, eventType:'keyup', input:this, type:obj.type })
 
-	validateIntField: (obj) ->
+		$W('#'+obj.applyTo)[0].onchange = (event)->
+			return _validateTextField({ event:event, eventType:'change', input:this, type:obj.type })
+
+	$W.form.emailField = (obj) ->
+		$W('#'+obj.applyTo)[0].onchange = (event)->
+			return _validateEmailField({ event:event, input:this })
+
+	_validateIntField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 		 	return true
@@ -49,7 +52,7 @@ $W.form = do->
 		else if obj.eventType == 'change'
 			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
 
-	validateDoubleField: (obj) ->
+	_validateDoubleField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 		 	return true
@@ -57,13 +60,12 @@ $W.form = do->
 			return (/[\d.]/).test(String.fromCharCode(tecla))
 		else if obj.eventType == 'change'
 			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
-			console.log(!!(obj.input.value).toString().match(/(^-?\d\d*[\.|,]\d*$)|(^-?\d\d*$)|(^-?[\.|,]\d\d*$)/))
 			validate = !!(obj.input.value).toString().match(/(^-?\d\d*[\.|,]\d*$)|(^-?\d\d*$)|(^-?[\.|,]\d\d*$)/)
 			if !validate
 				arrayValue = (obj.input.value).split(".")
 				obj.input.value = arrayValue[0]+'.'+arrayValue[1]
 
-	validateTextField: (obj) ->
+	_validateTextField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 		 	return true
@@ -75,7 +77,7 @@ $W.form = do->
 		else if obj.eventType == 'change'
 			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
-	validateEmailField: (obj) ->
+	_validateEmailField = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
 		if !validate
 			obj.input.value=""
@@ -84,17 +86,14 @@ $W.form = do->
 	###
 	# Calendar
 	###
-	dateField: (obj) ->
+	$W.form.dateField = (obj) ->
 		separator    = '-'
 		calendarId   = obj.applyTo
 		format       = obj.format or 'y-m-d'
 		selected     = obj.listeners.select or ''
 
-		# console.log(HTML_CONTAINERS)
-
-
 		# ATRAPA EL ELEMENTO
-		inputCalendar = $W('#'+calendarId)
+		inputCalendar = $W('#'+calendarId)[0]
 		inputCalendar.dataset.icon = 'date'
 
 		if typeof(obj.value)!='undefined' then inputCalendar.value = obj.value
@@ -121,8 +120,8 @@ $W.form = do->
 
 		inputCalendar.onclick = () ->
 
-			if $W('#date_'+calendarId)
-				$W('#date_'+calendarId).parentNode.removeChild($W('#date_'+calendarId));
+			if $W('#date_'+calendarId)[0]
+				removeCalendar $W('#date_'+calendarId)[0]
 				return;
 
 			drawCalendar(this)
@@ -191,14 +190,14 @@ $W.form = do->
 			calendarDiv = document.createElement("div")
 			calendarDiv.innerHTML = html
 			calendarDiv.setAttribute("id", "date_"+calendarId)
-			$W('#'+calendarId).parentNode.insertBefore(calendarDiv, $W('#'+calendarId).nextSibling)
+			$W('#'+calendarId)[0].parentNode.insertBefore(calendarDiv, $W('#'+calendarId)[0].nextSibling)
 			setPos(inputCalendar, calendarDiv)
 
 			# close button link
-			$W('#closeCalendar').onclick = () -> removeCalendar(calendarDiv)
+			$W('#closeCalendar')[0].onclick = () -> removeCalendar calendarDiv
 
 			# setup next and previous links
-			$W('#prevMonth').onclick = () ->
+			$W('#prevMonth')[0].onclick = () ->
 				selectedMonth--
 
 				if selectedMonth < 0
@@ -208,7 +207,7 @@ $W.form = do->
 				drawCalendar(inputObj)
 				setupLinks(inputObj)
 
-			$W('#nextMonth').onclick = () ->
+			$W('#nextMonth')[0].onclick = () ->
 				selectedMonth++
 
 				if selectedMonth > 11
@@ -222,19 +221,19 @@ $W.form = do->
 
 		setupLinks = (inputObj) ->
 			# set up link events on calendar table
-			y = $W('#calendar')
+			y = $W('#calendar')[0]
 			x = y.getElementsByTagName('a')
 
 			for i in x
 				i.onclick = () ->
 
-					inputCalendar.selected = selected
-					inputCalendar.selected()
-
 					selectedDay = this.innerHTML
 					inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear)
 
-					removeCalendar($W('#date_'+calendarId))
+					inputCalendar.selected = selected
+					inputCalendar.selected()
+
+					removeCalendar($W('#date_'+calendarId)[0])
 
 		# Functions Dealing with Dates
 		formatDate = (Day, Month, Year) ->
