@@ -19,10 +19,11 @@
 
 
 		<script src="js/Win.form.js"></script>
+		<script src="js/Win.widget.js"></script>
+		<script src="js/Win.ajax.js"></script>
 
-		<!-- // <script src="js/Win.widget.js"></script> -->
 		// <!-- <script src="js/Win.ini.js"></script>
-		// <script src="js/Win.ajax.js"></script>
+		//
 		// <script src="js/Win.desktop.js"></script> -->
 
 		<link rel="stylesheet" href="js/highlight/styles/androidstudio.css">
@@ -467,85 +468,85 @@ $contenido ='
 				listeners : { select: function() { console.log(this); alert("prueba input 1") } }
 			});
 
-			// function ventana1(){
-			// 	Win_ventana_1 = new $W.Window({
-			// 		bodyStyle   : "",
-			// 		width       : 800,
-			// 		height      : 700,
-			// 		id          : "Win_ventana_1",
-			// 		title       : "VENTANA 1",
-			// 		titleStyle  : "",
-			// 		modal       : true,
-			// 		closable    : true,
-			// 		drag        : true,
-			// 		resize      : true,
-			// 		autoLoad    :
-			// 		{
-			// 	        url     : "bd.php",
-			// 	        params  :
-			// 	        {
-			// 	            opc : "prueba_ajax",
-			// 	            var2 : "var2",
-			// 	        }
-			// 	    },
-			// 		tbar        :
-			// 		[
-			// 			{
-			// 				xtype : "button",
-			// 				id    : "btn_1",
-			// 				cls   : "user_black_36",
-			// 				text  : "Nueva Ventana",
-			// 				handler : function(){ ventana2(); }
-			// 			},"-",
-			// 			{
-			// 				xtype     : "panel",
-			// 				width     : 160,
-			// 				// bodyStyle : "background-color:rgb(208, 205, 205)",
-			// 				bodyStyle : "",
-			// 				html      : "<div>contenido por parametro</div>",
-			// 				autoLoad  :
-			// 				{
-			// 					url		: "bd.php",
-			// 					params	:
-			// 					{
-			// 						opc    : "prueba_ajax_load",
-			// 						prueba : 1
-			// 					}
-			// 				}
+			function ventana1(){
+				Win_ventana_1 = new $W.Window({
+					bodyStyle   : "",
+					width       : 800,
+					height      : 700,
+					id          : "Win_ventana_1",
+					title       : "VENTANA 1",
+					titleStyle  : "",
+					modal       : true,
+					closable    : true,
+					drag        : true,
+					resize      : true,
+					autoLoad    :
+					{
+				        url     : "bd.php",
+				        params  :
+				        {
+				            opc : "prueba_ajax",
+				            var2 : "var2",
+				        }
+				    },
+					tbar        :
+					[
+						{
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "user_black_36",
+							text  : "Nueva Ventana",
+							handler : function(){ ventana2(); }
+						},"-",
+						{
+							xtype     : "panel",
+							width     : 160,
+							// bodyStyle : "background-color:rgb(208, 205, 205)",
+							bodyStyle : "",
+							html      : "<div>contenido por parametro</div>",
+							autoLoad  :
+							{
+								url		: "bd.php",
+								params	:
+								{
+									opc    : "prueba_ajax_load",
+									prueba : 1
+								}
+							}
 
-			// 			},"-",
-			// 			{
-			// 				xtype : "button",
-			// 				id    : "btn_2",
-			// 				cls   : "ic_autorenew_black_36dp",
-			// 				text  : "ajax load",
-			// 				width : 60,
-			// 				handler: function () { ajax_load();	}
-			// 			},"->","-",
-			// 			{
-			// 				xtype : "button",
-			// 				id    : "btn_1",
-			// 				cls   : "icon-action-black-ic_perm_identity_black_24dp",
-			// 				text  : "Salir",
-			// 				width : 60,
-			// 				handler : function(){ alert(4); ventana2(); }
-			// 			},"-",
-			// 			{
-			// 				xtype : "tbtext",
-			// 				id    : "btn_1",
-			// 				text  : "una demostracion de un texto largo<br>con salto de linea",
-			// 			},"--",
-			// 			{
-			// 				xtype : "button",
-			// 				id    : "btn_2",
-			// 				cls   : "ic_autorenew_black_36dp",
-			// 				text  : "ajax request",
-			// 				width : 60,
-			// 				handler: function () { ajax_request(); }
-			// 			}
-			// 		]
-			// 	});
-			// }
+						},"-",
+						{
+							xtype : "button",
+							id    : "btn_2",
+							cls   : "ic_autorenew_black_36dp",
+							text  : "ajax load",
+							width : 60,
+							handler: function () { ajax_load();	}
+						},"->","-",
+						{
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "icon-action-black-ic_perm_identity_black_24dp",
+							text  : "Salir",
+							width : 60,
+							handler : function(){ alert(4); ventana2(); }
+						},"-",
+						{
+							xtype : "tbtext",
+							id    : "btn_1",
+							text  : "una demostracion de un texto largo<br>con salto de linea",
+						},"--",
+						{
+							xtype : "button",
+							id    : "btn_2",
+							cls   : "ic_autorenew_black_36dp",
+							text  : "ajax request",
+							width : 60,
+							handler: function () { ajax_request(); }
+						}
+					]
+				});
+			}
 
 			// function ventana2(){
 

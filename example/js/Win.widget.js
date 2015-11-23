@@ -56,28 +56,28 @@
         obj.tbar.applyTo = id;
         $W.tbar(obj.tbar);
       } else {
-        $W('#' + id).removeChild($W('#win_tbar_' + id));
+        $W('#' + id)[0].removeChild($W('#win_tbar_' + id)[0]);
       }
       if (typeof obj.autoLoad !== 'undefined') {
-        $W.Ajax.load($W('#win_window_' + id), obj.autoLoad);
+        $W.Ajax.load($W('#win_window_' + id)[0], obj.autoLoad);
       }
       return {
         close: function() {
-          return $W("\#" + id).parentNode.parentNode.removeChild($W("\#" + id).parentNode);
+          return $W("\#" + id)[0].parentNode.parentNode.removeChild($W("\#" + id).parentNode);
         }
       };
     };
     $W.tbar = function(obj) {
       var tbar;
-      tbar = $W('#win_tbar_' + obj.applyTo);
+      tbar = $W('#win_tbar_' + obj.applyTo)[0];
       return _router(obj, tbar);
     };
     $W.getButton = function(id) {
       this.hiden = function(id) {
-        return $W('#id').style.display = 'none';
+        return $W('#id').style('display', 'none');
       };
       this.show = function(id) {
-        return $W('#id').style.display = 'block';
+        return $W('#id').style('display', 'block');
       };
       return id;
     };
@@ -85,7 +85,7 @@
       return {
         load: function(obj) {
           var dom_element;
-          dom_element = $W(element_id);
+          dom_element = $W(element_id)[0];
           return $W.Ajax.load(dom_element, obj);
         },
         element: function() {
@@ -99,18 +99,18 @@
         console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
         return;
       }
-      if (!$W('#win_window_' + obj.id_ventana)) {
+      if (!$W('#win_window_' + obj.id_ventana)[0]) {
         console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana ' + id_ventana);
         return;
       }
-      mask = $W('#win_modal_window_' + obj.id_ventana);
+      mask = $W('#win_modal_window_' + obj.id_ventana)[0];
       text = obj.text || 'Cargando...';
       loader = obj.loader || 'default';
       if (obj.estado === 'on') {
-        $W('#win_modal_window_' + obj.id_ventana).innerHTML = '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_' + obj.id_ventana + '"></div><div class="win-modal-label" id="label_cargando_' + obj.id_ventana + '"></div></div>';
+        $W('#win_modal_window_' + obj.id_ventana)[0].innerHTML = '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_' + obj.id_ventana + '"></div><div class="win-modal-label" id="label_cargando_' + obj.id_ventana + '"></div></div>';
         mask.style.visibility = 'visible';
-        $W('#win_loader_' + obj.id_ventana).setAttribute('class', 'win-loader-' + loader);
-        return $W('#label_cargando_' + obj.id_ventana).innerHTML = text;
+        $W('#win_loader_' + obj.id_ventana)[0].setAttribute('class', 'win-loader-' + loader);
+        return $W('#label_cargando_' + obj.id_ventana)[0].innerHTML = text;
       } else if (obj.estado === 'off') {
         iconos = {
           sucess: '',
@@ -131,9 +131,9 @@
           estilo_texto = 'padding-top: 10px;font-size: 12px;color:#FFF;';
         }
         if (duracion === 'infinito') {
-          return $W('#win_modal_window_' + obj.id_ventana).innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='" + icono + "' onclick='" + evento_icono + "'; ><br><div class='win-modal-label label-finish' >" + texto + "</div></div></div>";
+          return $W('#win_modal_window_' + obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='" + icono + "' onclick='" + evento_icono + "'; ><br><div class='win-modal-label label-finish' >" + texto + "</div></div></div>";
         } else {
-          $W('#win_modal_window_' + obj.id_ventana).innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='" + icono + "' onclick='" + evento_icono + "'; ><br><div class='win-modal-label label-finish' >" + texto + "</div></div></div>";
+          $W('#win_modal_window_' + obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='" + icono + "' onclick='" + evento_icono + "'; ><br><div class='win-modal-label label-finish' >" + texto + "</div></div></div>";
           return setTimeout((function() {
             return mask.style.visibility = 'hidden';
           }), duracion);
@@ -150,7 +150,7 @@
       height = 120;
       title = obj.title || 'Alert';
       text = obj.text || '';
-      text += "<div class=\"content-btn\"><input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert').parentNode.parentNode.removeChild($W('#Win_ventana_alert').parentNode)\"></div>";
+      text += "<div class=\"content-btn\"><input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\"></div>";
       return Win_ventana_alert = new $W.Window({
         width: width,
         height: height,
@@ -176,7 +176,7 @@
       height = 120;
       title = obj.title || 'Confirm';
       text = obj.text || '';
-      text += "<div class=\"content-btn\">\n	<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_confirm').parentNode.parentNode.removeChild($W('#Win_ventana_confirm').parentNode);'+obj.functionOK+';\">\n	<input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm').parentNode.parentNode.removeChild($W('#Win_ventana_confirm').parentNode);return false;\">\n</div>";
+      text += "<div class=\"content-btn\">\n	<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);'+obj.functionOK+';\">\n	<input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);return false;\">\n</div>";
       return new $W.Window({
         width: width,
         height: height,
@@ -267,6 +267,7 @@
       text = obj.text || '';
       id = obj.id || '';
       cls = obj.cls || '';
+      console.log(obj);
       boton = document.createElement('div');
       boton.setAttribute("id", id);
       boton.setAttribute("class", "win-btn");
