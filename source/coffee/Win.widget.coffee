@@ -67,16 +67,16 @@ do ($W = Win) ->
 			obj.tbar.applyTo = id
 			$W.tbar(obj.tbar)
 		else
-			$W('#'+id).removeChild($W('#win_tbar_'+id))
+			$W('#'+id)[0].removeChild($W('#win_tbar_'+id)[0])
 
 		if typeof(obj.autoLoad) != 'undefined'
-			$W.Ajax.load($W('#win_window_'+id),obj.autoLoad)
+			$W.Ajax.load($W('#win_window_'+id)[0],obj.autoLoad)
 
 		close: ()->
-			$W("\##{id}").parentNode.parentNode.removeChild($W("\##{id}").parentNode)
+			$W("\##{id}")[0].parentNode.parentNode.removeChild($W("\##{id}").parentNode)
 
 	$W.tbar = (obj) ->
-		tbar = $W('#win_tbar_'+obj.applyTo)
+		tbar = $W('#win_tbar_'+obj.applyTo)[0]
 		_router(obj, tbar)
 
 
@@ -86,16 +86,16 @@ do ($W = Win) ->
 	# ---------------------------------------------------------------------------
 	$W.getButton = (id) ->
 		@hiden = (id) ->
-			$W('#id').style.display = 'none'
+			$W('#id').style('display','none')
 
 		@show = (id) ->
-			$W('#id').style.display = 'block';
+			$W('#id').style('display','block')
 
 		return id
 
 	$W.get = (element_id) ->
 		load: (obj) ->
-			dom_element = $W(element_id)
+			dom_element = $W(element_id)[0]
 			$W.Ajax.load(dom_element,obj)
 
 		element: ->
@@ -106,19 +106,19 @@ do ($W = Win) ->
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
 			return
-		if !$W('#win_window_'+obj.id_ventana)
+		if !$W('#win_window_'+obj.id_ventana)[0]
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
 			return
-		mask = $W('#win_modal_window_'+obj.id_ventana)
+		mask = $W('#win_modal_window_'+obj.id_ventana)[0]
 
 		text   = obj.text or 'Cargando...'
 		loader = obj.loader or 'default'
 
 		if obj.estado == 'on'
-			$W('#win_modal_window_'+obj.id_ventana).innerHTML= '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_'+obj.id_ventana+'"></div><div class="win-modal-label" id="label_cargando_'+obj.id_ventana+'"></div></div>'
+			$W('#win_modal_window_'+obj.id_ventana)[0].innerHTML= '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_'+obj.id_ventana+'"></div><div class="win-modal-label" id="label_cargando_'+obj.id_ventana+'"></div></div>'
 			mask.style.visibility = 'visible'
-			$W('#win_loader_'+obj.id_ventana).setAttribute('class','win-loader-'+loader)
-			$W('#label_cargando_'+obj.id_ventana).innerHTML = text
+			$W('#win_loader_'+obj.id_ventana)[0].setAttribute('class','win-loader-'+loader)
+			$W('#label_cargando_'+obj.id_ventana)[0].innerHTML = text
 		else if obj.estado == 'off'
 			iconos =
 				sucess : '',
@@ -139,9 +139,9 @@ do ($W = Win) ->
 				estilo_texto = 'padding-top: 10px;font-size: 12px;color:#FFF;'
 
 			if duracion=='infinito'
-				$W('#win_modal_window_'+obj.id_ventana).innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
+				$W('#win_modal_window_'+obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
 			else
-				$W('#win_modal_window_'+obj.id_ventana).innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
+				$W('#win_modal_window_'+obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
 				setTimeout ( ->
 				  mask.style.visibility = 'hidden'
 				), duracion
@@ -156,7 +156,7 @@ do ($W = Win) ->
 		height = 120
 		title  = obj.title or 'Alert'
 		text   = obj.text or ''
-		text   += """<div class="content-btn"><input type="button" value="Aceptar" onclick="$W('#Win_ventana_alert').parentNode.parentNode.removeChild($W('#Win_ventana_alert').parentNode)"></div>"""
+		text   += """<div class="content-btn"><input type="button" value="Aceptar" onclick="$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)"></div>"""
 
 		Win_ventana_alert = new $W.Window({
 											width       : width,
@@ -184,8 +184,8 @@ do ($W = Win) ->
 		title  = obj.title or 'Confirm'
 		text   = obj.text or ''
 		text   += """<div class="content-btn">
-						<input type="button" value="Aceptar" onclick="$W('#Win_ventana_confirm').parentNode.parentNode.removeChild($W('#Win_ventana_confirm').parentNode);'+obj.functionOK+';">
-						<input type="button" value="Cancelar" onclick="$W('#Win_ventana_confirm').parentNode.parentNode.removeChild($W('#Win_ventana_confirm').parentNode);return false;">
+						<input type="button" value="Aceptar" onclick="$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);'+obj.functionOK+';">
+						<input type="button" value="Cancelar" onclick="$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);return false;">
 					</div>"""
 
 		new $W.Window(
@@ -282,6 +282,7 @@ do ($W = Win) ->
 		id   = obj.id or ''
 		cls  = obj.cls or ''
 
+		console.log(obj)
 		boton = document.createElement('div')
 		boton.setAttribute("id",id)
 		boton.setAttribute("class","win-btn")

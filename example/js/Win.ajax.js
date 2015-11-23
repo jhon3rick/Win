@@ -71,7 +71,7 @@
           }
         }
         text = obj.text || 'cargando...';
-        dom_element.innerHTML = '<div class="win-content-min-load" ><div class="win-content-min-load-img"><div class="win-min-load-ajax"></div></div><div class="win-content-min-load-label">' + text + '</div></div>';
+        dom_element.innerHTML = "<div class=\"win-content-min-load\" >\n	<div class=\"win-content-min-load-img\">\n		<div class=\"win-min-load-ajax\"></div>\n	</div>\n	<div class=\"win-content-min-load-label\">" + text + "</div>\n</div>";
         xhr = new XMLHttpRequest;
         bodyXhr = obj.url + '?' + parametros;
         method = obj.method || 'POST';

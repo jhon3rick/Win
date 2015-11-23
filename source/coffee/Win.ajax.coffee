@@ -58,7 +58,12 @@ $W.Ajax = do ->
 
 
 		text = obj.text || 'cargando...'
-		dom_element.innerHTML = '<div class="win-content-min-load" ><div class="win-content-min-load-img"><div class="win-min-load-ajax"></div></div><div class="win-content-min-load-label">'+text+'</div></div>'
+		dom_element.innerHTML = """<div class="win-content-min-load" >
+										<div class="win-content-min-load-img">
+											<div class="win-min-load-ajax"></div>
+										</div>
+										<div class="win-content-min-load-label">#{text}</div>
+									</div>"""
 
 		xhr     = new XMLHttpRequest
 		bodyXhr = obj.url+'?'+parametros
