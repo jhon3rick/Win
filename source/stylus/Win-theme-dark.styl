@@ -17,6 +17,10 @@ $bgColorTbar = #696969
 // VENTANA WIN
 $wMarco = #FFF
 
+// CALENDAR
+$bgCalendar = rgba(88, 88, 88, 0.9)
+$colorCalendar = #FFF
+
 .win-marco
 	background-color $wMarco
 
@@ -45,3 +49,25 @@ $wMarco = #FFF
 
 		/.win-separatorHeight
 			border-color $colorSeparator
+
+.win-calendar, .win-calendar-day
+	background $bgCalendar
+	color $colorCalendar
+
+	.calendar-month:hover
+		background #DDD
+		color #333
+
+	.calendar-header:hover
+		background #DDD
+		color #333
+
+	.weekDaysCell:hover
+		background #DDD
+		color #333
+		font-weight bold
+
+	select
+		background $bgCalendar
+		color $colorCalendar
+		border none

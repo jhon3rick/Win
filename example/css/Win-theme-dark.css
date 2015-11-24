@@ -32,3 +32,30 @@
 .win-separatorHeight {
   border-color: #d6d6d6;
 }
+.win-calendar,
+.win-calendar-day {
+  background: rgba(88,88,88,0.9);
+  color: #fff;
+}
+.win-calendar .calendar-month:hover,
+.win-calendar-day .calendar-month:hover {
+  background: #ddd;
+  color: #333;
+}
+.win-calendar .calendar-header:hover,
+.win-calendar-day .calendar-header:hover {
+  background: #ddd;
+  color: #333;
+}
+.win-calendar .weekDaysCell:hover,
+.win-calendar-day .weekDaysCell:hover {
+  background: #ddd;
+  color: #333;
+  font-weight: bold;
+}
+.win-calendar select,
+.win-calendar-day select {
+  background: rgba(88,88,88,0.9);
+  color: #fff;
+  border: none;
+}

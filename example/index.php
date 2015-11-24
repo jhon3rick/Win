@@ -465,7 +465,7 @@ $contenido ='
 			$W.form.dateField({
 				applyTo   : "inputDate",
 				format    : "y-m-d",
-				listeners : { select: function() { console.log(this); alert("prueba input 1") } }
+				listeners : { select: function() { alert("Haz seleccionado la fecha "+this.value) } }
 			});
 
 			function ventana1(){
@@ -485,8 +485,8 @@ $contenido ='
 				        url     : "bd.php",
 				        params  :
 				        {
-				            opc : "prueba_ajax",
-				            var2 : "var2",
+							opc : "prueba_ajax",
+							var2 : "var2",
 				        }
 				    },
 					tbar        :

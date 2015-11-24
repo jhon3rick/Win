@@ -234,110 +234,50 @@ input[type=button]
 }
 
 // CALENDAR
-#calendarDiv
-	display block
-	display none
-	position relative
-	border 1px solid #777
+.win-calendar-parent
+	max-width 200px
+	overflow hidden
 
-	table, th, td, a
-		margin 0
-		padding 0
-		border 0
-		outline 0
-		font-weight inherit
-		font-style inherit
-		font-size 12px
-		font-family inherit
-		vertical-align baseline
+	// SELECT FECHA
+	/.win-calendar
+		clear both
+		width 180px
+		text-align center
 
-	#linksTable td
-		background #000
+		.calendar-header
+			font-weight bold
+			font-size 13px
 
-	a
-		cursor pointer
-		cursor hand
-		color #000
+		.calendar-month
+			font-weight bold
+			font-size 15px
 
-#calendar
-	// background #555555
-	background rgba(88, 88, 88, 0.82)
-	clear both
-	text-align center
-	font-size 105%
+		td
+			padding 5px
 
+		.weekDaysCell, .calendar-month, .calendar-header
+			cursor hand
 
+	// SELECT YEAR
+	/.win-calendar-day
+		clear both
+		width 200px
+		max-width 200px
+		text-align center
 
-#calendar, #linksTable
-	width 180px
+		option
+			padding-right 20px
+			padding-bottom 2
 
-#calendar .calendarHeader
-	padding 5px
-	color #fff
-	cursor default
+		td
+			padding 5px
 
-#calendar tr.weekDaysTitleRow td
-	padding 5px
-	color #fff
-	cursor default
+		/.date-change-year
+			float left
+			width 30px
+			height 100%
+			bordder-right 1px solid
 
-#calendar tr.weekDaysRow
-	color #FFF
-
-#calendar tr.weekDaysRow td.weekDaysCell
-	cursor pointer
-	box-sizing border-box
-
-#calendar tr.weekDaysRow td.weekDaysCell:hover
-	background rgba(183, 182, 182, 0.52)
-
-#closeCalender
-	position absolute
-	right 0
-	bottom 100%
-	margin-bottom 1px
-	display block
-	padding 2px
-	cursor pointer
-	cursor hand
-	font-size 60%
-	letter-spacing 1px
-
-#closeCalenderhover
-	background #000
-	color #fff
-
-#linksTable a
-	display block
-	color #fff
-	letter-spacing 1px
-	font-weight bold
-	font-size 80%
-	padding 2px 5px
-
-#linksTable ahover
-	background #ddd
-	color #333
-
-#prevMonth
-	float left
-
-#nextMonth
-	float right
-
-#today
-	background #999
-
-#calendar_cover
-	display none /*sorry for IE5*/
-	display/**/ block /*sorry for IE5*/
-	position absolute /*must have*/
-	z-index -1 /*must have*/
-	filter mask() /*must have*/
-	top -4px /*must have*/
-	left -4px /*must have*/
-	width 193px /*must have to match width and borders*/
-	height 200px /*must have to match maximum height*/
 
 // ATRIBUTOS
 input[data-icon="email"]

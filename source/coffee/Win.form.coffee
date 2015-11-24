@@ -88,12 +88,20 @@ do ($W = Win) ->
 	###
 	$W.form.dateField = (obj) ->
 		separator    = '-'
-		calendarId   = obj.applyTo
+		id           = obj.applyTo
 		format       = obj.format or 'y-m-d'
 		selected     = obj.listeners.select or ''
 
+		# monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+		monthNames   = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+		dayNames     = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+		# weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+		weekDays     = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
+
+
 		# ATRAPA EL ELEMENTO
-		inputCalendar = $W('#'+calendarId)[0]
+		inputCalendar = $W('#'+id)[0]
 		inputCalendar.dataset.icon = 'date'
 
 		if typeof(obj.value)!='undefined' then inputCalendar.value = obj.value
@@ -120,38 +128,34 @@ do ($W = Win) ->
 
 		inputCalendar.onclick = () ->
 
-			if $W('#date_'+calendarId)[0]
-				removeCalendar $W('#date_'+calendarId)[0]
+			if $W('#date_'+id)[0]
+				_removeCalendar $W('#date_'+id)[0]
 				return;
 
-			drawCalendar(this)
-			setupLinks(this)
+			_drawCalendar(this)
+			_setupDays(this)
 
-		# FUNCTION DRAW
-		drawCalendar= (inputObj) ->
+		###
+		_drawCalendar
+		@paran obj this
+		###
+		_drawCalendar = (inputObj) ->
 
-			html = """<a id="closeCalendar">Close Calendar</a>
-					<table cellpadding="0" cellspacing="0" id="linksTable">
+			html = """<table id="win-calendar-day-#{id}" cellpadding="0" cellspacing="0" class="win-calendar-day" style="display:block;"></table>
+					<table id="win-calendar-#{id}" cellpadding="0" cellspacing="0" class="win-calendar">
 						<tr>
-
-
-						</tr>
-					</table>
-					<table id="calendar" cellpadding="0" cellspacing="0"`class="win-calendar">
-						<tr>
-							<td id="prevMonth"> < </td> <th colspan="5" class="calendarHeader">"""+getMonthName(selectedMonth)+' ' +selectedYear+"""</th><td id="nextMonth">> </td>
+							<td id="prev-month-#{id}" class="calendar-month"> < </td>
+							<td id="title-date-#{id}" colspan="5" class="calendar-header">"""+_getMonthName(selectedMonth)+' ' +selectedYear+"""</td>
+							<td id="next-month-#{id}" class="calendar-month"> > </td>
 						</tr>
 						<tr class="weekDaysTitleRow">"""
 
 			# CALENDAR DAYS
-			# weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-			weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
-
 			for day in weekDays
 				html += """<td>#{day}</td>"""
 
-			daysInMonth = getDaysInMonth(selectedYear, selectedMonth)
-			startDay    = getFirstDayofMonth(selectedYear, selectedMonth)
+			daysInMonth = _getDaysInMonth(selectedYear, selectedMonth)
+			startDay    = _getFirstDayofMonth(selectedYear, selectedMonth)
 			numRows     = 0
 			printDate   = 1
 
@@ -185,58 +189,116 @@ do ($W = Win) ->
 
 			html += '</table>'
 
-			# add calendar to element to calendar Div
-			# calendarDiv.innerHTML = html
-			calendarDiv = document.createElement("div")
-			calendarDiv.innerHTML = html
-			calendarDiv.setAttribute("id", "date_"+calendarId)
-			$W('#'+calendarId)[0].parentNode.insertBefore(calendarDiv, $W('#'+calendarId)[0].nextSibling)
-			setPos(inputCalendar, calendarDiv)
+			# ADD CALENDAR TO ELEMENT TO CALENDAR DIV
+			if $W('#date_'+id).length > 0
+				$W('#date_'+id).html(html)
+			else
+				divCalendar = document.createElement("div")
+				divCalendar.innerHTML = html
 
-			# close button link
-			$W('#closeCalendar')[0].onclick = () -> removeCalendar calendarDiv
+				divCalendar.setAttribute("id", "date_"+id)
+				divCalendar.setAttribute("class","win-calendar-parent")
+				$W('#'+id)[0].parentNode.insertBefore(divCalendar, $W('#'+id)[0].nextSibling)
+				_setLocate(inputCalendar, divCalendar)
 
-			# setup next and previous links
-			$W('#prevMonth')[0].onclick = () ->
+			$W('#title-date-'+id)[0].onclick = () ->
+				year  = (this.innerHTML).split(' ')[1] * 1
+				_changeYear(year-10)
+
+			# NEXT AND PREVIOUS MONTH
+			$W('#prev-month-'+id)[0].onclick = () ->
 				selectedMonth--
 
 				if selectedMonth < 0
 					selectedMonth = 11
 					selectedYear--
 
-				drawCalendar(inputObj)
-				setupLinks(inputObj)
+				_drawCalendar(inputObj)
+				_setupDays(inputObj)
 
-			$W('#nextMonth')[0].onclick = () ->
+			$W('#next-month-'+id)[0].onclick = () ->
 				selectedMonth++
 
 				if selectedMonth > 11
 					selectedMonth = 0
 					selectedYear++
 
-				drawCalendar(inputObj)
-				setupLinks(inputObj)
+				_drawCalendar(inputObj)
+				_setupDays(inputObj)
 
-		removeCalendar = (obj) -> obj.parentNode.removeChild(obj);
+		###
+		_changeYear
+		@param str year
+		###
+		_changeYear = (year) ->
+			year1 = year
+			year2 = year + 7
+			year3 = year + 14
 
-		setupLinks = (inputObj) ->
+			option = ""
+			for i in monthNames
+				option += "<option>#{i}</option>"
+
+			option = """<select size="7" style="height:200px;">#{option}</select>"""
+
+			html  = """<tr>
+						<td colspan="4">
+							<div id="change-year-top-#{id}" class="date-change-year">top</div>
+							<div id="change-year-down-#{id}" class="date-change-year">down</div>
+						</td>
+					</tr>"""
+			for i in [0...7]
+				rowspan = if i==0 then """<td rowspan="7">#{option}</td>""" else ''
+				html += """<tr>
+								<td>#{year1++}</td>
+								<td>#{year2++}</td>
+								<td>#{year3++}</td>
+								#{rowspan}
+							</tr>"""
+
+
+			$W('#win-calendar-'+id).hide()
+			$W('#win-calendar-day-'+id).show().html(html)
+
+			$W("#change-year-top-#{id}")[0].onclick = () ->
+				_changeYear(year3)
+
+			$W("#change-year-down-#{id}")[0].onclick = () ->
+				_changeYear(year-21)
+
+		###
+		_removeCalendar
+		@param obj calendar $W('#date_'+id)[0]
+		###
+		_removeCalendar = (obj) -> obj.parentNode.removeChild(obj);
+
+		###
+		_setupDays
+		@param obj input date $W('#'+id)[0]
+		###
+		_setupDays = (inputObj) ->
 			# set up link events on calendar table
-			y = $W('#calendar')[0]
+			y = $W('#win-calendar-'+id)[0]
 			x = y.getElementsByTagName('a')
 
 			for i in x
 				i.onclick = () ->
 
 					selectedDay = this.innerHTML
-					inputObj.value = formatDate(selectedDay, selectedMonth, selectedYear)
+					inputObj.value = _formatDate(selectedDay, selectedMonth, selectedYear)
 
 					inputCalendar.selected = selected
 					inputCalendar.selected()
 
-					removeCalendar($W('#date_'+calendarId)[0])
+					_removeCalendar($W('#date_'+id)[0])
 
-		# Functions Dealing with Dates
-		formatDate = (Day, Month, Year) ->
+		###
+		_formatDate
+		@param int dia
+		@param int mes
+		@param int año
+		###
+		_formatDate = (Day, Month, Year) ->
 			Month++
 			# adjust javascript month
 			if (Month < 10) then Month = '0' + Month
@@ -250,29 +312,45 @@ do ($W = Win) ->
 
 			dateString = array[formatField[0]] + separator + array[formatField[1]] + separator + array[formatField[2]]
 
-		getMonthName = (month) ->
-			monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-			# monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+		###
+		_getMonthName
+		@param  int month
+		@return str name month
+		###
+		_getMonthName = (month) ->
 			monthNames[month]
 
-		getDayName = (day) ->
-			dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+		###
+		_getDayName
+		@param  int dia
+		@return str name day
+		###
+		_getDayName = (day) ->
 			dayNames[day]
 
-		getDaysInMonth = (year, month) ->
+		_getDaysInMonth = (year, month) ->
 			return 32 - new Date(year, month, 32).getDate()
 
-		getFirstDayofMonth = (year, month) ->
+		_getFirstDayofMonth = (year, month) ->
 			day = new Date(year, month, 0).getDay()
 
-		# Position Functions
-		setPos = (targetObj, moveObj) ->
-			coors = findPos(targetObj)
+		###
+		_setLocate
+		@param obj input date $W('#'+id)[0]
+		@param obj calendar $W('#date_'+id)[0]
+		###
+		_setLocate = (targetObj, moveObj) ->
+			coors = _findXY(targetObj)
 			moveObj.style.position = 'absolute'
-			moveObj.style.top      = coors[1] + 18 + 'px'
+			moveObj.style.top      = coors[1] + 23 + 'px'
 			moveObj.style.left     = coors[0] + 'px'
 
-		findPos = (obj) ->
+		###
+		_findXY
+		@param  obj dom XY Coord
+		@return arr [left.px, top.px]
+		###
+		_findXY = (obj) ->
 			curleft = curtop = 0
 			if obj.offsetParent
 				curleft = obj.offsetLeft
