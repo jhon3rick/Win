@@ -16,6 +16,14 @@ $bgColorTbar = #C0DDF0
 // VENTANA WIN
 $wMarco = #FFF
 
+// CALENDAR
+$bgCalendar = #2A80B9
+$colorCalendar = #FFF
+
+// INPUT BUTTON
+$bgInputButton    = $bgCalendar
+$colorInputButton = $colorCalendar
+
 .win-marco
 	background-color $wMarco
 
@@ -35,11 +43,46 @@ $wMarco = #FFF
 
 			&:hover
 				background-color $BgBtnHover
-				border 1px solid $bordeBtnHover
 
 			&:active
-				border 1px solid #8DABD3
-
+				background-color $BgBtnActive
 
 		/.win-separator
 			color $colorSeparator
+
+		/.win-separatorHeight
+			border-color $colorSeparator
+
+.win-calendar, .win-calendar-year
+	background $bgCalendar
+	color $colorCalendar
+
+	.calendar-change:hover
+		background #DDD
+		color #333
+
+	.calendar-header:hover
+		background #DDD
+		color #333
+
+	.weekDaysCell:hover
+		background #DDD
+		color #333
+		font-weight bold
+
+	select, input
+		background $bgCalendar
+		color $colorCalendar
+
+input[type=button]
+	background $bgCalendar
+	color $colorCalendar
+
+	&:hover
+		background-color #DDD
+		color #333
+
+
+	&:active
+		background-color $BgBtnActive
+		color #333

@@ -85,7 +85,6 @@
   });
 
   gulp.task('default', function() {
-    gulp.watch(path.coffee, ['minCoffee']);
     gulp.watch(path.coffee, ['coffee']);
     return gulp.watch(path.stylus, ['stylus']);
   });

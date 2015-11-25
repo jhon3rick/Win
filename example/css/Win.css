@@ -45,9 +45,6 @@ input[type=button] {
   height: 30px;
   border: 0px;
 }
-input[type=button]:hover {
-  background-color: #e6e6e6;
-}
 .win-modal {
   position: fixed;
   width: 100%;
@@ -240,6 +237,11 @@ input[type=button]:hover {
   max-width: 200px;
   overflow: hidden;
 }
+.win-calendar-parent .calendar-change {
+  font-weight: bold;
+  font-size: 15px;
+  cursor: hand;
+}
 .win-calendar {
   clear: both;
   width: 180px;
@@ -248,10 +250,6 @@ input[type=button]:hover {
 .win-calendar .calendar-header {
   font-weight: bold;
   font-size: 13px;
-}
-.win-calendar .calendar-month {
-  font-weight: bold;
-  font-size: 15px;
 }
 .win-calendar td {
   padding: 5px;
@@ -267,12 +265,35 @@ input[type=button]:hover {
   max-width: 200px;
   text-align: center;
 }
+.win-calendar-year .content-month {
+  overflow: hidden;
+  padding: 0 5px;
+  border-right: 1px solid #fff;
+}
+.win-calendar-year .content-month > div {
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+  display: table;
+  text-align: left;
+}
+.win-calendar-year .content-month > div > div {
+  text-align: left;
+  height: 25px;
+  display: table-cell;
+  vertical-align: middle;
+  width: 50%;
+}
+.win-calendar-year .content-year {
+  padding: 0;
+}
+.win-calendar-year .content-year > div {
+  width: 50%;
+  height: 20px;
+  padding: 2px;
+}
 .win-calendar-year td {
   padding: 3px 5px;
-}
-.date-change-year {
-  width: 20px;
-  height: 100%;
 }
 .win-calendar-year select {
   box-shadow: none;

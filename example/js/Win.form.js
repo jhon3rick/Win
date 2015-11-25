@@ -120,7 +120,8 @@
           return obj.input.value = obj.input.value.toLowerCase();
         }
       } else if (obj.eventType === 'change') {
-        return obj.input.value = obj.input.value.replace(/[\#\-\"\']/g, '');
+        console.log('-' + obj.input.value + '-');
+        return obj.input.value = obj.input.value.replace(/[\#\-\"\'|^\s+|\s+$]/g, '');
       }
     };
     _validateEmailField = function(obj) {
@@ -136,12 +137,11 @@
     	 * Calendar
      */
     return $W.form.dateField = function(obj) {
-      var _changeYear, _drawCalendar, _findXY, _formatDate, _getDayName, _getDaysInMonth, _getFirstDayofMonth, _getMonthName, _removeCalendar, _setLocate, _setupDays, arrayDate, dayNames, format, formatField, id, inputCalendar, monthNames, monthNames2, selected, selectedDay, selectedMonth, selectedYear, separator, valueField, weekDays;
+      var _changeToCalendarDay, _changeYear, _drawCalendar, _findXY, _formatDate, _getDayName, _getDaysInMonth, _getFirstDayofMonth, _getMonthName, _removeCalendar, _setLocate, _setupDays, arrayDate, dayNames, format, formatField, id, inputCalendar, monthNames, selected, selectedDay, selectedMonth, selectedYear, separator, valueField, weekDays;
       separator = '-';
       id = obj.applyTo;
       format = obj.format || 'y-m-d';
       selected = obj.listeners.select || '';
-      monthNames2 = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
       monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
@@ -182,7 +182,7 @@
        */
       _drawCalendar = function(inputObj) {
         var day, daysInMonth, divCalendar, e, f, html, k, l, len, m, noPrintDays, numRows, printDate, ref, startDay, thisMonth, thisYear, today;
-        html = ("<table id=\"win-calendar-year-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>\n<table id=\"win-calendar-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">\n	<tr>\n		<td id=\"prev-month-" + id + "\" class=\"calendar-month\"> < </td>\n		<td id=\"title-date-" + id + "\" colspan=\"5\" class=\"calendar-header\">") + _getMonthName(selectedMonth) + ' ' + selectedYear + ("</td>\n	<td id=\"next-month-" + id + "\" class=\"calendar-month\"> > </td>\n</tr>\n<tr class=\"weekDaysTitleRow\">");
+        html = ("<table id=\"win-calendar-year-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>\n<table id=\"win-calendar-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">\n	<tr>\n		<td id=\"prev-month-" + id + "\" class=\"calendar-change\"> < </td>\n		<td id=\"title-date-" + id + "\" colspan=\"5\" class=\"calendar-header\">") + _getMonthName(selectedMonth) + ' ' + selectedYear + ("</td>\n	<td id=\"next-month-" + id + "\" class=\"calendar-change\"> > </td>\n</tr>\n<tr class=\"weekDaysTitleRow\">");
         for (k = 0, len = weekDays.length; k < len; k++) {
           day = weekDays[k];
           html += "<td>" + day + "</td>";
@@ -268,21 +268,32 @@
         option = "";
         for (i = k = 0; k < 6; i = ++k) {
           j = i + 6;
-          option += "<div style=\"overflow:hidden; padding:3px 0;\">\n	<div style=\"float:left; width:50%; text-align:left;\">" + monthNames2[i] + "</div>\n	<div style=\"float:right; width:50%; text-align:left;\">" + monthNames2[j] + "</div>\n</div>";
+          option += "<div>\n	<div class=\"date-change-month\">" + (monthNames[i].substr(0, 3)) + "</div>\n	<div class=\"date-change-month\">" + (monthNames[j].substr(0, 3)) + "</div>\n</div>";
         }
-        html = "<tr>\n	<td colspan=\"2\" rowspan=\"7\" style=\"overflow:hidden; border-right:1px solid #fff; padding:0 5px\">" + option + "</td>\n	<td colspan=\"2\">\n		<div id=\"change-year-down-" + id + "\" class=\"date-change-year\" style=\"float:left;\"><</div>\n		<div id=\"change-year-top-" + id + "\" class=\"date-change-year\" style=\"float:right;\">></div>\n	</td>\n</tr>";
+        html = "<tr>\n	<td colspan=\"2\" rowspan=\"7\" class=\"content-month\">" + option + "</td>\n	<td colspan=\"2\" class=\"content-year\">\n		<div id=\"change-year-down-" + id + "\" class=\"calendar-change\" style=\"float:left;\"> < </div>\n		<div id=\"change-year-top-" + id + "\" class=\"calendar-change\" style=\"float:right;\"> > </div>\n	</td>\n</tr>";
         for (i = l = 0; l < 6; i = ++l) {
           html += "<tr>\n	<td>" + (year1++) + "</td>\n	<td>" + (year2++) + "</td>\n</tr>";
         }
-        html += "<tr style=\"border-top:1px solid #fff;\">\n	<td colspan=2 style=\"padding:0px; border-right:1px solid #fff;\">\n		<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Aceptar\">\n	</td>\n	<td colspan=2 style=\"padding:0px;\">\n		<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Volver\">\n	</td>\n</tr>";
+        html += "<tr style=\"border-top:1px solid #fff;\">\n	<td colspan=2 style=\"padding:0px; border-right:1px solid #fff;\">\n		<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Aceptar\">\n	</td>\n	<td colspan=2 style=\"padding:0px;\">\n		<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Volver\" id=\"boton-back-calendar-" + id + "\">\n	</td>\n</tr>";
         $W('#win-calendar-' + id).hide();
         $W('#win-calendar-year-' + id).show().html(html);
         $W("#change-year-top-" + id)[0].onclick = function() {
           return _changeYear(year2);
         };
-        return $W("#change-year-down-" + id)[0].onclick = function() {
-          return _changeYear(year - 14);
+        $W("#change-year-down-" + id)[0].onclick = function() {
+          return _changeYear(year - 12);
         };
+        return $W("#boton-back-calendar-" + id)[0].onclick = function() {
+          return _changeToCalendarDay();
+        };
+      };
+
+      /*
+      		_removeCalendar
+       */
+      _changeToCalendarDay = function() {
+        $W('#win-calendar-year-' + id).hide().html('');
+        return $W('#win-calendar-' + id).show();
       };
 
       /*

@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="css/Win-loaders.css" />
 		<link rel="stylesheet" href="css/icon.css" />
 
-		<link rel="stylesheet" href="css/Win-theme-dark.css" />
+		<link rel="stylesheet" href="css/Win-theme-blue.css" />
 
 		<!-- // <script src="../dist/js/Win.min.js"></script> -->
 		<script src="js/Win.js"></script>
@@ -21,8 +21,8 @@
 		<script src="js/Win.form.js"></script>
 		<script src="js/Win.widget.js"></script>
 		<script src="js/Win.ajax.js"></script>
-
-		// <!-- <script src="js/Win.ini.js"></script>
+		<script src="js/Win.ini.js"></script>
+		// <!--
 		//
 		// <script src="js/Win.desktop.js"></script> -->
 
@@ -138,6 +138,26 @@ $contenido ='
 $contenido ='
 <script>
     console.log($W.version);
+</script>';
+								echo htmlentities($contenido);
+							?>
+						</code></pre>
+					</div>
+				</div>
+
+
+<!-- ===================== WIN INI ===================== -->
+				<div class="subtitle2">WIN INI</div>
+				<div class="parrafo">
+					<div style="overflow:hidden; margin: 10px 0;">
+						<div class="textForm">Change theme</div>
+					</div>
+					<div>
+						<pre><code class="html">
+							<?php
+$contenido ='
+<script>
+    $W.ini({theme:"Win-theme-light.css"})	// change theme
 </script>';
 								echo htmlentities($contenido);
 							?>

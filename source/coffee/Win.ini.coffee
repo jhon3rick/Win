@@ -2,16 +2,23 @@
 # CONFIG INI
 ###
 
-# W = (obj)->
-# 	return document.querySelectorAll(obj)
+do ($W = Win) ->
 
-# Win.ini = ((obj={}) ->
+	$W.ini = (obj) ->
 
-	# window.addEventListener 'keydown', (e) ->
-		# show chrome devtools on f12 or commmand+option+j
-		# console.log(e.keyIdentifier)
-		# if e.keyIdentifier is 'F12' or e.keyCode is 74 and e.metaKey and e.altKey
-		# 	console.log(e.keyIdentifier)
+		if(obj.theme)
+			link = $W('head > link')
 
-# ).()
+			for i in link
+				if /Win-theme/g.test(i.getAttribute('href'))
+					dir = i.getAttribute('href').split('Win-theme',1)
+					i.setAttribute('href', dir+obj.theme)
+					return
+
+			theme = document.createElement("link")
+			theme.setAttribute("rel", "stylesheet")
+			theme.setAttribute("href", obj.theme)
+
+			$W('head')[0].appendChild(theme)
+
 

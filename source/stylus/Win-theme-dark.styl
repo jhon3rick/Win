@@ -21,6 +21,11 @@ $wMarco = #FFF
 $bgCalendar = rgba(22, 22, 22, 1)
 $colorCalendar = #FFF
 
+// INPUT BUTTON
+$bgInputButton    = $bgCalendar
+$colorInputButton = $colorCalendar
+
+// VENTANA WIN
 .win-marco
 	background-color $wMarco
 
@@ -54,7 +59,7 @@ $colorCalendar = #FFF
 	background $bgCalendar
 	color $colorCalendar
 
-	.calendar-month:hover
+	.calendar-change:hover
 		background #DDD
 		color #333
 
@@ -70,3 +75,17 @@ $colorCalendar = #FFF
 	select, input
 		background $bgCalendar
 		color $colorCalendar
+
+input[type=button]
+	background $bgCalendar
+	color $colorCalendar
+
+	&:hover
+		background-color #DDD
+		color #333
+
+
+	&:active
+		background-color $BgBtnActive
+		color #333
+

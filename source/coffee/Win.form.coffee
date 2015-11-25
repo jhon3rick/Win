@@ -71,11 +71,12 @@ do ($W = Win) ->
 		 	return true
 		else if obj.eventType == 'keyup'
 			if obj.type=='uppercase'
-				obj.input.value =obj.input.value.toUpperCase()
+				obj.input.value = obj.input.value.toUpperCase()
 			else if obj.type=='lowercase'
 				obj.input.value = obj.input.value.toLowerCase()
 		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
+			console.log('-'+obj.input.value+'-')
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
 
 	_validateEmailField = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
@@ -93,7 +94,6 @@ do ($W = Win) ->
 		selected     = obj.listeners.select or ''
 
 		# monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-		monthNames2  = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 		monthNames   = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 		dayNames     = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -144,9 +144,9 @@ do ($W = Win) ->
 			html = """<table id="win-calendar-year-#{id}" cellpadding="0" cellspacing="0" class="win-calendar-year" style="display:block;"></table>
 					<table id="win-calendar-#{id}" cellpadding="0" cellspacing="0" class="win-calendar">
 						<tr>
-							<td id="prev-month-#{id}" class="calendar-month"> < </td>
+							<td id="prev-month-#{id}" class="calendar-change"> < </td>
 							<td id="title-date-#{id}" colspan="5" class="calendar-header">"""+_getMonthName(selectedMonth)+' ' +selectedYear+"""</td>
-							<td id="next-month-#{id}" class="calendar-month"> > </td>
+							<td id="next-month-#{id}" class="calendar-change"> > </td>
 						</tr>
 						<tr class="weekDaysTitleRow">"""
 
@@ -237,22 +237,20 @@ do ($W = Win) ->
 
 			for i in [0...6]
 				j = i+6
-				option += """<div style="overflow:hidden; padding:3px 0;">
-								<div style="float:left; width:50%; text-align:left;">#{monthNames2[i]}</div>
-								<div style="float:right; width:50%; text-align:left;">#{monthNames2[j]}</div>
+
+				option += """<div>
+								<div class="date-change-month">#{monthNames[i].substr(0,3)}</div>
+								<div class="date-change-month">#{monthNames[j].substr(0,3)}</div>
 							</div>"""
 
-			# option = """<select size="7" style="height:100%;">#{option}</select>"""
-
 			html  = """<tr>
-							<td colspan="2" rowspan="7" style="overflow:hidden; border-right:1px solid #fff; padding:0 5px">#{option}</td>
-							<td colspan="2">
-								<div id="change-year-down-#{id}" class="date-change-year" style="float:left;"><</div>
-								<div id="change-year-top-#{id}" class="date-change-year" style="float:right;">></div>
+							<td colspan="2" rowspan="7" class="content-month">#{option}</td>
+							<td colspan="2" class="content-year">
+								<div id="change-year-down-#{id}" class="calendar-change" style="float:left;"> < </div>
+								<div id="change-year-top-#{id}" class="calendar-change" style="float:right;"> > </div>
 							</td>
 						</tr>"""
 			for i in [0...6]
-				# rowspan = if i==0 then """<td rowspan="8">#{option}</td>""" else ''
 				html += """<tr>
 								<td>#{year1++}</td>
 								<td>#{year2++}</td>
@@ -263,7 +261,7 @@ do ($W = Win) ->
 								<input type="button" style="width:100%; padding:3px;" value="Aceptar">
 							</td>
 							<td colspan=2 style="padding:0px;">
-								<input type="button" style="width:100%; padding:3px;" value="Volver">
+								<input type="button" style="width:100%; padding:3px;" value="Volver" id="boton-back-calendar-#{id}">
 							</td>
 						</tr>"""
 
@@ -275,7 +273,17 @@ do ($W = Win) ->
 				_changeYear(year2)
 
 			$W("#change-year-down-#{id}")[0].onclick = () ->
-				_changeYear(year-14)
+				_changeYear(year-12)
+
+			$W("#boton-back-calendar-#{id}")[0].onclick = () ->
+				_changeToCalendarDay()
+
+		###
+		_removeCalendar
+		###
+		_changeToCalendarDay = () ->
+			$W('#win-calendar-year-'+id).hide().html('')
+			$W('#win-calendar-'+id).show()
 
 		###
 		_removeCalendar

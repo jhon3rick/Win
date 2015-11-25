@@ -41,9 +41,6 @@ input[type=button]
 	height 30px
 	border 0px
 
-	&:hover
-		background-color #E6E6E6
-
 .win-modal
 	position fixed
 	width 100%
@@ -241,6 +238,11 @@ input[type=button]
 	max-width 200px
 	overflow hidden
 
+	.calendar-change
+		font-weight bold
+		font-size 15px
+		cursor hand
+
 	// SELECT FECHA
 	/.win-calendar
 		clear both
@@ -250,10 +252,6 @@ input[type=button]
 		.calendar-header
 			font-weight bold
 			font-size 13px
-
-		.calendar-month
-			font-weight bold
-			font-size 15px
 
 		td
 			padding 5px
@@ -268,13 +266,37 @@ input[type=button]
 		max-width 200px
 		text-align center
 
+		.content-month
+			overflow hidden
+			padding 0 5px
+			border-right 1px solid #fff
+
+			> div
+				overflow hidden
+				padding 0
+				width 100%
+				display table
+				text-align left
+
+
+				> div
+					text-align left
+					height 25px
+					display table-cell
+					vertical-align middle
+					width 50%
+
+		.content-year
+			padding 0
+
+			> div
+				width 50%
+				height 20px
+				padding 2px
+
+
 		td
 			padding 3px 5px
-			// font-size 11px
-
-		/.date-change-year
-			width 20px
-			height 100%
 
 		select
 			box-shadow none

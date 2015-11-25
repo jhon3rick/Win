@@ -93,7 +93,7 @@ gulp.task "validate", ->
 # 	gulp.watch path.stylus, ['stylus']
 
 gulp.task 'default', ->
-	gulp.watch path.coffee, ['minCoffee']
+	# gulp.watch path.coffee, ['minCoffee']
 	gulp.watch path.coffee, ['coffee']
 	gulp.watch path.stylus, ['stylus']
 
