@@ -136,11 +136,12 @@
     	 * Calendar
      */
     return $W.form.dateField = function(obj) {
-      var _changeYear, _drawCalendar, _findXY, _formatDate, _getDayName, _getDaysInMonth, _getFirstDayofMonth, _getMonthName, _removeCalendar, _setLocate, _setupDays, arrayDate, dayNames, format, formatField, id, inputCalendar, monthNames, selected, selectedDay, selectedMonth, selectedYear, separator, valueField, weekDays;
+      var _changeYear, _drawCalendar, _findXY, _formatDate, _getDayName, _getDaysInMonth, _getFirstDayofMonth, _getMonthName, _removeCalendar, _setLocate, _setupDays, arrayDate, dayNames, format, formatField, id, inputCalendar, monthNames, monthNames2, selected, selectedDay, selectedMonth, selectedYear, separator, valueField, weekDays;
       separator = '-';
       id = obj.applyTo;
       format = obj.format || 'y-m-d';
       selected = obj.listeners.select || '';
+      monthNames2 = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
       monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
@@ -180,10 +181,10 @@
       		@paran obj this
        */
       _drawCalendar = function(inputObj) {
-        var day, daysInMonth, divCalendar, e, f, html, j, k, l, len, noPrintDays, numRows, printDate, ref, startDay, thisMonth, thisYear, today;
+        var day, daysInMonth, divCalendar, e, f, html, k, l, len, m, noPrintDays, numRows, printDate, ref, startDay, thisMonth, thisYear, today;
         html = ("<table id=\"win-calendar-year-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>\n<table id=\"win-calendar-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">\n	<tr>\n		<td id=\"prev-month-" + id + "\" class=\"calendar-month\"> < </td>\n		<td id=\"title-date-" + id + "\" colspan=\"5\" class=\"calendar-header\">") + _getMonthName(selectedMonth) + ' ' + selectedYear + ("</td>\n	<td id=\"next-month-" + id + "\" class=\"calendar-month\"> > </td>\n</tr>\n<tr class=\"weekDaysTitleRow\">");
-        for (j = 0, len = weekDays.length; j < len; j++) {
-          day = weekDays[j];
+        for (k = 0, len = weekDays.length; k < len; k++) {
+          day = weekDays[k];
           html += "<td>" + day + "</td>";
         }
         daysInMonth = _getDaysInMonth(selectedYear, selectedMonth);
@@ -199,9 +200,9 @@
         today = new Date().getDate();
         thisMonth = new Date().getMonth();
         thisYear = new Date().getFullYear();
-        for (e = k = 0, ref = numRows; 0 <= ref ? k < ref : k > ref; e = 0 <= ref ? ++k : --k) {
+        for (e = l = 0, ref = numRows; 0 <= ref ? l < ref : l > ref; e = 0 <= ref ? ++l : --l) {
           html += '<tr class="weekDaysRow">';
-          for (f = l = 0; l < 7; f = ++l) {
+          for (f = m = 0; m < 7; f = ++m) {
             if (printDate === today && selectedYear === thisYear && selectedMonth === thisMonth && noPrintDays === 0) {
               html += '<td id="today" class="weekDaysCell">';
             } else {
@@ -234,7 +235,7 @@
         $W('#title-date-' + id)[0].onclick = function() {
           var year;
           year = this.innerHTML.split(' ')[1] * 1;
-          return _changeYear(year - 10);
+          return _changeYear(year - 5);
         };
         $W('#prev-month-' + id)[0].onclick = function() {
           selectedMonth--;
@@ -261,28 +262,26 @@
       		@param str year
        */
       _changeYear = function(year) {
-        var html, i, j, k, len, option, rowspan, year1, year2, year3;
+        var html, i, j, k, l, option, year1, year2;
         year1 = year;
-        year2 = year + 7;
-        year3 = year + 14;
+        year2 = year + 6;
         option = "";
-        for (j = 0, len = monthNames.length; j < len; j++) {
-          i = monthNames[j];
-          option += "<option>" + i + "</option>";
+        for (i = k = 0; k < 6; i = ++k) {
+          j = i + 6;
+          option += "<div style=\"overflow:hidden; padding:3px 0;\">\n	<div style=\"float:left; width:50%; text-align:left;\">" + monthNames2[i] + "</div>\n	<div style=\"float:right; width:50%; text-align:left;\">" + monthNames2[j] + "</div>\n</div>";
         }
-        option = "<select size=\"7\" style=\"height:100%;\">" + option + "</select>";
-        html = "<tr height=\"20\">\n	<td colspan=\"4\">\n		<div id=\"change-year-top-" + id + "\" class=\"date-change-year\">top</div>\n		<div id=\"change-year-down-" + id + "\" class=\"date-change-year\">down</div>\n	</td>\n</tr>";
-        for (i = k = 0; k < 7; i = ++k) {
-          rowspan = i === 0 ? "<td rowspan=\"7\">" + option + "</td>" : '';
-          html += "<tr height=\"20\">\n	<td>" + (year1++) + "</td>\n	<td>" + (year2++) + "</td>\n	<td>" + (year3++) + "</td>\n	" + rowspan + "\n</tr>";
+        html = "<tr>\n	<td colspan=\"2\" rowspan=\"7\" style=\"overflow:hidden; border-right:1px solid #fff; padding:0 5px\">" + option + "</td>\n	<td colspan=\"2\">\n		<div id=\"change-year-down-" + id + "\" class=\"date-change-year\" style=\"float:left;\"><</div>\n		<div id=\"change-year-top-" + id + "\" class=\"date-change-year\" style=\"float:right;\">></div>\n	</td>\n</tr>";
+        for (i = l = 0; l < 6; i = ++l) {
+          html += "<tr>\n	<td>" + (year1++) + "</td>\n	<td>" + (year2++) + "</td>\n</tr>";
         }
+        html += "<tr style=\"border-top:1px solid #fff;\">\n	<td colspan=2 style=\"padding:0px; border-right:1px solid #fff;\">\n		<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Aceptar\">\n	</td>\n	<td colspan=2 style=\"padding:0px;\">\n		<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Volver\">\n	</td>\n</tr>";
         $W('#win-calendar-' + id).hide();
         $W('#win-calendar-year-' + id).show().html(html);
         $W("#change-year-top-" + id)[0].onclick = function() {
-          return _changeYear(year3);
+          return _changeYear(year2);
         };
         return $W("#change-year-down-" + id)[0].onclick = function() {
-          return _changeYear(year - 21);
+          return _changeYear(year - 14);
         };
       };
 
@@ -299,12 +298,12 @@
       		@param obj input date $W('#'+id)[0]
        */
       _setupDays = function(inputObj) {
-        var i, j, len, results, x, y;
+        var i, k, len, results, x, y;
         y = $W('#win-calendar-' + id)[0];
         x = y.getElementsByTagName('a');
         results = [];
-        for (j = 0, len = x.length; j < len; j++) {
-          i = x[j];
+        for (k = 0, len = x.length; k < len; k++) {
+          i = x[k];
           results.push(i.onclick = function() {
             selectedDay = this.innerHTML;
             inputObj.value = _formatDate(selectedDay, selectedMonth, selectedYear);

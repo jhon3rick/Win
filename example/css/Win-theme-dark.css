@@ -54,7 +54,9 @@
   font-weight: bold;
 }
 .win-calendar select,
-.win-calendar-year select {
+.win-calendar-year select,
+.win-calendar input,
+.win-calendar-year input {
   background: #161616;
   color: #fff;
 }

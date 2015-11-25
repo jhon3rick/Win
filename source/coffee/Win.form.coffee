@@ -93,12 +93,12 @@ do ($W = Win) ->
 		selected     = obj.listeners.select or ''
 
 		# monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+		monthNames2  = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 		monthNames   = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 		dayNames     = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 		# weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-		weekDays     = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
-
+		weekDays   = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
 
 		# ATRAPA EL ELEMENTO
 		inputCalendar = $W('#'+id)[0]
@@ -203,7 +203,7 @@ do ($W = Win) ->
 
 			$W('#title-date-'+id)[0].onclick = () ->
 				year  = (this.innerHTML).split(' ')[1] * 1
-				_changeYear(year-10)
+				_changeYear(year-5)
 
 			# NEXT AND PREVIOUS MONTH
 			$W('#prev-month-'+id)[0].onclick = () ->
@@ -231,40 +231,51 @@ do ($W = Win) ->
 		@param str year
 		###
 		_changeYear = (year) ->
-			year1 = year
-			year2 = year + 7
-			year3 = year + 14
-
+			year1  = year
+			year2  = year + 6
 			option = ""
-			for i in monthNames
-				option += "<option>#{i}</option>"
 
-			option = """<select size="7" style="height:100%;">#{option}</select>"""
+			for i in [0...6]
+				j = i+6
+				option += """<div style="overflow:hidden; padding:3px 0;">
+								<div style="float:left; width:50%; text-align:left;">#{monthNames2[i]}</div>
+								<div style="float:right; width:50%; text-align:left;">#{monthNames2[j]}</div>
+							</div>"""
 
-			html  = """<tr height="20">
-							<td colspan="4">
-								<div id="change-year-top-#{id}" class="date-change-year">top</div>
-								<div id="change-year-down-#{id}" class="date-change-year">down</div>
+			# option = """<select size="7" style="height:100%;">#{option}</select>"""
+
+			html  = """<tr>
+							<td colspan="2" rowspan="7" style="overflow:hidden; border-right:1px solid #fff; padding:0 5px">#{option}</td>
+							<td colspan="2">
+								<div id="change-year-down-#{id}" class="date-change-year" style="float:left;"><</div>
+								<div id="change-year-top-#{id}" class="date-change-year" style="float:right;">></div>
 							</td>
 						</tr>"""
-			for i in [0...7]
-				rowspan = if i==0 then """<td rowspan="7">#{option}</td>""" else ''
-				html += """<tr height="20">
+			for i in [0...6]
+				# rowspan = if i==0 then """<td rowspan="8">#{option}</td>""" else ''
+				html += """<tr>
 								<td>#{year1++}</td>
 								<td>#{year2++}</td>
-								<td>#{year3++}</td>
-								#{rowspan}
 							</tr>"""
+
+			html += """<tr style="border-top:1px solid #fff;">
+							<td colspan=2 style="padding:0px; border-right:1px solid #fff;">
+								<input type="button" style="width:100%; padding:3px;" value="Aceptar">
+							</td>
+							<td colspan=2 style="padding:0px;">
+								<input type="button" style="width:100%; padding:3px;" value="Volver">
+							</td>
+						</tr>"""
 
 
 			$W('#win-calendar-'+id).hide()
 			$W('#win-calendar-year-'+id).show().html(html)
 
 			$W("#change-year-top-#{id}")[0].onclick = () ->
-				_changeYear(year3)
+				_changeYear(year2)
 
 			$W("#change-year-down-#{id}")[0].onclick = () ->
-				_changeYear(year-21)
+				_changeYear(year-14)
 
 		###
 		_removeCalendar
