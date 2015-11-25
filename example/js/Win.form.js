@@ -181,7 +181,7 @@
        */
       _drawCalendar = function(inputObj) {
         var day, daysInMonth, divCalendar, e, f, html, j, k, l, len, noPrintDays, numRows, printDate, ref, startDay, thisMonth, thisYear, today;
-        html = ("<table id=\"win-calendar-day-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-day\" style=\"display:block;\"></table>\n<table id=\"win-calendar-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">\n	<tr>\n		<td id=\"prev-month-" + id + "\" class=\"calendar-month\"> < </td>\n		<td id=\"title-date-" + id + "\" colspan=\"5\" class=\"calendar-header\">") + _getMonthName(selectedMonth) + ' ' + selectedYear + ("</td>\n	<td id=\"next-month-" + id + "\" class=\"calendar-month\"> > </td>\n</tr>\n<tr class=\"weekDaysTitleRow\">");
+        html = ("<table id=\"win-calendar-year-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>\n<table id=\"win-calendar-" + id + "\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">\n	<tr>\n		<td id=\"prev-month-" + id + "\" class=\"calendar-month\"> < </td>\n		<td id=\"title-date-" + id + "\" colspan=\"5\" class=\"calendar-header\">") + _getMonthName(selectedMonth) + ' ' + selectedYear + ("</td>\n	<td id=\"next-month-" + id + "\" class=\"calendar-month\"> > </td>\n</tr>\n<tr class=\"weekDaysTitleRow\">");
         for (j = 0, len = weekDays.length; j < len; j++) {
           day = weekDays[j];
           html += "<td>" + day + "</td>";
@@ -270,14 +270,14 @@
           i = monthNames[j];
           option += "<option>" + i + "</option>";
         }
-        option = "<select size=\"7\" style=\"height:200px;\">" + option + "</select>";
-        html = "<tr>\n	<td colspan=\"4\">\n		<div id=\"change-year-top-" + id + "\" class=\"date-change-year\">top</div>\n		<div id=\"change-year-down-" + id + "\" class=\"date-change-year\">down</div>\n	</td>\n</tr>";
+        option = "<select size=\"7\" style=\"height:100%;\">" + option + "</select>";
+        html = "<tr height=\"20\">\n	<td colspan=\"4\">\n		<div id=\"change-year-top-" + id + "\" class=\"date-change-year\">top</div>\n		<div id=\"change-year-down-" + id + "\" class=\"date-change-year\">down</div>\n	</td>\n</tr>";
         for (i = k = 0; k < 7; i = ++k) {
           rowspan = i === 0 ? "<td rowspan=\"7\">" + option + "</td>" : '';
-          html += "<tr>\n	<td>" + (year1++) + "</td>\n	<td>" + (year2++) + "</td>\n	<td>" + (year3++) + "</td>\n	" + rowspan + "\n</tr>";
+          html += "<tr height=\"20\">\n	<td>" + (year1++) + "</td>\n	<td>" + (year2++) + "</td>\n	<td>" + (year3++) + "</td>\n	" + rowspan + "\n</tr>";
         }
         $W('#win-calendar-' + id).hide();
-        $W('#win-calendar-day-' + id).show().html(html);
+        $W('#win-calendar-year-' + id).show().html(html);
         $W("#change-year-top-" + id)[0].onclick = function() {
           return _changeYear(year3);
         };

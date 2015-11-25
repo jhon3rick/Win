@@ -141,7 +141,7 @@ do ($W = Win) ->
 		###
 		_drawCalendar = (inputObj) ->
 
-			html = """<table id="win-calendar-day-#{id}" cellpadding="0" cellspacing="0" class="win-calendar-day" style="display:block;"></table>
+			html = """<table id="win-calendar-year-#{id}" cellpadding="0" cellspacing="0" class="win-calendar-year" style="display:block;"></table>
 					<table id="win-calendar-#{id}" cellpadding="0" cellspacing="0" class="win-calendar">
 						<tr>
 							<td id="prev-month-#{id}" class="calendar-month"> < </td>
@@ -239,17 +239,17 @@ do ($W = Win) ->
 			for i in monthNames
 				option += "<option>#{i}</option>"
 
-			option = """<select size="7" style="height:200px;">#{option}</select>"""
+			option = """<select size="7" style="height:100%;">#{option}</select>"""
 
-			html  = """<tr>
-						<td colspan="4">
-							<div id="change-year-top-#{id}" class="date-change-year">top</div>
-							<div id="change-year-down-#{id}" class="date-change-year">down</div>
-						</td>
-					</tr>"""
+			html  = """<tr height="20">
+							<td colspan="4">
+								<div id="change-year-top-#{id}" class="date-change-year">top</div>
+								<div id="change-year-down-#{id}" class="date-change-year">down</div>
+							</td>
+						</tr>"""
 			for i in [0...7]
 				rowspan = if i==0 then """<td rowspan="7">#{option}</td>""" else ''
-				html += """<tr>
+				html += """<tr height="20">
 								<td>#{year1++}</td>
 								<td>#{year2++}</td>
 								<td>#{year3++}</td>
@@ -258,7 +258,7 @@ do ($W = Win) ->
 
 
 			$W('#win-calendar-'+id).hide()
-			$W('#win-calendar-day-'+id).show().html(html)
+			$W('#win-calendar-year-'+id).show().html(html)
 
 			$W("#change-year-top-#{id}")[0].onclick = () ->
 				_changeYear(year3)

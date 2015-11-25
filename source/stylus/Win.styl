@@ -259,7 +259,7 @@ input[type=button]
 			cursor hand
 
 	// SELECT YEAR
-	/.win-calendar-day
+	/.win-calendar-year
 		clear both
 		width 200px
 		max-width 200px
@@ -270,13 +270,25 @@ input[type=button]
 			padding-bottom 2
 
 		td
-			padding 5px
+			padding 2px 5px
+			font-size 11px
 
 		/.date-change-year
 			float left
 			width 30px
 			height 100%
-			bordder-right 1px solid
+			border-right 1px solid
+
+		select
+			box-shadow none
+
+			option
+				font-size 11px
+
+			:focus
+				box-shadow none
+
+
 
 
 // ATRIBUTOS

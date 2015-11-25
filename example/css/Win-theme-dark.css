@@ -33,29 +33,28 @@
   border-color: #d6d6d6;
 }
 .win-calendar,
-.win-calendar-day {
-  background: rgba(88,88,88,0.9);
+.win-calendar-year {
+  background: #161616;
   color: #fff;
 }
 .win-calendar .calendar-month:hover,
-.win-calendar-day .calendar-month:hover {
+.win-calendar-year .calendar-month:hover {
   background: #ddd;
   color: #333;
 }
 .win-calendar .calendar-header:hover,
-.win-calendar-day .calendar-header:hover {
+.win-calendar-year .calendar-header:hover {
   background: #ddd;
   color: #333;
 }
 .win-calendar .weekDaysCell:hover,
-.win-calendar-day .weekDaysCell:hover {
+.win-calendar-year .weekDaysCell:hover {
   background: #ddd;
   color: #333;
   font-weight: bold;
 }
 .win-calendar select,
-.win-calendar-day select {
-  background: rgba(88,88,88,0.9);
+.win-calendar-year select {
+  background: #161616;
   color: #fff;
-  border: none;
 }
