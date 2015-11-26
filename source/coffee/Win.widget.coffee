@@ -79,6 +79,11 @@ do ($W = Win) ->
 		close: ()->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
 
+	$W.aside = (obj) ->
+
+
+	$W.tabpanel = (obj) ->
+
 	$W.tbar = (obj) ->
 		tbar = $W('#win_tbar_'+obj.applyTo)[0]
 		_router(obj, tbar)
@@ -329,3 +334,4 @@ do ($W = Win) ->
 
 		text.innerHTML = obj.text
 		(obj.parent).appendChild(text)
+

@@ -65,6 +65,8 @@
         }
       };
     };
+    $W.aside = function(obj) {};
+    $W.tabpanel = function(obj) {};
     $W.tbar = function(obj) {
       var tbar;
       tbar = $W('#win_tbar_' + obj.applyTo)[0];

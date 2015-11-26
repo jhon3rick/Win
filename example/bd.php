@@ -34,17 +34,21 @@
 					<option>Datos</option>
 					<option>Datos</option>
 					<option>Datos</option>
-				</select>
-				<div class='win-content-min-load'>
-					<div class='win-content-min-load-img'></div>
-					<div class='win-min-load-ajax'></div>
-				</div>
-				<div class='win-content-min-load-label'>loading style</div>";
+				</select>";
 	}
 
-	function prueba_ajax_request(){ echo 'true'; }
+	function prueba_ajax_request(){
+		echo '<div><input type="text" id="input_calendar"></div>
+				<script>
+					$W.form.dateField({
+						applyTo   : "input_calendar",
+						format    : "y-m-d",
+						listeners : { select: function() { alert("Haz seleccionado la fecha "+this.value) } }
+					});
+				</script>';
+	}
 
-	function default_function() { for ($i=0; $i < 100; $i++) { echo 'gtgjjg <br>'; } }
+	function default_function() { for ($i=0; $i < 100; $i++) { echo 'contenido renderizado <br>'; } }
 
 
 ?>

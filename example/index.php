@@ -491,8 +491,8 @@ $contenido ='
 			function ventana1(){
 				Win_ventana_1 = new $W.Window({
 					bodyStyle   : "",
-					width       : 800,
-					height      : 700,
+					width       : 700,
+					height      : 550,
 					id          : "Win_ventana_1",
 					title       : "VENTANA 1",
 					titleStyle  : "",
@@ -568,77 +568,79 @@ $contenido ='
 				});
 			}
 
-			// function ventana2(){
+			function ventana2(){
 
-			// 	Win_ventana_2 = new Win.Window({
-			// 		apply       : "prueba",
-			// 		bodyStyle   : "",
-			// 		width       : 600,
-			// 		height      : 500,
-			// 		id          : "Win_ventana_2",
-			// 		title       : "VENTANA 2",
-			// 		modal       : true,
-			// 		autoScroll  : true,
-			// 		closable    : true,
-			// 		autoDestroy : true,
-			// 		tabPanel    :
-			// 		[
-			// 			{
-			// 		        xtype     : "",
-			// 		        scripts : true,
-			// 		        nocache : true,
-			// 		        params  :
-			// 		        {
-			// 		            var1 : "var1",
-			// 		            var2 : "var2",
-			// 		        }
-			// 		    },
-			// 		],
-			// 		tbar        :
-			// 		[
-			// 			{
-			// 				xtype : "button",
-			// 				id    : "btn_1",
-			// 				cls   : "prueba",
-			// 				text  : "Nueva<br>Ventana",
-			// 				handler : function(){ ventana3(); }
-			// 			},
-			// 			{
-			// 				xtype : "button",
-			// 				id    : "btn_2",
-			// 				cls   : "prueba",
-			// 				// text  : "guardar"
-			// 				handler: function () { ajax_load_2();	}
-			// 			},
-			// 		]
-			// 	});
-			// }
+				Win_ventana_2 = new Win.Window({
+					apply       : "prueba",
+					bodyStyle   : "",
+					width       : 450,
+					height      : 450,
+					id          : "Win_ventana_2",
+					title       : "VENTANA 2",
+					modal       : true,
+					autoScroll  : true,
+					closable    : true,
+					autoDestroy : true,
+					autoLoad    :
+					{
+				        url     : "bd.php",
+				        params  :
+				        {
+							opc : "prueba_ajax_request",
+							var2 : "var2",
+				        }
+				    },
+					tabPanel    :
+					[
+						{
+					        xtype     : "",
+					        scripts : true,
+					        nocache : true,
+					        params  :
+					        {
+					            var1 : "var1",
+					            var2 : "var2",
+					        }
+					    },
+					],
+					tbar        :
+					[
+						{
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "user_black_36",
+							text  : "Nueva<br>Ventana",
+							handler : function(){ ventana3(); }
+						}
+					]
+				});
+			}
 
-			// function ventana3(){
-			// 	Win_ventana_3 = new Win.Window({
-			// 		apply       : "prueba",
-			// 		bodyStyle   : "",
-			// 		width       : 400,
-			// 		height      : 300,
-			// 		id          : "Win_ventana_3",
-			// 		title       : "VENTANA 3",
-			// 		modal       : true,
-			// 		autoScroll  : true,
-			// 		closable    : true,
-			// 		autoDestroy : true,
-			// 		drag        : true,
-			// 		resize      : true,
-			// 		autoLoad    :
-			// 		{
-			// 	        url     : ".php",
-			// 	        params  :
-			// 	        {
-			// 	            var1 : "var1",
-			// 	            var2 : "var2",
-			// 	        }
-			// 	    },
-			// 	});
-			// }
+			function ventana3(){
+				Win_ventana_3 = new Win.Window({
+					apply       : "prueba",
+					bodyStyle   : "",
+					width       : 400,
+					height      : 300,
+					id          : "Win_ventana_3",
+					title       : "VENTANA 3",
+					modal       : true,
+					autoScroll  : true,
+					closable    : true,
+					autoDestroy : true,
+					drag        : true,
+					resize      : true,
+					autoLoad    :
+					{
+				        url     : "bd.php",
+				        params  :
+				        {
+				            var1 : "var1",
+				            var2 : "var2",
+				        }
+				    },
+				});
+			}
 
 			// // Win.getButton('btn_1').hiden;
 			// // prueba = new Win.getButton('btn_1').hiden
