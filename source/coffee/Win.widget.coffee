@@ -41,7 +41,7 @@ do ($W = Win) ->
 		bgBody    = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle   = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
 		divClose  = if resize==true or resize == '' then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
-		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win_div_resize_#{id}"></div>""" else ''
+		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win-div-resize-#{id}"></div>""" else ''
 
 		winModal.setAttribute("id","win-modal-#{id}")
 		winModal.setAttribute("class","win-modal")
@@ -50,13 +50,17 @@ do ($W = Win) ->
 		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
 
 		winModal.innerHTML = """<div style="width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}" id="#{id}" class="win-marco">
+									<div class="win-file-resize" data-resize="top" id="win-resize-top-#{id}"></div>
+									<div class="win-file-resize" data-resize="bottom" id="win-resize-bottom-#{id}"></div>
+									<div class="win-file-resize" data-resize="left" id="win-resize-left-#{id}"></div>
+									<div class="win-file-resize" data-resize="right" id="win-resize-right-#{id}"></div>
 									<div class="win-modal-parent" id="win-modal-window_#{id}">
 										<div class="win-modal-content">
 											<div class="win-loader-default" id="win_loader_#{id}"></div>
 											<div class="win-modal-label" id="label_cargando_#{id}"></div>
 										</div>
 									</div>
-									<header class="win-title" id="win_title_#{id}" style="#{bgTitle} #{titleStyle}">
+									<header class="win-title" id="win-title-#{id}" style="#{bgTitle} #{titleStyle}">
 										<div class="win-title-txt">#{title}</div>
 										#{divClose}
 									</header>
@@ -66,12 +70,18 @@ do ($W = Win) ->
 								</div>"""
 
 		body.appendChild(winModal)
+		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id,winModal,event);
+		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(winModal);
+
+		_resize($W("#win-resize-top-#{id}")[0])
+		_resize($W("#win-resize-bottom-#{id}")[0])
+		_resize($W("#win-resize-left-#{id}")[0])
+		_resize($W("#win-resize-right-#{id}")[0])
+		# _resize($W("#win-div-resize-#{id}")[0])
 
 		if typeof(obj.tbar) != 'undefined'
 			obj.tbar.applyTo = id
 			$W.tbar(obj.tbar)
-		# else
-		# 	$W('#'+id)[0].removeChild($W('#win_tbar_'+id)[0])
 
 		if typeof(obj.autoLoad) != 'undefined'
 			$W.Ajax.load($W('#win_window_'+id)[0],obj.autoLoad)
@@ -214,10 +224,111 @@ do ($W = Win) ->
 	# Private Elements
 	# ---------------------------------------------------------------------------
 
+	_draggStart = (id,divParent,evt) ->
+		domMove = document.getElementById(id)
+
+		evt     = evt || window.event
+		posX    = evt.clientX
+		posY    = evt.clientY
+		divTop  = (domMove.style.top).replace('px','')
+		divLeft = (domMove.style.left).replace('px','')
+		eWi     = parseInt(domMove.offsetWidth)
+		eHe     = parseInt(domMove.offsetHeight)
+		cWi     = parseInt(divParent.offsetWidth)
+		cHe     = parseInt(divParent.offsetHeight)
+
+		divParent.style.cursor='move'
+		diffX = posX - divLeft
+		diffY = posY - divTop
+
+		document.onmousemove = (evt) ->
+			evt  = evt || window.event
+			posX = evt.clientX
+			posY = evt.clientY
+			aX   = posX - diffX
+			aY   = posY - diffY
+
+			if aX < 0 then aX = 0
+			if aY < 0 then aY = 0
+			if (aX + eWi > cWi) then aX = cWi - eWi
+			if (aY + eHe > cHe) then aY = cHe - eHe
+			_draggMove(domMove,aX,aY)
+
 	###
-		@method _router
-		@param  arr child
-		@param  obj ObjetoDom parent
+	_draggMove
+	@param obj object DOM move
+	@param int position x
+	@param int position y
+	###
+	_draggMove = (objDom, xpos, ypos) ->
+		objDom.style.left = xpos + 'px'
+		objDom.style.top  = ypos + 'px'
+
+	###
+	_draggMove
+	@param obj object parent DOM move
+	###
+	_draggStop = (objDom) ->
+		objDom.style.cursor  = 'default'
+		document.onmousemove = (e) -> e.preventDefault
+
+	###
+	_resize
+	@param obj object DOM resize
+	###
+	_resize = (objDom) ->
+
+		startX = 0
+		startY = 0
+		startWidth  = 0
+		startHeight = 0
+		objParent   = objDom.parentNode
+		attrData    = objDom.getAttribute("data-resize")
+
+		objDom.onmousedown = (e) -> _initDrag(e)
+
+		_initDrag = (e) ->
+			startX      = e.clientX
+			startY      = e.clientY
+			startWidth  = parseInt(document.defaultView.getComputedStyle(objParent).width, 10)
+			startHeight = parseInt(document.defaultView.getComputedStyle(objParent).height, 10)
+
+			document.documentElement.addEventListener('mousemove', _doDrag, false)
+			document.documentElement.addEventListener('mouseup', _stopDrag, false)
+
+		_doDrag = (e) ->
+			if attrData == 'left' then _resizeXLeft(e)
+			else if attrData == 'right' then _resizeXRight(e)
+			else if attrData == 'top' then _resizeYTop(e)
+			else if attrData == 'bottom' then _resizeYBottom(e)
+
+
+
+		_stopDrag = (e) ->
+			document.documentElement.removeEventListener('mousemove', _doDrag, false)
+			document.documentElement.removeEventListener('mouseup', _stopDrag, false)
+
+		_resizeXLeft = (e) ->
+			if e.clientX >= 500
+				objParent.style.width = (startWidth + e.clientX - startX) + 'px'
+
+		_resizeXRight = (e) ->
+			console.log('sda')
+			if e.clientX >= 500
+				objParent.style.width = (startWidth + e.clientX - startX) + 'px'
+
+		_resizeYTop = (e) ->
+			if e.clientY >= 340
+				objParent.style.height = (startHeight + e.clientY - startY) + 'px'
+
+		_resizeYBottom = (e) ->
+			if e.clientY >= 340
+				objParent.style.height = (startHeight + e.clientY - startY) + 'px'
+
+	###
+	@method _router
+	@param  arr child
+	@param  obj ObjetoDom parent
 	###
 	_router = (obj, parent) ->
 		if typeof(obj) == 'object'
