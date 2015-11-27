@@ -21,7 +21,7 @@
   (function($W) {
     var _button, _draggMove, _draggStart, _draggStop, _panel, _resize, _router, _separator, _separatorHeight, _tbtext;
     $W.Window = function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, divResize, drag, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
+      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
       width = obj.width || 300;
       height = obj.height || 300;
       id = obj.id || '';
@@ -43,12 +43,11 @@
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
       divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
-      divResize = obj.resize !== false ? "<div class=\"win-div-resize\" id=\"win-div-resize-" + id + "\"></div>" : '';
       winModal.setAttribute("id", "win-modal-" + id);
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div>\n	<div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\">\n		<div class=\"win-modal-content\">\n			<div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div>\n			<div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div>\n		</div>\n	</div>\n	<header class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		" + divClose + "\n	</header>\n	" + divResize + "\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div>\n</div>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div>\n	<div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\">\n		<div class=\"win-modal-content\">\n			<div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div>\n			<div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div>\n		</div>\n	</div>\n	<header class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		" + divClose + "\n	</header>\n	<nav class=\"win-tbar\" id=\"win_tbar_" + id + "\"></nav>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div>\n</div>";
       body.appendChild(winModal);
       $W("#win-title-" + id)[0].onmousedown = function() {
         return _draggStart(id, winModal, event);

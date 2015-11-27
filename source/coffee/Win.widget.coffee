@@ -39,7 +39,6 @@ do ($W = Win) ->
 		bgBody    = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle   = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
 		divClose  = if obj.closable != false then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
-		divResize = if obj.resize != false then """<div class="win-div-resize" id="win-div-resize-#{id}"></div>""" else ''
 
 		winModal.setAttribute("id","win-modal-#{id}")
 		winModal.setAttribute("class","win-modal")
@@ -62,8 +61,7 @@ do ($W = Win) ->
 										<div class="win-title-txt">#{title}</div>
 										#{divClose}
 									</header>
-									#{divResize}
-									<div class="win-tbar" id="win_tbar_#{id}"></div>
+									<nav class="win-tbar" id="win_tbar_#{id}"></nav>
 									<div class="win-window-body #{clsBody}" id="win_window_#{id}">#{html}</div>
 								</div>"""
 
