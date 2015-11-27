@@ -21,7 +21,7 @@
   (function($W) {
     var _button, _draggMove, _draggStart, _draggStop, _panel, _resize, _router, _separator, _separatorHeight, _tbtext;
     $W.Window = function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, closable, clsBody, divClose, divResize, drag, height, html, id, left, modal, resize, theme, title, titleStyle, top, width, win, winModal;
+      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, divResize, drag, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
       width = obj.width || 300;
       height = obj.height || 300;
       id = obj.id || '';
@@ -29,12 +29,10 @@
       titleStyle = obj.titleStyle || '';
       modal = obj.modal || '';
       autoScroll = obj.autoScroll || '';
-      closable = typeof obj.closable !== 'undefined' ? obj.closable : true;
       autoDestroy = obj.autoDestroy || '';
       autoLoad = obj.autoLoad || '';
       html = obj.html || '';
       drag = obj.drag || '';
-      resize = typeof obj.resize !== 'undefined' ? obj.resize : true;
       theme = obj.theme || '';
       bodyStyle = obj.bodyStyle || '';
       bodyColor = obj.bodyColor || '#FFF';
@@ -44,8 +42,8 @@
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
-      divClose = resize === true || resize === '' ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
-      divResize = resize === true || resize === '' ? "<div class=\"win-div-resize\" id=\"win-div-resize-" + id + "\"></div>" : '';
+      divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
+      divResize = obj.resize !== false ? "<div class=\"win-div-resize\" id=\"win-div-resize-" + id + "\"></div>" : '';
       winModal.setAttribute("id", "win-modal-" + id);
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
@@ -58,10 +56,12 @@
       $W("#win-title-" + id)[0].onmouseup = function() {
         return _draggStop(winModal);
       };
-      _resize($W("#win-resize-top-" + id)[0]);
-      _resize($W("#win-resize-bottom-" + id)[0]);
-      _resize($W("#win-resize-left-" + id)[0]);
-      _resize($W("#win-resize-right-" + id)[0]);
+      if (obj.resize !== false) {
+        _resize($W("#win-resize-top-" + id)[0]);
+        _resize($W("#win-resize-bottom-" + id)[0]);
+        _resize($W("#win-resize-left-" + id)[0]);
+        _resize($W("#win-resize-right-" + id)[0]);
+      }
       if (typeof obj.tbar !== 'undefined') {
         obj.tbar.applyTo = id;
         $W.tbar(obj.tbar);
@@ -263,11 +263,13 @@
     	@param obj object DOM resize
      */
     _resize = function(objDom) {
-      var _doDrag, _initDrag, _resizeXLeft, _resizeXRight, _resizeYBottom, _resizeYTop, _stopDrag, attrData, objParent, startHeight, startWidth, startX, startY;
+      var _doDrag, _initDrag, _resizeXLeft, _resizeXRight, _resizeYBottom, _resizeYTop, _stopDrag, attrData, objParent, positionX, positionY, startHeight, startWidth, startX, startY;
       startX = 0;
       startY = 0;
       startWidth = 0;
       startHeight = 0;
+      positionY = objDom.parentNode.style.top.replace('px', '') * 1;
+      positionX = objDom.parentNode.style.left.replace('px', '') * 1;
       objParent = objDom.parentNode;
       attrData = objDom.getAttribute("data-resize");
       objDom.onmousedown = function(e) {
@@ -297,19 +299,18 @@
         return document.documentElement.removeEventListener('mouseup', _stopDrag, false);
       };
       _resizeXLeft = function(e) {
-        if (e.clientX >= 500) {
-          return objParent.style.width = (startWidth + e.clientX - startX) + 'px';
-        }
-      };
-      _resizeXRight = function(e) {
-        console.log('sda');
-        if (e.clientX >= 500) {
-          return objParent.style.width = (startWidth + e.clientX - startX) + 'px';
-        }
+        console.log(positionX + (e.clientX - startX));
+        objParent.style.left = (positionX + e.clientX - startX) + 'px';
+        return objParent.style.width = (startWidth - e.clientX + startX) + 'px';
       };
       _resizeYTop = function(e) {
-        if (e.clientY >= 340) {
-          return objParent.style.height = (startHeight + e.clientY - startY) + 'px';
+        console.log(attrData);
+        objParent.style.top = (positionY + e.clientY - startY) + 'px';
+        return objParent.style.height = (startHeight - e.clientY + startY) + 'px';
+      };
+      _resizeXRight = function(e) {
+        if (e.clientX >= 500) {
+          return objParent.style.width = (startWidth + e.clientX - startX) + 'px';
         }
       };
       return _resizeYBottom = function(e) {

@@ -24,12 +24,10 @@ do ($W = Win) ->
 		titleStyle  = obj.titleStyle or ''
 		modal       = obj.modal or ''
 		autoScroll  = obj.autoScroll or ''
-		closable      = if typeof(obj.closable)!= 'undefined' then obj.closable else true
 		autoDestroy = obj.autoDestroy or ''
 		autoLoad    = obj.autoLoad or ''
 		html        = obj.html or ''
 		drag        = obj.drag or ''
-		resize      = if typeof(obj.resize)!= 'undefined' then obj.resize else true
 		theme       = obj.theme or ''
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
@@ -40,8 +38,8 @@ do ($W = Win) ->
 
 		bgBody    = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle   = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
-		divClose  = if resize==true or resize == '' then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
-		divResize = if resize==true or resize == '' then """<div class="win-div-resize" id="win-div-resize-#{id}"></div>""" else ''
+		divClose  = if obj.closable != false then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
+		divResize = if obj.resize != false then """<div class="win-div-resize" id="win-div-resize-#{id}"></div>""" else ''
 
 		winModal.setAttribute("id","win-modal-#{id}")
 		winModal.setAttribute("class","win-modal")
@@ -73,11 +71,12 @@ do ($W = Win) ->
 		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id,winModal,event);
 		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(winModal);
 
-		_resize($W("#win-resize-top-#{id}")[0])
-		_resize($W("#win-resize-bottom-#{id}")[0])
-		_resize($W("#win-resize-left-#{id}")[0])
-		_resize($W("#win-resize-right-#{id}")[0])
-		# _resize($W("#win-div-resize-#{id}")[0])
+		if obj.resize != false
+			_resize($W("#win-resize-top-#{id}")[0])
+			_resize($W("#win-resize-bottom-#{id}")[0])
+			_resize($W("#win-resize-left-#{id}")[0])
+			_resize($W("#win-resize-right-#{id}")[0])
+			# _resize($W("#win-div-resize-#{id}")[0])
 
 		if typeof(obj.tbar) != 'undefined'
 			obj.tbar.applyTo = id
@@ -282,6 +281,8 @@ do ($W = Win) ->
 		startY = 0
 		startWidth  = 0
 		startHeight = 0
+		positionY   = ((objDom.parentNode.style.top).replace('px','') * 1)
+		positionX   = ((objDom.parentNode.style.left).replace('px','') * 1)
 		objParent   = objDom.parentNode
 		attrData    = objDom.getAttribute("data-resize")
 
@@ -297,6 +298,7 @@ do ($W = Win) ->
 			document.documentElement.addEventListener('mouseup', _stopDrag, false)
 
 		_doDrag = (e) ->
+
 			if attrData == 'left' then _resizeXLeft(e)
 			else if attrData == 'right' then _resizeXRight(e)
 			else if attrData == 'top' then _resizeYTop(e)
@@ -309,17 +311,25 @@ do ($W = Win) ->
 			document.documentElement.removeEventListener('mouseup', _stopDrag, false)
 
 		_resizeXLeft = (e) ->
-			if e.clientX >= 500
-				objParent.style.width = (startWidth + e.clientX - startX) + 'px'
-
-		_resizeXRight = (e) ->
-			console.log('sda')
-			if e.clientX >= 500
-				objParent.style.width = (startWidth + e.clientX - startX) + 'px'
+			# console.log(positionX)
+			# console.log(e.clientX)
+			console.log((positionX + (e.clientX - startX)))
+			objParent.style.left  = (positionX + e.clientX - startX) + 'px'
+			objParent.style.width = (startWidth - e.clientX + startX) + 'px'
 
 		_resizeYTop = (e) ->
-			if e.clientY >= 340
-				objParent.style.height = (startHeight + e.clientY - startY) + 'px'
+			console.log(attrData)
+			objParent.style.top  = (positionY + e.clientY - startY) + 'px'
+			objParent.style.height = (startHeight - e.clientY + startY) + 'px'
+
+
+
+
+
+		_resizeXRight = (e) ->
+			if e.clientX >= 500
+				objParent.style.width = (startWidth + e.clientX - startX) + 'px'
+
 
 		_resizeYBottom = (e) ->
 			if e.clientY >= 340

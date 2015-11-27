@@ -15,7 +15,7 @@
   (function($W) {
     var _button, _draggMove, _draggStart, _draggStop, _panel, _resize, _router, _separator, _separatorHeight, _tbtext;
     $W.Window = function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, closable, clsBody, divClose, divResize, drag, height, html, id, left, modal, resize, theme, title, titleStyle, top, width, win, winModal;
+      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, divResize, drag, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
       width = obj.width || 300;
       height = obj.height || 300;
       id = obj.id || '';
@@ -23,12 +23,10 @@
       titleStyle = obj.titleStyle || '';
       modal = obj.modal || '';
       autoScroll = obj.autoScroll || '';
-      closable = typeof obj.closable !== 'undefined' ? obj.closable : true;
       autoDestroy = obj.autoDestroy || '';
       autoLoad = obj.autoLoad || '';
       html = obj.html || '';
       drag = obj.drag || '';
-      resize = typeof obj.resize !== 'undefined' ? obj.resize : true;
       theme = obj.theme || '';
       bodyStyle = obj.bodyStyle || '';
       bodyColor = obj.bodyColor || '#FFF';
@@ -38,13 +36,13 @@
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
-      divClose = resize === true || resize === '' ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
-      divResize = resize === true || resize === '' ? "<div class=\"win-div-resize\" id=\"win_div_resize_" + id + "\"></div>" : '';
+      divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
+      divResize = resize !== false ? "<div class=\"win-div-resize\" id=\"win-div-resize-" + id + "\"></div>" : '';
       winModal.setAttribute("id", "win-modal-" + id);
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div style=\"height:2px; width:100%; background-color:red; position:absolute; top:0;\" id=\"win-resize-top-" + id + "\"></div>\n	<div style=\"height:2px; width:100%; background-color:red; position:absolute; top:100%;\" id=\"win-resize-buttom-" + id + "\"></div>\n	<div style=\"height:100%; width:2px; background-color:red; position:absolute; left:0\" id=\"win-resize-left-" + id + "\"></div>\n	<div style=\"height:100%; width:2px; background-color:red; position:absolute; left:100%\" id=\"win-resize-right-" + id + "\"></div>\n	<div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\">\n		<div class=\"win-modal-content\">\n			<div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div>\n			<div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div>\n		</div>\n	</div>\n	<header class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		" + divClose + "\n	</header>\n	" + divResize + "\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div>\n</div>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div>\n	<div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\">\n		<div class=\"win-modal-content\">\n			<div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div>\n			<div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div>\n		</div>\n	</div>\n	<header class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		" + divClose + "\n	</header>\n	" + divResize + "\n	<div class=\"win-tbar\" id=\"win_tbar_" + id + "\"></div>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div>\n</div>";
       body.appendChild(winModal);
       $W("#win-title-" + id)[0].onmousedown = function() {
         return _draggStart(id, winModal, event);
@@ -52,10 +50,12 @@
       $W("#win-title-" + id)[0].onmouseup = function() {
         return _draggStop(winModal);
       };
-      _resize("#win-resize-top-" + id);
-      _resize("#win-resize-buttom-" + id);
-      _resize("#win-resize-left-" + id);
-      _resize("#win-resize-right-" + id);
+      if (resize !== false) {
+        _resize($W("#win-resize-top-" + id)[0]);
+        _resize($W("#win-resize-bottom-" + id)[0]);
+        _resize($W("#win-resize-left-" + id)[0]);
+        _resize($W("#win-resize-right-" + id)[0]);
+      }
       if (typeof obj.tbar !== 'undefined') {
         obj.tbar.applyTo = id;
         $W.tbar(obj.tbar);
@@ -232,7 +232,7 @@
 
     /*
     	_draggMove
-    	@param obj object Dom move
+    	@param obj object DOM move
     	@param int position x
     	@param int position y
      */
@@ -243,38 +243,74 @@
 
     /*
     	_draggMove
-    	@param obj object parent Dom move
+    	@param obj object parent DOM move
      */
     _draggStop = function(objDom) {
-      return objDom.style.cursor = 'default';
+      objDom.style.cursor = 'default';
+      return document.onmousemove = function(e) {
+        return e.preventDefault;
+      };
     };
-    _resize = function(elementId) {
-      var doDrag, initDrag, p, r, stopDrag;
-      r = document.getElementById(elementId);
-      p = r.parentNode;
-      r.addEventListener('mousedown', initDrag, false);
-      initDrag = function(e) {
-        var startHeight, startWidth, startX, startY;
+
+    /*
+    	_resize
+    	@param obj object DOM resize
+     */
+    _resize = function(objDom) {
+      var _doDrag, _initDrag, _resizeXLeft, _resizeXRight, _resizeYBottom, _resizeYTop, _stopDrag, attrData, objParent, positionX, positionY, startHeight, startWidth, startX, startY;
+      startX = 0;
+      startY = 0;
+      startWidth = 0;
+      startHeight = 0;
+      positionY = objDom.parentNode.style.top.replace('px', '') * 1;
+      positionX = objDom.parentNode.style.left.replace('px', '') * 1;
+      objParent = objDom.parentNode;
+      attrData = objDom.getAttribute("data-resize");
+      objDom.onmousedown = function(e) {
+        return _initDrag(e);
+      };
+      _initDrag = function(e) {
         startX = e.clientX;
         startY = e.clientY;
-        startWidth = parseInt(document.defaultView.getComputedStyle(p).width, 10);
-        startHeight = parseInt(document.defaultView.getComputedStyle(p).height, 10);
-        document.documentElement.addEventListener('mousemove', doDrag, false);
-        return document.documentElement.addEventListener('mouseup', stopDrag, false);
+        startWidth = parseInt(document.defaultView.getComputedStyle(objParent).width, 10);
+        startHeight = parseInt(document.defaultView.getComputedStyle(objParent).height, 10);
+        document.documentElement.addEventListener('mousemove', _doDrag, false);
+        return document.documentElement.addEventListener('mouseup', _stopDrag, false);
       };
-      doDrag = function(e) {
+      _doDrag = function(e) {
+        if (attrData === 'left') {
+          return _resizeXLeft(e);
+        } else if (attrData === 'right') {
+          return _resizeXRight(e);
+        } else if (attrData === 'top') {
+          return _resizeYTop(e);
+        } else if (attrData === 'bottom') {
+          return _resizeYBottom(e);
+        }
+      };
+      _stopDrag = function(e) {
+        document.documentElement.removeEventListener('mousemove', _doDrag, false);
+        return document.documentElement.removeEventListener('mouseup', _stopDrag, false);
+      };
+      _resizeXLeft = function(e) {
+        console.log(positionX + (e.clientX - startX));
+        objParent.style.left = (positionX + e.clientX - startX) + 'px';
+        return objParent.style.width = (startWidth - e.clientX + startX) + 'px';
+      };
+      _resizeYTop = function(e) {
+        console.log(attrData);
+        objParent.style.top = (positionY + e.clientY - startY) + 'px';
+        return objParent.style.height = (startHeight - e.clientY + startY) + 'px';
+      };
+      _resizeXRight = function(e) {
         if (e.clientX >= 500) {
-          p.style.width = (startWidth + e.clientX - startX) + 'px';
-          p.style.width = (startWidth + e.clientX - startX) + 'px';
-        }
-        if (e.clientY >= 340) {
-          p.style.height = (startHeight + e.clientY - startY) + 'px';
-          return p.style.height = (startHeight + e.clientY - startY) + 'px';
+          return objParent.style.width = (startWidth + e.clientX - startX) + 'px';
         }
       };
-      return stopDrag = function(e) {
-        document.documentElement.removeEventListener('mousemove', doDrag, false);
-        return document.documentElement.removeEventListener('mouseup', stopDrag, false);
+      return _resizeYBottom = function(e) {
+        if (e.clientY >= 340) {
+          return objParent.style.height = (startHeight + e.clientY - startY) + 'px';
+        }
       };
     };
 
