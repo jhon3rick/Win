@@ -36,9 +36,9 @@ do ($W = Win) ->
 		win         = this
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
 
-		bgBody    = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
-		bgTitle   = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
-		divClose  = if obj.closable != false then """<div class="win-title-btn" id="btn_close_ventana_#{id}" onclick="#{id}.close()"></div>""" else ''
+		bgBody   = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
+		bgTitle  = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
+		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\" onclick=\"#{id}.close()\"></div>" else ""
 
 		winModal.setAttribute("id","win-modal-#{id}")
 		winModal.setAttribute("class","win-modal")
@@ -46,24 +46,28 @@ do ($W = Win) ->
 		left = if body.offsetWidth < width then 0 else (body.offsetWidth - width)/2
 		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
 
-		winModal.innerHTML = """<div style="width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}" id="#{id}" class="win-marco">
-									<div class="win-file-resize" data-resize="top" id="win-resize-top-#{id}"></div>
-									<div class="win-file-resize" data-resize="bottom" id="win-resize-bottom-#{id}"></div>
-									<div class="win-file-resize" data-resize="left" id="win-resize-left-#{id}"></div>
-									<div class="win-file-resize" data-resize="right" id="win-resize-right-#{id}"></div>
-									<div class="win-modal-parent" id="win-modal-window_#{id}">
-										<div class="win-modal-content">
-											<div class="win-loader-default" id="win_loader_#{id}"></div>
-											<div class="win-modal-label" id="label_cargando_#{id}"></div>
+		winModal.innerHTML = "<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
+									<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
+									<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
+									<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
+									<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-#{id}\"></div>
+									<div class=\"win-modal-parent\" id=\"win-modal-window_#{id}\">
+										<div class=\"win-modal-content\">
+											<div class=\"win-loader-default\" id=\"win-loader-#{id}\"></div>
+											<div class=\"win-modal-label\" id=\"label-load-#{id}\"></div>
 										</div>
 									</div>
-									<header class="win-title" id="win-title-#{id}" style="#{bgTitle} #{titleStyle}">
-										<div class="win-title-txt">#{title}</div>
-										#{divClose}
+									<header>
+										<div class=\"win-title\" id=\"win-title-#{id}\" style=\"#{bgTitle} #{titleStyle}\">
+											<div class=\"win-title-txt\">#{title}</div>
+											#{divClose}
+										</div>
 									</header>
-									<nav class="win-tbar" id="win_tbar_#{id}"></nav>
-									<div class="win-window-body #{clsBody}" id="win_window_#{id}">#{html}</div>
-								</div>"""
+									<nav>
+										<div class=\"win-tbar\" id=\"win-tbar-#{id}\"></div>
+									</nav>
+									<div class=\"win-window-body #{clsBody}\" id=\"win_window_#{id}\">#{html}</div>
+								</div>"
 
 		body.appendChild(winModal)
 		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id,winModal,event);
@@ -81,7 +85,7 @@ do ($W = Win) ->
 			$W.tbar(obj.tbar)
 
 		if typeof(obj.autoLoad) != 'undefined'
-			$W.Ajax.load($W('#win_window_'+id)[0],obj.autoLoad)
+			$W.Ajax.load($W("#win_window_#{id}")[0],obj.autoLoad)
 
 		close: ()->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
@@ -92,7 +96,7 @@ do ($W = Win) ->
 	$W.tabpanel = (obj) ->
 
 	$W.tbar = (obj) ->
-		tbar = $W('#win_tbar_'+obj.applyTo)[0]
+		tbar = $W("#win-tbar-#{obj.applyTo}")[0]
 		_router(obj, tbar)
 
 
@@ -122,19 +126,23 @@ do ($W = Win) ->
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
 			return
-		if !$W('#win_window_'+obj.id_ventana)[0]
+		if !$W("#win_window_#{obj.id_ventana}")[0]
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
 			return
-		mask = $W('#win-modal-window_'+obj.id_ventana)[0]
 
-		text   = obj.text or 'Cargando...'
+		mask   = $W("#win-modal-window_#{obj.id_ventana}")[0]
+		text   = obj.text or 'Load...'
 		loader = obj.loader or 'default'
 
 		if obj.estado == 'on'
-			$W('#win-modal-window_'+obj.id_ventana)[0].innerHTML= '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_'+obj.id_ventana+'"></div><div class="win-modal-label" id="label_cargando_'+obj.id_ventana+'"></div></div>'
+			$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML= "<div class=\"win-modal-content\">
+																		<div class=\"win-loader-default\" id=\"win-loader-#{obj.id_ventana}\"></div>
+																		<div class=\"win-modal-label\" id=\"label-load-#{obj.id_ventana}\"></div>
+																	</div>"
+
 			mask.style.visibility = 'visible'
-			$W('#win_loader_'+obj.id_ventana)[0].setAttribute('class','win-loader-'+loader)
-			$W('#label_cargando_'+obj.id_ventana)[0].innerHTML = text
+			$W("#win-loader-#{obj.id_ventana}")[0].setAttribute('class','win-loader-'+loader)
+			$W("#label-load-#{obj.id_ventana}")[0].innerHTML = text
 		else if obj.estado == 'off'
 			iconos =
 				sucess : '',
@@ -152,12 +160,18 @@ do ($W = Win) ->
 				evento_icono = ''
 				texto        = 'Informacion Almacenada'
 				duracion     = '2000'
-				estilo_texto = 'padding-top: 10px;font-size: 12px;color:#FFF;'
+				estilo_texto = 'padding-top:10px; font-size:12px; color:#FFF;'
 
 			if duracion=='infinito'
-				$W('#win-modal-window_'+obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
+				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\">
+																			<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
+																			<div class=\"win-modal-label label-finish\">#{texto}</div>
+																		</div>";
 			else
-				$W('#win-modal-window_'+obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='"+icono+"' onclick='"+evento_icono+"'; ><br><div class='win-modal-label label-finish' >"+texto+"</div></div></div>";
+				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\">
+																			<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
+																			<div class=\"win-modal-label label-finish\">#{texto}</div>
+																		</div>";
 				setTimeout ( ->
 				  mask.style.visibility = 'hidden'
 				), duracion
@@ -172,7 +186,9 @@ do ($W = Win) ->
 		height = 120
 		title  = obj.title or 'Alert'
 		text   = obj.text or ''
-		text   += """<div class="content-btn"><input type="button" value="Aceptar" onclick="$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)"></div>"""
+		text   += "<div class=\"content-btn\">
+						<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\">
+					</div>"
 
 		Win_ventana_alert = new $W.Window({
 											width       : width,
@@ -195,10 +211,10 @@ do ($W = Win) ->
 		height = 120
 		title  = obj.title or 'Confirm'
 		text   = obj.text or ''
-		text   += """<div class="content-btn">
-						<input type="button" value="Aceptar" onclick="$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);'+obj.functionOK+';">
-						<input type="button" value="Cancelar" onclick="$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);return false;">
-					</div>"""
+		text   += "<div class=\"content-btn\">
+						<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode); #{obj.functionOK};\">
+						<input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode); return false;\">
+					</div>"
 
 		new $W.Window(
 			width       : width,
@@ -446,7 +462,7 @@ do ($W = Win) ->
 	_tbtext = (obj) ->
 		text = document.createElement('div')
 
-		text.setAttribute("id","win_tbtext_"+obj.id)
+		text.setAttribute("id","win-tbtext-#{obj.id}")
 		text.setAttribute("class","win-tbtext ")
 
 		if(obj.align == 'right') then text.setAttribute("style","text-align:right;")

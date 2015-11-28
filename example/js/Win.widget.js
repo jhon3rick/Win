@@ -42,12 +42,12 @@
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
-      divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : '';
+      divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : "";
       winModal.setAttribute("id", "win-modal-" + id);
       winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\">\n	<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div>\n	<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div>\n	<div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\">\n		<div class=\"win-modal-content\">\n			<div class=\"win-loader-default\" id=\"win_loader_" + id + "\"></div>\n			<div class=\"win-modal-label\" id=\"label_cargando_" + id + "\"></div>\n		</div>\n	</div>\n	<header class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\">\n		<div class=\"win-title-txt\">" + title + "</div>\n		" + divClose + "\n	</header>\n	<nav class=\"win-tbar\" id=\"win_tbar_" + id + "\"></nav>\n	<div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div>\n</div>";
+      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <nav> <div class=\"win-tbar\" id=\"win-tbar-" + id + "\"></div> </nav> <div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div> </div>";
       body.appendChild(winModal);
       $W("#win-title-" + id)[0].onmousedown = function() {
         return _draggStart(id, winModal, event);
@@ -66,7 +66,7 @@
         $W.tbar(obj.tbar);
       }
       if (typeof obj.autoLoad !== 'undefined') {
-        $W.Ajax.load($W('#win_window_' + id)[0], obj.autoLoad);
+        $W.Ajax.load($W("#win_window_" + id)[0], obj.autoLoad);
       }
       return {
         close: function() {
@@ -78,7 +78,7 @@
     $W.tabpanel = function(obj) {};
     $W.tbar = function(obj) {
       var tbar;
-      tbar = $W('#win_tbar_' + obj.applyTo)[0];
+      tbar = $W("#win-tbar-" + obj.applyTo)[0];
       return _router(obj, tbar);
     };
     $W.getButton = function(id) {
@@ -108,18 +108,18 @@
         console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
         return;
       }
-      if (!$W('#win_window_' + obj.id_ventana)[0]) {
+      if (!$W("#win_window_" + obj.id_ventana)[0]) {
         console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana ' + id_ventana);
         return;
       }
-      mask = $W('#win-modal-window_' + obj.id_ventana)[0];
-      text = obj.text || 'Cargando...';
+      mask = $W("#win-modal-window_" + obj.id_ventana)[0];
+      text = obj.text || 'Load...';
       loader = obj.loader || 'default';
       if (obj.estado === 'on') {
-        $W('#win-modal-window_' + obj.id_ventana)[0].innerHTML = '<div class="win-modal-content"><div class="win-loader-default" id="win_loader_' + obj.id_ventana + '"></div><div class="win-modal-label" id="label_cargando_' + obj.id_ventana + '"></div></div>';
+        $W("#win-modal-window_" + obj.id_ventana)[0].innerHTML = "<div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + obj.id_ventana + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + obj.id_ventana + "\"></div> </div>";
         mask.style.visibility = 'visible';
-        $W('#win_loader_' + obj.id_ventana)[0].setAttribute('class', 'win-loader-' + loader);
-        return $W('#label_cargando_' + obj.id_ventana)[0].innerHTML = text;
+        $W("#win-loader-" + obj.id_ventana)[0].setAttribute('class', 'win-loader-' + loader);
+        return $W("#label-load-" + obj.id_ventana)[0].innerHTML = text;
       } else if (obj.estado === 'off') {
         iconos = {
           sucess: '',
@@ -137,12 +137,12 @@
           evento_icono = '';
           texto = 'Informacion Almacenada';
           duracion = '2000';
-          estilo_texto = 'padding-top: 10px;font-size: 12px;color:#FFF;';
+          estilo_texto = 'padding-top:10px; font-size:12px; color:#FFF;';
         }
         if (duracion === 'infinito') {
-          return $W('#win-modal-window_' + obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='" + icono + "' onclick='" + evento_icono + "'; ><br><div class='win-modal-label label-finish' >" + texto + "</div></div></div>";
+          return $W("#win-modal-window_" + obj.id_ventana)[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\"> <img src=\"" + icono + "\" onclick=\"" + evento_icono + "\"><br> <div class=\"win-modal-label label-finish\">" + texto + "</div> </div>";
         } else {
-          $W('#win-modal-window_' + obj.id_ventana)[0].innerHTML = "<div class='win-modal-content'><div class='win-modal-img-finish'><img src='" + icono + "' onclick='" + evento_icono + "'; ><br><div class='win-modal-label label-finish' >" + texto + "</div></div></div>";
+          $W("#win-modal-window_" + obj.id_ventana)[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\"> <img src=\"" + icono + "\" onclick=\"" + evento_icono + "\"><br> <div class=\"win-modal-label label-finish\">" + texto + "</div> </div>";
           return setTimeout((function() {
             return mask.style.visibility = 'hidden';
           }), duracion);
@@ -159,7 +159,7 @@
       height = 120;
       title = obj.title || 'Alert';
       text = obj.text || '';
-      text += "<div class=\"content-btn\"><input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\"></div>";
+      text += "<div class=\"content-btn\"> <input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\"> </div>";
       return Win_ventana_alert = new $W.Window({
         width: width,
         height: height,
@@ -181,7 +181,7 @@
       height = 120;
       title = obj.title || 'Confirm';
       text = obj.text || '';
-      text += "<div class=\"content-btn\">\n	<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);'+obj.functionOK+';\">\n	<input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode);return false;\">\n</div>";
+      text += "<div class=\"content-btn\"> <input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode); " + obj.functionOK + ";\"> <input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode); return false;\"> </div>";
       return new $W.Window({
         width: width,
         height: height,
@@ -433,7 +433,7 @@
     return _tbtext = function(obj) {
       var text;
       text = document.createElement('div');
-      text.setAttribute("id", "win_tbtext_" + obj.id);
+      text.setAttribute("id", "win-tbtext-" + obj.id);
       text.setAttribute("class", "win-tbtext ");
       if (obj.align === 'right') {
         text.setAttribute("style", "text-align:right;");
