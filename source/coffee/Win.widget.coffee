@@ -173,7 +173,7 @@ do ($W = Win) ->
 																			<div class=\"win-modal-label label-finish\">#{texto}</div>
 																		</div>";
 				setTimeout ( ->
-				  mask.style.visibility = 'hidden'
+				  	mask.style.visibility = 'hidden'
 				), duracion
 
 	$W.Alert = (obj) ->
