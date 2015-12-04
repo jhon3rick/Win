@@ -19,7 +19,16 @@
 			break;
 	}
 
-	function prueba_ajax(){ echo'Mi primera ventana'; }
+	function prueba_ajax(){
+		echo"<div>
+				hola mundo
+			</div>
+			<div>
+				<script>
+					alert(2)
+				</script>
+			</div>";
+	}
 
 	function prueba_ajax_load(){
 		echo "<style>
@@ -41,8 +50,8 @@
 		echo '<div><input type="text" id="input_calendar"></div>
 				<script>
 					$W.form.dateField({
-						applyTo   : "input_calendar",
 						format    : "y-m-d",
+						applyTo   : "input_calendar",
 						listeners : { select: function() { alert("Haz seleccionado la fecha "+this.value) } }
 					});
 				</script>';

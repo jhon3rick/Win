@@ -58,12 +58,12 @@ $W.Ajax = do ->
 
 
 		text = obj.text || 'cargando...'
-		dom_element.innerHTML = """<div class="win-content-min-load" >
-										<div class="win-content-min-load-img">
-											<div class="win-min-load-ajax"></div>
+		dom_element.innerHTML = "<div class=\"win-content-min-load\" >
+										<div class=\"win-content-min-load-img\">
+											<div class=\"win-min-load-ajax\"></div>
 										</div>
-										<div class="win-content-min-load-label">#{text}</div>
-									</div>"""
+										<div class=\"win-content-min-load-label\">#{text}</div>
+									</div>"
 
 		xhr     = new XMLHttpRequest
 		bodyXhr = obj.url+'?'+parametros
@@ -72,10 +72,15 @@ $W.Ajax = do ->
 		xhr.open(method,bodyXhr, true)
 		xhr.onreadystatechange=() ->
 			if xhr.readyState==4
-				response = xhr.responseText
-				html = extract_script(response)
-				dom_element.innerHTML = html
-				eval_script(response)
+				responseHtml = xhr.responseText
+				# html = extract_script(response)
+				dom_element.innerHTML = responseHtml
+				script = dom_element.getElementsByTagName('script');
+
+				for i in script
+					tagScript = document.createElement('script');
+					i.parentNode.replaceChild(tagScript,i);
+					tagScript.innerHTML = i.innerHTML;
 
 		xhr.send(null)
 

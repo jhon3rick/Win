@@ -71,18 +71,25 @@
           }
         }
         text = obj.text || 'cargando...';
-        dom_element.innerHTML = "<div class=\"win-content-min-load\" >\n	<div class=\"win-content-min-load-img\">\n		<div class=\"win-min-load-ajax\"></div>\n	</div>\n	<div class=\"win-content-min-load-label\">" + text + "</div>\n</div>";
+        dom_element.innerHTML = "<div class=\"win-content-min-load\" > <div class=\"win-content-min-load-img\"> <div class=\"win-min-load-ajax\"></div> </div> <div class=\"win-content-min-load-label\">" + text + "</div> </div>";
         xhr = new XMLHttpRequest;
         bodyXhr = obj.url + '?' + parametros;
         method = obj.method || 'POST';
         xhr.open(method, bodyXhr, true);
         xhr.onreadystatechange = function() {
-          var html, response;
+          var i, j, len, responseHtml, results, script;
           if (xhr.readyState === 4) {
-            response = xhr.responseText;
-            html = extract_script(response);
-            dom_element.innerHTML = html;
-            return eval_script(response);
+            responseHtml = xhr.responseText;
+            dom_element.innerHTML = responseHtml;
+            script = dom_element.getElementsByTagName('script');
+            results = [];
+            for (j = 0, len = script.length; j < len; j++) {
+              i = script[j];
+              tagScript = document.createElement('script');
+              i.parentNode.replaceChild(tagScript, i);
+              results.push(tagScript.innerHTML = i.innerHTML);
+            }
+            return results;
           }
         };
         xhr.send(null);
