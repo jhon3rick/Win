@@ -846,7 +846,7 @@ function _invoke (collection, fn, args) {
     }
   } else {
     for (i in collection) {
-      console.log(i)
+      console.log(collection[i])
       collection[i][fn].apply(collection[i], args);
     }
   }
