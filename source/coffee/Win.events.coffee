@@ -15,10 +15,12 @@ do ($W = Win) ->
 
   ELEMENT_ID = 1
   HANDLERS = {}
+  
   EVENT_METHODS =
     preventDefault          : "isDefaultPrevented"
     stopImmediatePropagation: "isImmediatePropagationStopped"
     stopPropagation         : "isPropagationStopped"
+
   EVENTS_DESKTOP =
     touchstart        : "mousedown"
     touchmove         : "mousemove"
