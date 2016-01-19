@@ -9,22 +9,21 @@
 
 		<link rel="stylesheet" href="css/Win-theme-blue.css" />
 
-		<!-- // <script src="../dist/js/Win.min.js"></script> -->
-		<script src="js/Win.js"></script>
-		<script src="js/Win.element.js"></script>
-		<script src="js/Win.css.js"></script>
-		<script src="js/Win.events.js"></script>
-		<script src="js/Win.query.js"></script>
-		<script src="js/Win.output.js"></script>
+		<script src="../dist/js/Win.min.js"></script>
+		<!-- <script src="js/Win.js"></script>
+		// <script src="js/Win.element.js"></script>
+		// <script src="js/Win.css.js"></script>
+		// <script src="js/Win.events.js"></script>
+		// <script src="js/Win.query.js"></script>
+		// <script src="js/Win.output.js"></script>
 
 
-		<script src="js/Win.form.js"></script>
-		<script src="js/Win.widget.js"></script>
-		<script src="js/Win.ajax.js"></script>
-		<script src="js/Win.ini.js"></script>
-		// <!--
+		// <script src="js/Win.form.js"></script>
+		// <script src="js/Win.widget.js"></script>
+		// <script src="js/Win.ajax.js"></script>
+		// <script src="js/Win.ini.js"></script> -->
 		//
-		// <script src="js/Win.desktop.js"></script> -->
+		// <!--<script src="js/Win.desktop.js"></script> -->
 
 		<link rel="stylesheet" href="js/highlight/styles/androidstudio.css">
 		<script src="js/highlight/highlight.pack.js"></script>

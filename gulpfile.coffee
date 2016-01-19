@@ -22,16 +22,19 @@ path =
 	coffee      : ['./source/coffee/*.coffee']
 	stylus      : ['./source/stylus/*.styl']
 	jshint      : ['./build/js/*.js']
-	# modules     : ['./source/coffee/Win.coffee',
-	# 				'./source/coffee/Win.element.coffee',
-	# 				'./source/coffee/Win.css.coffee',
-	# 				'./source/coffee/Win.widget.coffee',
-	# 				'./source/coffee/Win.form.coffee',
-	# 				'./source/coffee/Win.ajax.coffee',
-	# 				'./source/coffee/Win.ini.coffee',
-	# 				'./source/coffee/Win.desktop.coffee']
+	modules     : ['./source/coffee/Win.coffee',
+					'./source/coffee/Win.ini.coffee',
+					'./source/coffee/Win.element.coffee',
+					'./source/coffee/Win.css.coffee',
+					'./source/coffee/Win.events.coffee',
+					'./source/coffee/Win.query.coffee',
+					'./source/coffee/Win.output.coffee',
 
-	modules     : ['./source/coffee/*.coffee']
+					'./source/coffee/Win.form.coffee',
+					'./source/coffee/Win.widget.coffee',
+					'./source/coffee/Win.ajax.coffee']
+
+	# modules     : ['./source/coffee/*.coffee']
 
 banner = [
 	"/**"
