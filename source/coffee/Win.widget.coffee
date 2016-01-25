@@ -17,6 +17,7 @@ do ($W = Win) ->
 	# Widgets ventana
 	# ---------------------------------------------------------------------------
 	$W.Window = (obj) ->
+		elementsNav = ''
 		width       = obj.width or 300
 		height      = obj.height or 300
 		id          = obj.id or ''
@@ -46,6 +47,9 @@ do ($W = Win) ->
 		left = if body.offsetWidth < width then 0 else (body.offsetWidth - width)/2
 		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
 
+		if typeof(obj.items) != 'undefined'
+			elementsNav = _router(obj.items)
+
 		winModal.innerHTML = "<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
 									<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
@@ -63,9 +67,7 @@ do ($W = Win) ->
 											#{divClose}
 										</div>
 									</header>
-									<nav>
-										<div class=\"win-tbar\" id=\"win-tbar-#{id}\"></div>
-									</nav>
+									<nav>#{elementsNav}</nav>
 									<div class=\"win-window-body #{clsBody}\" id=\"win_window_#{id}\">#{html}</div>
 								</div>"
 
@@ -80,24 +82,30 @@ do ($W = Win) ->
 			_resize($W("#win-resize-right-#{id}")[0])
 			# _resize($W("#win-div-resize-#{id}")[0])
 
-		if typeof(obj.tbar) != 'undefined'
-			obj.tbar.applyTo = id
-			$W.tbar(obj.tbar)
-
 		if typeof(obj.autoLoad) != 'undefined'
 			$W.Ajax.load($W("#win_window_#{id}")[0],obj.autoLoad)
 
-		close: ()->
+		close: () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
 
 	$W.aside = (obj) ->
 
 
 	$W.tabpanel = (obj) ->
+		console.log(obj);
+		html = "<div id=\"#{obj.id}\">"
+
+		(obj.items).forEach(json,index,element) ->
+			html += "<div id=\"#{json.id}\">#{json.title}</div>"
+
+		html += "</div>"
 
 	$W.tbar = (obj) ->
-		tbar = $W("#win-tbar-#{obj.applyTo}")[0]
-		_router(obj, tbar)
+		id    = obj.id or ''
+		items = obj.items or ''
+		tbar  = $W("#win-tbar-#{obj.applyTo}")[0]
+		return "<div class=\"win-tbar\" id=\"win-tbar-#{id}\">"+_router(obj.items, tbar)+"</div>"
+		
 
 
 	# ---------------------------------------------------------------------------
@@ -109,6 +117,12 @@ do ($W = Win) ->
 			$W('#id').style('display','none')
 
 		@show = (id) ->
+			$W('#id').style('display','block')
+
+		@enable = (id) ->
+			$W('#id').style('display','none')
+
+		@disable = (id) ->
 			$W('#id').style('display','block')
 
 		return id
@@ -178,10 +192,6 @@ do ($W = Win) ->
 
 	$W.Alert = (obj) ->
 
-		if typeof(obj) == 'undefined'
-			console.warn('Para utiliza la propiedad alert debe enviar el objeto con los parametros\nConsulte la documentacion')
-			return
-
 		width  = 250
 		height = 120
 		title  = obj.title or 'Alert'
@@ -190,20 +200,20 @@ do ($W = Win) ->
 						<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\">
 					</div>"
 
-		Win_ventana_alert = new $W.Window({
-											width       : width,
-											height      : height,
-											id          : 'Win_ventana_alert',
-											title       : title,
-											html        : text,
-											type        : 'alert',
-											modal       : true,
-											autoScroll  : true,
-											closable    : false,
-											autoDestroy : true,
-											drag        : false,
-											resize      : false
-										});
+		new $W.Window({
+			width       : width,
+			height      : height,
+			id          : 'Win_ventana_alert',
+			title       : title,
+			html        : text,
+			type        : 'alert',
+			modal       : true,
+			autoScroll  : true,
+			closable    : false,
+			autoDestroy : true,
+			drag        : false,
+			resize      : false
+		});
 
 	$W.Confirm = (obj) ->
 
@@ -318,8 +328,6 @@ do ($W = Win) ->
 			else if attrData == 'top' then _resizeYTop(e)
 			else if attrData == 'bottom' then _resizeYBottom(e)
 
-
-
 		_stopDrag = (e) ->
 			document.documentElement.removeEventListener('mousemove', _doDrag, false)
 			document.documentElement.removeEventListener('mouseup', _stopDrag, false)
@@ -336,14 +344,9 @@ do ($W = Win) ->
 			objParent.style.top  = (positionY + e.clientY - startY) + 'px'
 			objParent.style.height = (startHeight - e.clientY + startY) + 'px'
 
-
-
-
-
 		_resizeXRight = (e) ->
 			if e.clientX >= 500
 				objParent.style.width = (startWidth + e.clientX - startX) + 'px'
-
 
 		_resizeYBottom = (e) ->
 			if e.clientY >= 340
@@ -355,83 +358,77 @@ do ($W = Win) ->
 	@param  obj ObjetoDom parent
 	###
 	_router = (obj, parent) ->
+		html = ""
 		if typeof(obj) == 'object'
 			align  = 'left'
 
 			obj.forEach (json,index,element) ->
 
+				console.log(json.xtype);
+
 				if json.xtype == 'button'
-					json.parent = parent
-					_button(json)
+					html += _button(json)
 
 				else if json.xtype == 'buttongroup'
-					json.parent = parent
-					$W.buttongroup(json)
+					html += $W.buttongroup(json)
+
+				else if json.xtype == 'tbar'
+					html += _tbar(json)
 
 				else if json.xtype == 'panel'
-					json.parent = parent
-					_panel(json)
+					html += _panel(json)
+
+				else if json.xtype == 'tabpanel'
+					html += $W.tabpanel(json)
 
 				else if json.xtype == 'tbtext'
-					json.align  = align
-					json.parent = parent
-					_tbtext(json)
+					json.align = align
+					html += _tbtext(json)
 
 				else if json == '-'
-					_separator(parent)
+					html +=_separator()
 
 				else if json == '--'
-					_separatorHeight(parent)
+					html +=_separatorHeight()
 
 				else if json == '->'
 					align = 'right'
-					div = document.createElement('div')
-					(parent).appendChild(div)
+					html  += "<div></div>"
+
 
 			if align == ''
-				div = document.createElement('div')
-				(parent).appendChild(div)
+				html += '<div></div>'
+		html
 
 	###
 		@method _separator
 		@param  obj objectDom parent
 	###
-	_separator = (obj) ->
-		div = document.createElement('div')
-		div.setAttribute("class","win-separator")
-		div.innerHTML = "|"
-		obj.appendChild(div)
+	_separator = () -> html = "<div class=\"win-separator\">|</div>"
 
 	###
 		@method _separatorHeight
 		@param  obj objectDom parent
 	###
-	_separatorHeight = (obj) ->
-		div = document.createElement('div')
-		div.setAttribute("class","win-separatorHeight")
-		obj.appendChild(div)
+	_separatorHeight = () -> html = "<div class=\"win-separatorHeight\"></div>"
 
-		$W.buttongroup = (obj) ->
+	$W.buttongroup = (obj) ->
 
 	###
 		@method _button
 		@param  obj objectDom parent and config
 	###
 	_button = (obj) ->
-		text = obj.text or ''
-		id   = obj.id or ''
-		cls  = obj.cls or ''
+		text  = obj.text or ''
+		id    = obj.id or ''
+		cls   = obj.cls or ''
+		width = obj.width or 50
+		click = obj.handler or ''
 
-		boton = document.createElement('div')
-		boton.setAttribute("id",id)
-		boton.setAttribute("class","win-btn")
+		html = "<div id=\"#{id}\" class=\"win-btn\" style=\"width: #{width}px;\" onclick=\"#{click}\">
+					<button class=\"#{cls}\">#{text}</button>
+				</div>"
 
-		if(obj.width > 0) then boton.setAttribute("style","width: #{obj.width}px;")
-
-		boton.innerHTML = """<button class="#{cls}">#{text}</button>"""
-		boton.onclick   = obj.handler
-
-		obj.parent.appendChild(boton)
 
 	###
 		@method _panel
@@ -441,32 +438,38 @@ do ($W = Win) ->
 		id        = obj.id or ''
 		width     = obj.width or 'auto'
 		height    = obj.height or 'auto'
+		html      = obj.html or ''
 		bodyStyle = obj.bodyStyle or ''
 
-		panel = document.createElement('div')
-		panel.setAttribute("id",id)
-		panel.setAttribute("class","win-panel ")
-		panel.setAttribute("style",'width:'+width+';height:'+height+';'+bodyStyle)
-		(obj.parent).appendChild(panel)
+		console.log(html)
 
-		if typeof(obj.autoLoad) != 'undefined'
-			$W.Ajax.load(panel,obj.autoLoad)
+		html = "<div id=\"#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{bodyStyle}\" onload=\"alert(3)\">#{html}</div>"
 
-		else if typeof(obj.html) != 'undefined'
-			panel.innerHTML = obj.html
+		# if typeof(obj.autoLoad) != 'undefined'
+		# 	$W.Ajax.load(panel,obj.autoLoad)
+
+	###
+		@method _tabpanel
+		@param  obj objectDom parent and config
+	###
+	_tabpanel = (obj) ->
 
 	###
 		@method _tbtext
 		@param  obj objectDom parent and config
 	###
 	_tbtext = (obj) ->
-		text = document.createElement('div')
+		id    = obj.id or ''
+		text  = obj.text or ''
+		align = obj.align or 'left'
+		html  = "<div id=\"win-tbtext-#{id}\" class=\"tbtext\" style=\"text-align:#{align};\">#{text}</div>"
 
-		text.setAttribute("id","win-tbtext-#{obj.id}")
-		text.setAttribute("class","win-tbtext ")
-
-		if(obj.align == 'right') then text.setAttribute("style","text-align:right;")
-
-		text.innerHTML = obj.text
-		(obj.parent).appendChild(text)
-
+	###
+		@method _tbar
+		@param  obj objectDom parent and config
+	###
+	_tbar = (obj) ->
+		id    = obj.id or ''
+		items = obj.items or ''
+		tbar  = $W("#win-tbar-#{obj.applyTo}")[0]
+		return "<div class=\"win-tbar\" id=\"win-tbar-#{id}\">"+_router(obj.items, tbar)+"</div>"

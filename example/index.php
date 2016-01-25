@@ -136,7 +136,7 @@ $contenido ='
 							<?php
 $contenido ='
 <script>
-    console.log($W.version);
+	console.log($W.version);
 </script>';
 								echo htmlentities($contenido);
 							?>
@@ -156,7 +156,7 @@ $contenido ='
 							<?php
 $contenido ='
 <script>
-    $W.ini({theme:"Win-theme-light.css"})	// change theme
+	$W.ini({theme:"Win-theme-light.css"})	// change theme
 </script>';
 								echo htmlentities($contenido);
 							?>
@@ -173,8 +173,8 @@ $contenido ='
 							<?php
 $contenido ='
 <script>
-    $W(".parrafo > div").html("tapquo");						// Captura varios nodes que cumplen la condicion
-    $W(".parrafo > div").html("tapquo").style("color", "red")	// Anidacion de funciones
+	$W(".parrafo > div").html("tapquo");						// Captura varios nodes que cumplen la condicion
+	$W(".parrafo > div").html("tapquo").style("color", "red")	// Anidacion de funciones
 </script>';
 								echo htmlentities($contenido);
 							?>
@@ -196,7 +196,7 @@ $contenido ='
 $contenido ='
 <input type="text" id="inputInteger"/>
 <script>
-    $W.form.intField({
+	$W.form.intField({
 		applyTo : "inputInteger"
 	});
 </script>';
@@ -215,7 +215,7 @@ $contenido ='
 $contenido ='
 <input type="text" id="inputDouble"/>
 <script>
-    $W.form.doubleField({
+	$W.form.doubleField({
 		applyTo : "inputDouble"
 	});
 </script>';
@@ -234,7 +234,7 @@ $contenido ='
 $contenido ='
 <input type="text" id="inputEmail"/>
 <script>
-    $W.form.emailField({
+	$W.form.emailField({
 		applyTo : "inputEmail"
 	});
 </script>';
@@ -253,7 +253,7 @@ $contenido ='
 $contenido ='
 <input type="text" id="inputText"/>
 <script>
-    $W.form.textField({
+	$W.form.textField({
 		applyTo : "inputText",
 		type    : "uppercase"
 		// type    : "lowercase"
@@ -274,7 +274,7 @@ $contenido ='
 $contenido ='
 <input type="text" id="inputDate"/>
 <script>
-    $W.form.dateField({
+	$W.form.dateField({
 		applyTo   : "inputDate",
 		format    : "y-m-d",
 		listeners : { select: function() { console.log(this); alert("prueba input date") } }
@@ -314,70 +314,87 @@ $contenido ='
 			resize      : true,
 			autoLoad    :
 			{
-		        url     : "bd.php",
-		        params  :
-		        {
-		            opc : "prueba_ajax",
-		            var2 : "var2",
-		        }
-		    },
-			tbar        :
+				url     : "bd.php",
+				params  :
+				{
+					opc : "prueba_ajax",
+					var2 : "var2",
+				}
+			},
+			items :
 			[
 				{
-					xtype : "button",
-					id    : "btn_1",
-					cls   : "user_black_36",
-					text  : "Nueva ventana",
-					handler : function(){ ventana2(); }
-				},"-",
-				{
-					items	:
+					xtype : "tabPanel",
+					id    : "tbar1",
+					items : 
 					[
 						{
-							xtype     : "panel",
-							width     : 160,
-							height    : 56,
-							bodyStyle : "background-color:rgb(208, 205, 205)",
-							bodyStyle : "border:1px solid #2a80b9;",
-							html      : "<div>contenido por parametro</div>",
-							autoLoad  :
-							{
-								url		: "bd.php",
-								params	:
-								{
-									opc    : "prueba_ajax_load",
-									prueba : 1
-								}
-							}
-						}
+							title: "panel1",
+						},
 					]
 				},
-				{
-					xtype : "button",
-					id    : "btn_2",
-					handler: function () { ajax_load();	},
-					cls   : "ic_autorenew_black_36dp",
-					text  : "ajax load"
-				},
-				{
-					xtype : "button",
-					id    : "btn_2",
-					handler: function () { ajax_request();	},
-					cls   : "ic_autorenew_black_36dp",
-					text  : "ajax request"
-				}
-				,"->","-",
-				{
-					xtype : "button",
-					id    : "btn_1",
-					cls   : "icon-action-black-ic_perm_identity_black_24dp",
-					text  : "Salir",
-					handler : function(){ alert(4); ventana2(); }
-				},"-",
-				{
-					xtype : "tbtext",
-					id    : "btn_1",
-					text  : "una demostracion de un texto largo<br>con salto de linea",
+				{	
+					xtype : "tbar"  
+					id    : "",
+					items :      
+					[
+						{
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "user_black_36",
+							text  : "Nueva ventana",
+							handler : function(){ ventana2(); }
+						},"-",
+						{
+							items	:	
+							[
+								{
+									xtype     : "panel",
+									width     : 160,
+									height    : 56,
+									bodyStyle : "background-color:rgb(208, 205, 205)",
+									bodyStyle : "border:1px solid #2a80b9;",
+									html      : "<div>contenido por parametro</div>",
+									autoLoad  :
+									{
+										url		: "bd.php",
+										params	:
+										{
+											opc    : "prueba_ajax_load",
+											prueba : 1
+										}
+									}
+								}
+							]
+						},
+						{
+							xtype : "button",
+							id    : "btn_2",
+							handler: function () { ajax_load();	},
+							cls   : "ic_autorenew_black_36dp",
+							text  : "ajax load"
+						},
+						{
+							xtype : "button",
+							id    : "btn_2",
+							handler: function () { ajax_request();	},
+							cls   : "ic_autorenew_black_36dp",
+							text  : "ajax request"
+						}
+						,"->","-",
+						{
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "icon-action-black-ic_perm_identity_black_24dp",
+							text  : "Salir",
+							handler : function(){ alert(4); ventana2(); }
+						},"-",
+						{
+							xtype : "tbtext",
+							id    : "btn_1",
+							text  : "una demostracion de un texto largo<br>con salto de linea",
+						}
+					]
 				}
 			]
 		});
@@ -429,13 +446,13 @@ $contenido ='
 			autoDestroy : true,
 			autoLoad    :
 			{
-		        url     : ".php",
-		        params  :
-		        {
-		            var1 : "var1",
-		            var2 : "var2",
-		        }
-		    },
+				url     : ".php",
+				params  :
+				{
+					var1 : "var1",
+					var2 : "var2",
+				}
+			},
 			drag        : true,
 			resize      : true,
 			tbar        :
@@ -501,67 +518,82 @@ $contenido ='
 					resize      : true,
 					autoLoad    :
 					{
-				        url     : "bd.php",
-				        params  :
-				        {
+						url     : "bd.php",
+						params  :
+						{
 							opc : "prueba_ajax",
 							var2 : "var2",
-				        }
-				    },
-					tbar        :
+						}
+					},
+					items :
 					[
 						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "user_black_36",
-							text  : "Nueva Ventana",
-							handler : function(){ ventana2(); }
-						},"-",
-						{
-							xtype     : "panel",
-							width     : 160,
-							// bodyStyle : "background-color:rgb(208, 205, 205)",
-							bodyStyle : "",
-							html      : "<div>contenido por parametro</div>",
-							autoLoad  :
-							{
-								url		: "bd.php",
-								params	:
+							xtype : "tabPanel",
+							id    : "tbar1",
+							items : 
+							[
 								{
-									opc    : "prueba_ajax_load",
-									prueba : 1
+									title: "panel1",
+								},
+							]
+						},
+						{	
+							xtype : "tbar",  
+							id    : "",
+							items :      
+							[
+								{
+									xtype : "button",
+									id    : "btn_1",
+									cls   : "user_black_36",
+									text  : "Nueva ventana",
+									handler : function(){ ventana2(); }
+								},"-",
+								{
+									xtype     : "panel",
+									width     : 160,
+									height    : 56,
+									bodyStyle : "background-color:rgb(208, 205, 205)",
+									bodyStyle : "border:1px solid #2a80b9;",
+									html      : "<div>contenido por parametro</div>",
+									autoLoad  :
+									{
+										url		: "bd.php",
+										params	:
+										{
+											opc    : "prueba_ajax_load",
+											prueba : 1
+										}
+									}
+								},
+								{
+									xtype : "button",
+									id    : "btn_2",
+									handler: function () { ajax_load();	},
+									cls   : "ic_autorenew_black_36dp",
+									text  : "ajax load"
+								},'--',
+								{
+									xtype : "button",
+									id    : "btn_2",
+									handler: function () { ajax_request();	},
+									cls   : "ic_autorenew_black_36dp",
+									text  : "ajax request"
 								}
-							}
-
-						},"-",
-						{
-							xtype : "button",
-							id    : "btn_2",
-							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax load",
-							width : 60,
-							handler: function () { ajax_load();	}
-						},"->","-",
-						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "icon-action-black-ic_perm_identity_black_24dp",
-							text  : "Salir",
-							width : 60,
-							handler : function(){ alert(4); ventana2(); }
-						},"-",
-						{
-							xtype : "tbtext",
-							id    : "btn_1",
-							text  : "una demostracion de un texto largo<br>con salto de linea",
-						},"--",
-						{
-							xtype : "button",
-							id    : "btn_2",
-							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax request",
-							width : 60,
-							handler: function () { ajax_request(); }
+								,"->","-",
+								{
+									xtype : "button",
+									id    : "btn_1",
+									cls   : "icon-action-black-ic_perm_identity_black_24dp",
+									text  : "Salir",
+									handler : function(){ alert(4); ventana2(); }
+								},"-",
+								{
+									xtype : "tbtext",
+									id    : "btn_1",
+									text  : "una demostracion de un texto largo<br>con salto de linea",
+								}
+							]
 						}
 					]
 				});
@@ -582,25 +614,25 @@ $contenido ='
 					autoDestroy : true,
 					autoLoad    :
 					{
-				        url     : "bd.php",
-				        params  :
-				        {
+						url     : "bd.php",
+						params  :
+						{
 							opc : "prueba_ajax_request",
 							var2 : "var2",
-				        }
-				    },
+						}
+					},
 					tabPanel    :
 					[
 						{
-					        xtype     : "",
-					        scripts : true,
-					        nocache : true,
-					        params  :
-					        {
-					            var1 : "var1",
-					            var2 : "var2",
-					        }
-					    },
+							xtype     : "",
+							scripts : true,
+							nocache : true,
+							params  :
+							{
+								var1 : "var1",
+								var2 : "var2",
+							}
+						},
 					],
 					tbar        :
 					[
@@ -631,13 +663,13 @@ $contenido ='
 					resize      : true,
 					autoLoad    :
 					{
-				        url     : "bd.php",
-				        params  :
-				        {
-				            var1 : "var1",
-				            var2 : "var2",
-				        }
-				    },
+						url     : "bd.php",
+						params  :
+						{
+							var1 : "var1",
+							var2 : "var2",
+						}
+					},
 				});
 			}
 
