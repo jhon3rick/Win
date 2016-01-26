@@ -105,5 +105,11 @@ gulp.task 'compile_watch', ->
 	gulp.watch path.coffee, ['minCoffee']
 	gulp.watch path.stylus, ['minStylus']
 
+gulp.task 'coffee_watch', ->
+	gulp.watch path.coffee, ['minCoffee']
+
+gulp.task 'stylus_watch', ->
+	gulp.watch path.stylus, ['minStylus']
+
 gulp.task 'compile_google', ['closure','minStylus']
 gulp.task 'compile', ['minCoffee','minStylus']
