@@ -12,6 +12,9 @@
 
 do ($W = Win) ->
 
+	IDGLOBAL  = ''
+	CONTPANEL = 0
+	CONTBODY  = 0
 	# ---------------------------------------------------------------------------
 	# Static Methods
 	# Widgets ventana
@@ -32,21 +35,20 @@ do ($W = Win) ->
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
 		body        = $W('body')[0]
-		winModal    = document.createElement('div')
 		win         = this
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
+
+		IDGLOBAL = id
 
 		bgBody   = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle  = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
 		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\" onclick=\"#{id}.close()\"></div>" else ""
 
-		winModal.setAttribute("id","win-modal-#{id}")
-		winModal.setAttribute("class","win-modal")
-
 		left = if body.offsetWidth < width then 0 else (body.offsetWidth - width)/2
 		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
 
-		winModal.innerHTML = "<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
+		body.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
+								<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
 									<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -63,32 +65,25 @@ do ($W = Win) ->
 											#{divClose}
 										</div>
 									</header>
-									<nav></nav>
-									<div class=\"win-window-body #{clsBody}\" id=\"win_window_#{id}\">#{html}</div>
-								</div>"
+									<section id=\"win-window-section-#{id}\"></section>
+								</div>
+							</div>"
 
-		
-		body.appendChild(winModal)
-
-		parent = winModal.querySelector('nav');
-		if typeof(obj.items) != 'undefined'
-			_router(obj.items, parent)
-
-
-		_loadScript(winModal)
-
-		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id,winModal,event);
-		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(winModal);
+		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id, document.getElementById("win-modal-#{id}"), event);
+		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(document.getElementById("win-modal-#{id}"));
 
 		if obj.resize != false
 			_resize($W("#win-resize-top-#{id}")[0])
 			_resize($W("#win-resize-bottom-#{id}")[0])
 			_resize($W("#win-resize-left-#{id}")[0])
 			_resize($W("#win-resize-right-#{id}")[0])
-			# _resize($W("#win-div-resize-#{id}")[0])
+
+		section = document.getElementById("win-window-section-#{id}");
+		if typeof(obj.items) != 'undefined'
+			_router(obj.items, section)
 
 		if typeof(obj.autoLoad) != 'undefined'
-			$W.Ajax.load($W("#win_window_#{id}")[0],obj.autoLoad)
+			_body(obj, section)
 
 		close: () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
@@ -103,19 +98,17 @@ do ($W = Win) ->
 	# 	(obj.items).forEach(json,index,element) ->
 	# 		html += "<div id=\"#{json.id}\">#{json.title}</div>"
 
-	# 	html += "</div>" 
+	# 	html += "</div>"
 
 	$W.tbar = (obj) ->
+		IDGLOBAL = obj.idApply
 		parent = document.getElementById("#{obj.idApply}")
-		parent.className = "win-tbar"
 		_router(obj.items, parent)
-		
-
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
 	# Get Elements
-	# --------------------------------------------------------------------------- 
+	# ---------------------------------------------------------------------------
 	$W.getButton = (id) ->
 		@hiden = (id) ->
 			$W('#id').style('display','none')
@@ -144,7 +137,7 @@ do ($W = Win) ->
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
 			return
-		if !$W("#win_window_#{obj.id_ventana}")[0]
+		if !$W("#win-window-body-#{obj.id_ventana}")[0]
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
 			return
 
@@ -191,7 +184,7 @@ do ($W = Win) ->
 																			<div class=\"win-modal-label label-finish\">#{texto}</div>
 																		</div>";
 				setTimeout ( ->
-				  	mask.style.visibility = 'hidden'
+					mask.style.visibility = 'hidden'
 				), duracion
 
 	$W.Alert = (obj) ->
@@ -250,7 +243,7 @@ do ($W = Win) ->
 	# Static Methods
 	# Private Elements
 	# ---------------------------------------------------------------------------
-	
+
 	###
 	@method _router
 	@param  arr child
@@ -258,7 +251,7 @@ do ($W = Win) ->
 	###
 	_router = (obj, parent) ->
 		if typeof(obj) == 'object'
-			align  = 'left'
+			float  = 'left'
 
 			obj.forEach (json,index,element) ->
 
@@ -268,22 +261,20 @@ do ($W = Win) ->
 					when 'tbar' then _tbar(json, parent)
 					when 'panel' then _panel(json, parent)
 					# when 'tabpanel' then $W.tabpanel(json)
-					when 'tbtext' 
-						json.align = align
-						_tbtext(json, parent)
-					else 
+					when 'tbtext' then _tbtext(json, parent)
+					else
 						if json == '-'
-							_separator(parent) 
+							_separator(parent)
 
 						else if json == '--'
 							_separatorHeight(parent)
 
 						else if json == '->'
-							align = 'right'
+							float = 'right'
 							parent.innerHTML += '<div></div>'
 
 
-			if align == 'left'
+			if float == 'left'
 				parent.innerHTML += '<div></div>'
 
 	###
@@ -304,14 +295,14 @@ do ($W = Win) ->
 	@method _button
 	@param  obj objectDom parent and config
 	###
-	_button = (obj,parent) ->
+	_button = (obj, parent) ->
 		text  = obj.text or ''
 		id    = obj.id or ''
 		cls   = obj.cls or ''
 		width = obj.width or 50
 		click = obj.handler or ''
 
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width: #{width}px;\" onclick=\"#{click}\">
+		parent.innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width: #{width};\" onclick=\"#{click}\">
 								<button class=\"#{cls}\">#{text}</button>
 							</div>"
 
@@ -321,19 +312,20 @@ do ($W = Win) ->
 	@param  obj objectDom parent
 	###
 	_panel = (obj, parent) ->
-		id     = obj.id or ''
+		CONTPANEL++
+
+		id     = obj.id or CONTPANEL
 		width  = obj.width or 'auto'
 		height = obj.height or 'auto'
 		html   = obj.html or ''
 		style  = obj.style or ''
 
-		# console.log('panel')
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\"></div>"
-		panel = parent.lastChild
+		parent.innerHTML += "<div id=\"win-panel-#{IDGLOBAL}-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">#{html}</div>"
+		panel = document.getElementById("win-panel-#{IDGLOBAL}-#{id}")
 
 		if typeof(obj.autoLoad)
-			$W.Ajax.load(panel,obj.autoLoad);
-			
+			$W.Ajax.load(panel, obj.autoLoad)
+
 	###
 	@method _tabpanel
 	@param  obj objectDom parent and config
@@ -347,10 +339,9 @@ do ($W = Win) ->
 	_tbtext = (obj, parent) ->
 		id    = obj.id or ''
 		text  = obj.text or ''
-		align = obj.align or 'left'
 		width = obj.width or '120'
 		style = obj.style or 'left'
-		parent.innerHTML  += "<div id=\"win-tbtext-#{id}\" class=\"win-tbtext\" style=\"width:#{width}px; #{style}\">#{text}</div>"
+		parent.innerHTML  += "<div id=\"win-tbtext-#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\">#{text}</div>"
 
 	###
 	@method _tbar
@@ -361,20 +352,28 @@ do ($W = Win) ->
 		items = obj.items or ''
 
 		parent.innerHTML += "<div class=\"win-tbar\" id=\"win-tbar-#{id}\"></div>"
-		tbar = document.getElementById("win-tbar-#{id}") 
+		tbar = document.getElementById("win-tbar-#{id}")
 
 		_router(obj.items, tbar)
 
 	###
-	@method _loadScript
-	@param  obj objectDom load script
+	@method _body
+	@param  obj objectDom parent and config
 	###
-	_loadScript = (obj) ->
-		tagsScript = obj.getElementsByTagName('script')
-		for i in tagsScript
-			tagScript = document.createElement('script')
-			i.parentNode.replaceChild(tagScript,i)
-			tagScript.innerHTML = i.innerHTML
+	_body = (obj, parent) ->
+		CONTBODY++
+
+		id      = obj.id or CONTBODY
+		items   = obj.items or ''
+		html    = obj.html or ''
+		clsBody = obj.clsBody or ''
+
+		parent.innerHTML += "<div class=\"win-window-body #{clsBody}\" id=\"win-window-body-#{id}\">#{html}</div>"
+		body = document.getElementById("win-window-body-#{id}")
+
+		if typeof(obj.autoLoad)
+			console.log(2)
+			$W.Ajax.load(body, obj.autoLoad)
 
 	# ---------------------------------------------------------------------------
 	# Private Method Drag and Drop
@@ -486,4 +485,3 @@ do ($W = Win) ->
 		_resizeYBottom = (e) ->
 			if e.clientY >= 340
 				objParent.style.height = (startHeight + e.clientY - startY) + 'px'
-

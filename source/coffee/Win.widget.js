@@ -13,9 +13,12 @@
 (function() {
   "use strict";
   (function($W) {
-    var _button, _draggMove, _draggStart, _draggStop, _loadScript, _panel, _resize, _router, _separator, _separatorHeight, _tabpanel, _tbar, _tbtext;
+    var CONTBODY, CONTPANEL, IDGLOBAL, _body, _button, _draggMove, _draggStart, _draggStop, _loadScript, _panel, _resize, _router, _separator, _separatorHeight, _tabpanel, _tbar, _tbtext;
+    IDGLOBAL = '';
+    CONTPANEL = 0;
+    CONTBODY = 0;
     $W.Window = function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, height, html, id, left, modal, parent, theme, title, titleStyle, top, width, win, winModal;
+      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, height, html, id, left, modal, section, theme, title, titleStyle, top, width, win;
       width = obj.width || 300;
       height = obj.height || 300;
       id = obj.id || '';
@@ -31,23 +34,15 @@
       bodyStyle = obj.bodyStyle || '';
       bodyColor = obj.bodyColor || '#FFF';
       body = $W('body')[0];
-      winModal = document.createElement('div');
       win = this;
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
+      IDGLOBAL = id;
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
       divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : "";
-      winModal.setAttribute("id", "win-modal-" + id);
-      winModal.setAttribute("class", "win-modal");
       left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
       top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <nav></nav> <div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div> </div>";
-      body.appendChild(winModal);
-      parent = winModal.querySelector('nav');
-      if (typeof obj.items !== 'undefined') {
-        _router(obj.items, parent);
-      }
-      _loadScript(winModal);
+      body.innerHTML += "<div id=\"win-modal-" + id + "\" class=\"win-modal\"> <div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <section id=\"win-window-section-" + id + "\"></section> </div> </div>";
       $W("#win-title-" + id)[0].onmousedown = function() {
         return _draggStart(id, winModal, event);
       };
@@ -60,14 +55,25 @@
         _resize($W("#win-resize-left-" + id)[0]);
         _resize($W("#win-resize-right-" + id)[0]);
       }
+      section = document.getElementById("win-window-section-" + id);
+      if (typeof obj.items !== 'undefined') {
+        _router(obj.items, section);
+      }
       if (typeof obj.autoLoad !== 'undefined') {
-        $W.Ajax.load($W("#win_window_" + id)[0], obj.autoLoad);
+        $W.Ajax.load($W("#win-window-body-" + id)[0], obj.autoLoad);
       }
       return {
         close: function() {
           return $W("\#win-modal-" + id)[0].parentNode.removeChild($W("\#win-modal-" + id)[0]);
         }
       };
+    };
+    $W.tbar = function(obj) {
+      var parent;
+      IDGLOBAL = obj.idApply;
+      parent = document.getElementById("" + obj.idApply);
+      parent.className = "win-tbar";
+      return _router(obj.items, parent);
     };
     $W.getButton = function(id) {
       this.hiden = function(id) {
@@ -102,7 +108,7 @@
         console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
         return;
       }
-      if (!$W("#win_window_" + obj.id_ventana)[0]) {
+      if (!$W("#win-window-body-" + obj.id_ventana)[0]) {
         console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana ' + id_ventana);
         return;
       }
@@ -205,6 +211,8 @@
               return _tbar(json, parent);
             case 'panel':
               return _panel(json, parent);
+            case 'body':
+              return _panel(json, parent);
             case 'tbtext':
               json.align = align;
               return _tbtext(json, parent);
@@ -262,21 +270,19 @@
     	@param  obj objectDom parent
      */
     _panel = function(obj, parent) {
-      var bodyStyle, height, html, id, panel, width;
-      id = obj.id || '';
-      width = obj.width || 'auto';
+      var height, html, id, panel, style, width;
+      CONTPANEL++;
+      id = obj.id || CONTPANEL;
+      width = obj.width || '180';
       height = obj.height || 'auto';
       html = obj.html || '';
-      bodyStyle = obj.bodyStyle || '';
-      if (typeof obj.autoLoad !== 'undefined') {
-        panel = document.createElement('div');
-        panel.id = id;
-        panel.className = "win-panel";
-        panel.setAttribute("style", "width:" + width + "; height:" + height + ";");
-        parent.appendChild(panel);
+      style = obj.style || '';
+      parent.innerHTML += "<div id=\"win-panel-" + IDGLOBAL + "-" + id + "\" class=\"win-panel\" style=\"width:" + width + "; height:" + height + "; " + style + "\"></div>";
+      panel = document.getElementById("win-panel-" + IDGLOBAL + "-" + id);
+      if (typeof obj.autoLoad) {
         return $W.Ajax.load(panel, obj.autoLoad);
-      } else {
-        return parent.innerHTML += "<div id=\"" + id + "\" class=\"win-panel\" style=\"width:" + width + "; height:" + height + "; " + bodyStyle + "\">" + html + "</div>";
+      } else if (typeof obj.html !== 'undefined') {
+        return panel.innerHTML = obj.html;
       }
     };
 
@@ -291,11 +297,13 @@
     	@param  obj objectDom parent and config
      */
     _tbtext = function(obj, parent) {
-      var align, id, text;
+      var align, id, style, text, width;
       id = obj.id || '';
       text = obj.text || '';
       align = obj.align || 'left';
-      return parent.innerHTML += "<div id=\"win-tbtext-" + id + "\" class=\"win-tbtext\" style=\"text-align:" + align + ";\">" + text + "</div>";
+      width = obj.width || '120';
+      style = obj.style || 'left';
+      return parent.innerHTML += "<div id=\"win-tbtext-" + id + "\" class=\"win-tbtext\" style=\"width:" + width + "px; " + style + "\">" + text + "</div>";
     };
 
     /*
@@ -309,6 +317,28 @@
       parent.innerHTML += "<div class=\"win-tbar\" id=\"win-tbar-" + id + "\"></div>";
       tbar = document.getElementById("win-tbar-" + id);
       return _router(obj.items, tbar);
+    };
+
+    /*
+    	@method _tbar
+    	@param  obj objectDom parent and config
+     */
+    _body = function(obj, parent) {
+      var body, html, id, items;
+      CONTBODY++;
+      id = obj.id || CONTBODY;
+      items = obj.items || '';
+      html = obj.html || '';
+      parent.innerHTML += "<div class=\"win-window-body " + clsBody + "\" id=\"win-window-body-" + id + "\">" + html + "</div>";
+      body = document.getElementById("win-window-body-" + id);
+      if (typeof obj.url) {
+        $W.Ajax.load(body, obj);
+      } else if (typeof obj.html !== 'undefined') {
+        body.innerHTML = obj.html;
+      }
+      if (items !== '') {
+        return _router(items, body);
+      }
     };
 
     /*

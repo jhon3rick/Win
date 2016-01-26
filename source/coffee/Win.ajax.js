@@ -8,15 +8,15 @@
   $W.Ajax = (function() {
     return {
       request: function(obj) {
-        var bodyXhr, method, obj_loading, parametros, value, xhr;
-        parametros = '';
+        var bodyXhr, method, obj_loading, param, value, xhr;
+        param = '';
         if (typeof obj.id_ventana === 'undefined') {
           console.warn("Debe enviar el parametro id_ventana, para poder mostrar el loading");
           return;
         }
         if (typeof obj.params !== 'undefined') {
           for (value in obj.params) {
-            parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
+            param += param === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
           }
         }
         if (obj.modal === true || obj.modal === '') {
@@ -33,7 +33,7 @@
           Win.loading(obj_loading);
         }
         xhr = new XMLHttpRequest;
-        bodyXhr = obj.url + '?' + parametros;
+        bodyXhr = obj.url + '?' + param;
         method = obj.method || 'POST';
         xhr.open(method, bodyXhr, true);
         xhr.onreadystatechange = function() {
@@ -55,28 +55,35 @@
         };
         return xhr.send(null);
       },
-      load: function(objDom, obj) {
-        var bodyXhr, divLoad, method, panel, parametros, text, value, xhr;
-        parametros = '';
-        panel = objDom;
+      load: function(parent, obj) {
+        var bodyXhr, method, param, text, value, xhr;
+        param = '';
         if (typeof obj.params !== 'undefined') {
           for (value in obj.params) {
-            parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
+            param += param === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
           }
         }
         text = obj.text || 'cargando...';
-        divLoad = document.createElement('div');
-        divLoad.className = "win-content-min-load";
-        divLoad.innerHTML = "<div class=\"win-content-min-load-img\"> <div class=\"win-min-load-ajax\"></div> </div> <div class=\"win-content-min-load-label\">" + text + "</div>";
-        objDom.appendChild(divLoad);
+        parent.innerHTML = "<div class=\"win-content-min-load\" > <div class=\"win-content-min-load-img\"> <div class=\"win-min-load-ajax\"></div> </div> <div class=\"win-content-min-load-label\">" + text + "</div> </div>";
         xhr = new XMLHttpRequest;
-        bodyXhr = obj.url + '?' + parametros;
+        bodyXhr = obj.url + '?' + param;
         method = obj.method || 'POST';
         xhr.open(method, bodyXhr, true);
         xhr.onreadystatechange = function() {
-          console.log(panel);
-          panel.style.backgroundColor = "red";
-          return panel.innerHTML = 222;
+          var i, j, len, load, results, script, tagScript;
+          if (xhr.readyState === 4) {
+            load = document.getElementById(parent.id);
+            load.innerHTML = xhr.responseText;
+            script = load.getElementsByTagName('script');
+            results = [];
+            for (j = 0, len = script.length; j < len; j++) {
+              i = script[j];
+              tagScript = document.createElement('script');
+              i.parentNode.replaceChild(tagScript, i);
+              results.push(tagScript.innerHTML = i.innerHTML);
+            }
+            return results;
+          }
         };
         return xhr.send(null);
       }
