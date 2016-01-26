@@ -48,60 +48,58 @@ $W.Ajax = do ->
 
 		xhr.send(null)
 
-	load: (dom_element,obj) ->
+	load : (parent_s,obj) ->
 		parametros = ''
-		tagScript  = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)'
+
 
 		if typeof(obj.params)!='undefined'
 			for value of obj.params
- 				parametros+= if parametros=='' then value+"="+obj.params[value] else "&"+value+"="+obj.params[value]
+				parametros+= if parametros=='' then value+"="+obj.params[value] else "&"+value+"="+obj.params[value]
 
+		div =  document.createElement('div')
+		div.className = "win-content-min-load"
+		div.innerHTML = "load..."
+		parent_s.appendChild(div)
+		
+		# text = obj.text || 'cargando...'
+		# parent_s.innerHTML = "<div class=\"win-content-min-load\" >
+		# 						<div class=\"win-content-min-load-img\">
+		# 							<div class=\"win-min-load-ajax\"></div>
+		# 						</div>
+		# 						<div class=\"win-content-min-load-label\">#{text}</div>
+		# 					</div>"
 
-		text = obj.text || 'cargando...'
-		dom_element.innerHTML = "<div class=\"win-content-min-load\" >
-										<div class=\"win-content-min-load-img\">
-											<div class=\"win-min-load-ajax\"></div>
-										</div>
-										<div class=\"win-content-min-load-label\">#{text}</div>
-									</div>"
+		console.log(parent_s)
+		# return;
+		_parentHtml = () ->
+			div.parentNode.innerHTML = 2
+			# a = document.querySelectorAll('.win-panel > div')
+			console.log(div.parentNode)
 
-		xhr     = new XMLHttpRequest
+		xhr     = new XMLHttpRequest 
 		bodyXhr = obj.url+'?'+parametros
 		method  = obj.method || 'POST'
 
 		xhr.open(method,bodyXhr, true)
-		xhr.onreadystatechange=() ->
+		# parent_s.innerHTML = 3
+		xhr.onreadystatechange = () ->
 			if xhr.readyState==4
-				responseHtml = xhr.responseText
-				# html = extract_script(response)
-				dom_element.innerHTML = responseHtml
-				script = dom_element.getElementsByTagName('script');
+				parent_s.innerHTML = 2
+				console.log(parent_s.innerHTML)
 
-				for i in script
-					tagScript = document.createElement('script');
-					i.parentNode.replaceChild(tagScript,i);
-					tagScript.innerHTML = i.innerHTML;
+
+				# console.log(parent_s)
+				# parent_s.innerHTML = xhr.responseText
+				# parent_s.innerHTML = 2
+				# document.getElementById(parent_s.id).innerHTML = 2
+				# _parentHtml()
+				# script = parent_s.getElementsByTagName('script');
+
+				# for i in script
+				# 	tagScript = document.createElement('script');
+				# 	i.parentNode.replaceChild(tagScript,i);
+				# 	tagScript.innerHTML = i.innerHTML;
 
 		xhr.send(null)
 
-		extract_script = (string) ->
-			SearchExp = new RegExp(tagScript, 'img')
-			return string.replace(SearchExp, '')
-
-		eval_script = (string) ->
-			scripts = (string.match(new RegExp(tagScript, 'img')) || [])
-			script  = ''
-			scripts.map (script_map) ->
-				script+=(script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1]
-			eval(script)
-
-
-
-	# 	contenido = 'cargando...'
-	# 	parentModal = document.createElement("div")
-	# 	parentModal.innerHTML = '<div id="contenido_modal_load" class="win-contenido-modal-load">'+contenido+'</div>'
-	# 	parentModal.setAttribute("id", "div_contenedor_modal")
-	# 	document.body.appendChild(parentModal)
-	# 	document.getElementById("div_contenedor_modal").className = "win-modal"
-	# 	document.getElementById('div_contenedor_modal').parentNode.style.display = 'table'
-
+		
