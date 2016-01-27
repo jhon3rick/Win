@@ -478,6 +478,8 @@ $contenido ='
 
 		<script type="text/javascript">
 
+		function prueba(){ alert(21456); }
+
 			// function prueba(){
 
 				$W.tbar({
@@ -496,12 +498,12 @@ $contenido ='
 						// },
 
 						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "user_black_36",
-							text  : "Nueva ventana",
-							handler : function(){ ventana2(); }
-						},"-",
+							xtype   : "button",
+							id      : "btn_1",
+							cls     : "user_black_36",
+							text    : "Nueva ventana",
+							handler : function(){ prueba(); }
+						}/*,"-",
 						{
 							xtype    : "panel",
 							id       : "panel_prueba",
@@ -518,8 +520,8 @@ $contenido ='
 									prueba : 1
 								}
 							}
-						},'-',
-						{
+						},'-'*/,
+						/*{
 							xtype : "button",
 							id    : "btn_2",
 							cls   : "ic_autorenew_black_36dp",
@@ -540,14 +542,14 @@ $contenido ='
 							cls   : "icon-action-black-ic_perm_identity_black_24dp",
 							text  : "Salir",
 							handler : function(){ alert(4); ventana2(); }
-						},"-",
+						}*//*,"-",
 						{
 							xtype : "tbtext",
 							id    : "btn_1",
 							width : 80,
 							text  : "una demostracion de un texto largo<br>con salto de linea",
 							style : ""
-						}
+						}*/
 					]
 				});
 			// }
@@ -590,27 +592,27 @@ $contenido ='
 					closable   : true,
 					drag       : true,
 					resize     : true,
-					autoLoad   :
-					{
-						url     : "bd.php",
-						params  :
-						{
-							opc : "prueba_ajax",
-							var2 : "var2",
-						}
-					},
+					// autoLoad   :
+					// {
+					// 	url     : "bd.php",
+					// 	params  :
+					// 	{
+					// 		opc : "prueba_ajax",
+					// 		var2 : "var2",
+					// 	}
+					// },
 					items      :
 					[
-						{
-							xtype : "tabPanel",
-							id    : "tbar1",
-							items :
-							[
-								{
-									title: "panel1",
-								},
-							]
-						},
+						// {
+						// 	xtype : "tabPanel",
+						// 	id    : "tbar1",
+						// 	items :
+						// 	[
+						// 		{
+						// 			title: "panel1",
+						// 		},
+						// 	]
+						// },
 						{
 							xtype : "tbar",
 							id    : "",
@@ -622,7 +624,7 @@ $contenido ='
 									cls   : "user_black_36",
 									text  : "Nueva ventana",
 									handler : function(){ ventana2(); }
-								},"-",
+								}/*,"-",
 								{
 									xtype    : "panel",
 									width    : 160,
@@ -665,7 +667,7 @@ $contenido ='
 									id    : "btn_1",
 									text  : "una demostracion de un texto largo<br>con salto de linea",
 									style : ""
-								}
+								}*/
 							]
 						}/*,
 						{
