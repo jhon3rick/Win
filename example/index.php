@@ -494,66 +494,59 @@ $contenido ='
 						// 		},
 						// 	]
 						// },
+
 						{
-							xtype  : "tbar",
-							id     : "",
-							height : "60",
-							items  :
-							[
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "user_black_36",
+							text  : "Nueva ventana",
+							handler : function(){ ventana2(); }
+						},"-",
+						{
+							xtype    : "panel",
+							id       : "panel_prueba",
+							width    : 160,
+							// height   : 56,
+							style    : "background-color:rgb(208, 205, 205)",
+							html     : "<div>contenido por parametro</div>",
+							autoLoad :
+							{
+								url		: "bd.php",
+								params	:
 								{
-									xtype : "button",
-									id    : "btn_1",
-									cls   : "user_black_36",
-									text  : "Nueva ventana",
-									handler : function(){ ventana2(); }
-								},"-",
-								{
-									xtype    : "panel",
-									id       : "panel_prueba",
-									width    : 160,
-									// height   : 56,
-									style    : "background-color:rgb(208, 205, 205)",
-									html     : "<div>contenido por parametro</div>",
-									autoLoad :
-									{
-										url		: "bd.php",
-										params	:
-										{
-											opc    : "prueba_ajax_load",
-											prueba : 1
-										}
-									}
-								},'-',
-								{
-									xtype : "button",
-									id    : "btn_2",
-									handler: function () { ajax_load();	},
-									cls   : "ic_autorenew_black_36dp",
-									text  : "ajax load"
-								},'--',
-								{
-									xtype : "button",
-									id    : "btn_2",
-									handler: function () { ajax_request();	},
-									cls   : "ic_autorenew_black_36dp",
-									text  : "ajax request"
+									opc    : "prueba_ajax_load",
+									prueba : 1
 								}
-								,"->","-",
-								{
-									xtype : "button",
-									id    : "btn_1",
-									cls   : "icon-action-black-ic_perm_identity_black_24dp",
-									text  : "Salir",
-									handler : function(){ alert(4); ventana2(); }
-								},"-",
-								{
-									xtype : "tbtext",
-									id    : "btn_1",
-									width : 80,
-									text  : "una demostracion de un texto largo<br>con salto de linea",
-									style : ""
-								}
-							]
+							}
+						},'-',
+						{
+							xtype : "button",
+							id    : "btn_2",
+							cls   : "ic_autorenew_black_36dp",
+							text  : "ajax load",
+							handler: function () { ajax_load();	}
+						},'--',
+						{
+							xtype : "button",
+							id    : "btn_2",
+							cls   : "ic_autorenew_black_36dp",
+							text  : "ajax request",
+							handler: function () { ajax_request();	}
+						}
+						,"->","-",
+						{
+							xtype : "button",
+							id    : "btn_1",
+							cls   : "icon-action-black-ic_perm_identity_black_24dp",
+							text  : "Salir",
+							handler : function(){ alert(4); ventana2(); }
+						},"-",
+						{
+							xtype : "tbtext",
+							id    : "btn_1",
+							width : 80,
+							text  : "una demostracion de un texto largo<br>con salto de linea",
+							style : ""
 						}
 					]
 				});

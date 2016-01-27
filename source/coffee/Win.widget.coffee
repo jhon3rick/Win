@@ -37,6 +37,7 @@ do ($W = Win) ->
 		body        = $W('body')[0]
 		win         = this
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
+		winModal    = document.createElement('div')
 
 		IDGLOBAL = id
 
@@ -47,8 +48,10 @@ do ($W = Win) ->
 		left = if body.offsetWidth < width then 0 else (body.offsetWidth - width)/2
 		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
 
-		body.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
-								<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
+		winModal.setAttribute("id","win-modal-#{id}")
+		winModal.setAttribute("class","win-modal")
+
+		winModal.innerHTML += "<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
 									<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -66,9 +69,9 @@ do ($W = Win) ->
 										</div>
 									</header>
 									<section id=\"win-window-section-#{id}\"></section>
-								</div>
-							</div>"
+								</div>"
 
+		body.appendChild(winModal)
 		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id, document.getElementById("win-modal-#{id}"), event);
 		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(document.getElementById("win-modal-#{id}"));
 
@@ -103,6 +106,8 @@ do ($W = Win) ->
 	$W.tbar = (obj) ->
 		IDGLOBAL = obj.idApply
 		parent = document.getElementById("#{obj.idApply}")
+		parent.className = "win-tbar"
+
 		_router(obj.items, parent)
 
 	# ---------------------------------------------------------------------------
@@ -300,11 +305,26 @@ do ($W = Win) ->
 		id    = obj.id or ''
 		cls   = obj.cls or ''
 		width = obj.width or 50
-		click = obj.handler or ''
 
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width: #{width};\" onclick=\"#{click}\">
-								<button class=\"#{cls}\">#{text}</button>
-							</div>"
+		boton = document.createElement('div')
+		boton.setAttribute("id",id)
+		boton.setAttribute("class","win-btn")
+
+		if(obj.width > 0) then boton.setAttribute("style","width: #{obj.width}px;")
+
+		boton.innerHTML = "<button class=\"#{cls}\">#{text}</button>"
+		boton.onclick   = obj.handler
+
+
+		parent.appendChild(boton)
+		document.getElementById(boton.id).onclick = alert(2)
+
+		# parent.innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\" onclick=\"return; #{obj.handler}\">
+		# parent.innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\">
+		# 						<button class=\"#{cls}\">#{text}</button>
+		# 					</div>"
+		# boton = parent.lastChild;
+		# if obj.handler then boton.onclick = () -> console.log(3)#('onclidsck', console.log(3))#boton.click(alert(2))
 
 	###
 	@method _panel
@@ -372,7 +392,6 @@ do ($W = Win) ->
 		body = document.getElementById("win-window-body-#{id}")
 
 		if typeof(obj.autoLoad)
-			console.log(2)
 			$W.Ajax.load(body, obj.autoLoad)
 
 	# ---------------------------------------------------------------------------
