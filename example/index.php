@@ -2,6 +2,10 @@
 	<head>
 		<title>Win Js</title>
 
+		<meta content="no-cache" http-equiv="Pragma"></meta>
+		<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"></meta>
+		<meta content="0" http-equiv="Expires"></meta>
+
 		<link rel="stylesheet" href="css/normalize.css" />
 		<link rel="stylesheet" href="../dist/css/Win.min.css" />
 		<link rel="stylesheet" href="css/Win-loaders.css" />
@@ -482,7 +486,7 @@ $contenido ='
 
 			// function prueba(){
 
-				$W.tbar({
+				new $W.tbar({
 					idApply : "prueba_tbar",
 					items   :
 					[
@@ -499,7 +503,7 @@ $contenido ='
 
 						{
 							xtype   : "button",
-							id      : "btn_1",
+							id      : "btn_100",
 							cls     : "user_black_36",
 							text    : "Nueva ventana",
 							handler : function(){ prueba(); }
@@ -523,7 +527,7 @@ $contenido ='
 						},'-',
 						{
 							xtype : "button",
-							id    : "btn_2",
+							id    : "btn_200",
 							cls   : "ic_autorenew_black_36dp",
 							text  : "ajax load",
 							handler: function () { ajax_load();	}
@@ -538,14 +542,14 @@ $contenido ='
 						,"->","-",
 						{
 							xtype : "button",
-							id    : "btn_1",
+							id    : "btn_11",
 							cls   : "icon-action-black-ic_perm_identity_black_24dp",
 							text  : "Salir",
-							handler : function(){ alert(4); ventana2(); }
+							handler : function(){ ventana2(); }
 						},"-",
 						{
 							xtype : "tbtext",
-							id    : "btn_1",
+							id    : "btn_14",
 							width : 80,
 							text  : "una demostracion de un texto largo<br>con salto de linea",
 							style : ""
@@ -592,15 +596,15 @@ $contenido ='
 					closable   : true,
 					drag       : true,
 					resize     : true,
-					// autoLoad   :
-					// {
-					// 	url     : "bd.php",
-					// 	params  :
-					// 	{
-					// 		opc : "prueba_ajax",
-					// 		var2 : "var2",
-					// 	}
-					// },
+					autoLoad   :
+					{
+						url     : "bd.php",
+						params  :
+						{
+							opc : "prueba_ajax",
+							var2 : "var2",
+						}
+					},
 					items      :
 					[
 						// {
@@ -615,7 +619,7 @@ $contenido ='
 						// },
 						{
 							xtype : "tbar",
-							id    : "",
+							id    : "dsa",
 							items :
 							[
 								{
@@ -691,77 +695,79 @@ $contenido ='
 			}
 
 			function ventana2(){
+				alert('ventana2')
 
-				Win_ventana_2 = new Win.Window({
-					apply       : "prueba",
-					bodyStyle   : "",
-					width       : 450,
-					height      : 450,
-					id          : "Win_ventana_2",
-					title       : "VENTANA 2",
-					modal       : true,
-					autoScroll  : true,
-					closable    : true,
-					autoDestroy : true,
-					autoLoad    :
-					{
-						url     : "bd.php",
-						params  :
-						{
-							opc : "prueba_ajax_request",
-							var2 : "var2",
-						}
-					},
-					tabPanel    :
-					[
-						{
-							xtype     : "",
-							scripts : true,
-							nocache : true,
-							params  :
-							{
-								var1 : "var1",
-								var2 : "var2",
-							}
-						},
-					],
-					tbar        :
-					[
-						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "user_black_36",
-							text  : "Nueva<br>Ventana",
-							handler : function(){ ventana3(); }
-						}
-					]
-				});
+				// Win_ventana_2 = new Win.Window({
+				// 	apply       : "prueba",
+				// 	bodyStyle   : "",
+				// 	width       : 450,
+				// 	height      : 450,
+				// 	id          : "Win_ventana_2",
+				// 	title       : "VENTANA 2",
+				// 	modal       : true,
+				// 	autoScroll  : true,
+				// 	closable    : true,
+				// 	autoDestroy : true,
+				// 	autoLoad    :
+				// 	{
+				// 		url     : "bd.php",
+				// 		params  :
+				// 		{
+				// 			opc : "prueba_ajax_request",
+				// 			var2 : "var2",
+				// 		}
+				// 	},
+				// 	tabPanel    :
+				// 	[
+				// 		{
+				// 			xtype     : "",
+				// 			scripts : true,
+				// 			nocache : true,
+				// 			params  :
+				// 			{
+				// 				var1 : "var1",
+				// 				var2 : "var2",
+				// 			}
+				// 		},
+				// 	],
+				// 	tbar        :
+				// 	[
+				// 		{
+				// 			xtype : "button",
+				// 			id    : "btn_1",
+				// 			cls   : "user_black_36",
+				// 			text  : "Nueva<br>Ventana",
+				// 			handler : function(){ ventana3(); }
+				// 		}
+				// 	]
+				// });
 			}
 
 			function ventana3(){
-				Win_ventana_3 = new Win.Window({
-					apply       : "prueba",
-					bodyStyle   : "",
-					width       : 400,
-					height      : 300,
-					id          : "Win_ventana_3",
-					title       : "VENTANA 3",
-					modal       : true,
-					autoScroll  : true,
-					closable    : true,
-					autoDestroy : true,
-					drag        : true,
-					resize      : true,
-					autoLoad    :
-					{
-						url     : "bd.php",
-						params  :
-						{
-							var1 : "var1",
-							var2 : "var2",
-						}
-					},
-				});
+				alert('ventana3')
+				// Win_ventana_3 = new Win.Window({
+				// 	apply       : "prueba",
+				// 	bodyStyle   : "",
+				// 	width       : 400,
+				// 	height      : 300,
+				// 	id          : "Win_ventana_3",
+				// 	title       : "VENTANA 3",
+				// 	modal       : true,
+				// 	autoScroll  : true,
+				// 	closable    : true,
+				// 	autoDestroy : true,
+				// 	drag        : true,
+				// 	resize      : true,
+				// 	autoLoad    :
+				// 	{
+				// 		url     : "bd.php",
+				// 		params  :
+				// 		{
+				// 			var1 : "var1",
+				// 			var2 : "var2",
+				// 		}
+				// 	},
+				// });
 			}
 
 
@@ -803,16 +809,17 @@ $contenido ='
 			// // duracion : segundos o infinito
 
 			function ajax_load () {
-				Win.get('win-window-body-Win_ventana_1').load({
-					url    : 'bd.php',
-					text   : 'ajax load text',
-					modal  : true,
-					params :
-					{
-						opc    : 'prueba_ajax_load',
-						prueba : 1
-					}
-				})
+				alert('ajaxLoad')
+				// Win.get('win-window-body-Win_ventana_1').load({
+				// 	url    : 'bd.php',
+				// 	text   : 'ajax load text',
+				// 	modal  : true,
+				// 	params :
+				// 	{
+				// 		opc    : 'prueba_ajax_load',
+				// 		prueba : 1
+				// 	}
+				// })
 			}
 
 

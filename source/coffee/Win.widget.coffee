@@ -78,8 +78,8 @@ do ($W = Win) ->
 
 
 		idSection = "win-window-section-#{id}"
-		if typeof(obj.items) then _router(obj.items, idSection)
-		if typeof(obj.autoLoad)then  _body(obj, document.getElementById(idSection))
+		if obj.items then _router(obj.items, idSection)
+		if obj.autoLoad then  _body(obj, idSection)
 
 		close: () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
@@ -322,16 +322,16 @@ do ($W = Win) ->
 	###
 	_button = (obj, idParent) ->
 		text  = obj.text or ''
-		id    = obj.id or ''
+		id    = obj.id or idParent
 		cls   = obj.cls or ''
 		width = obj.width or 50
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\">
+		document.getElementById(idParent).innerHTML += "<div id=\"win-btn-#{id}\" class=\"win-btn\" style=\"width:#{width};\">
 															<button class=\"#{cls}\">#{text}</button>
 														</div>"
 		if obj.handler
-			setTimeout ()->
-				document.querySelector("\##{idParent} > div").onclick = obj.handler
+			setTimeout () ->
+				document.querySelector("\##{idParent} > \#win-btn-#{id}").onclick = obj.handler
 
 	###
 	@method _tbtext
@@ -355,6 +355,22 @@ do ($W = Win) ->
 	@param  obj objectDom parent
 	###
 	_separatorHeight = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\"></div>"
+
+	###
+	@method _body
+	@param  obj objectDom parent and config
+	###
+	_body = (obj, idParent) ->
+		id      = obj.id or idParent
+		items   = obj.items or ''
+		html    = obj.html or ''
+		clsBody = obj.clsBody or ''
+
+		# return
+		document.getElementById(idParent).innerHTML += "<div class=\"win-window-body #{clsBody}\" id=\"win-window-body-#{id}\">#{html}</div>"
+		body = document.querySelector("\##{idParent} > \#win-window-body-#{id}")
+
+		if typeof(obj.autoLoad) then $W.Ajax.load(body, obj.autoLoad)
 
 	# ---------------------------------------------------------------------------
 	# Private Method Drag and Drop
