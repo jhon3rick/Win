@@ -561,28 +561,30 @@ $contenido ='
 			// $W("#pruebas").addClass()
 			// console.log($W.version);
 
-			$W.form.intField({
-				applyTo : "inputInteger"
+			$W.form.field({
+				idApply : "inputInteger",
+				type : "date",
+				// selected: function() { alert("Haz seleccionado la fecha "+this.value) }
 			});
 
-			$W.form.doubleField({
-				applyTo : "inputDouble"
-			});
+			// $W.form.doubleField({
+			// 	applyTo : "inputDouble"
+			// });
 
-			$W.form.emailField({
-				applyTo : "inputEmail"
-			});
+			// $W.form.emailField({
+			// 	applyTo : "inputEmail"
+			// });
 
-			$W.form.textField({
-				applyTo : "inputText",
-				type    : "uppercase"
-			});
+			// $W.form.textField({
+			// 	applyTo : "inputText",
+			// 	type    : "uppercase"
+			// });
 
-			$W.form.dateField({
-				applyTo   : "inputDate",
-				format    : "y-m-d",
-				listeners : { select: function() { alert("Haz seleccionado la fecha "+this.value) } }
-			});
+			// $W.form.dateField({
+			// 	applyTo   : "inputDate",
+			// 	format    : "y-m-d",
+			// 	listeners : { selected: function() { alert("Haz seleccionado la fecha "+this.value) } }
+			// });
 
 			function ventana1(){
 				Win_ventana_1 = new $W.Window({

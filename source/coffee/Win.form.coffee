@@ -14,34 +14,40 @@ do ($W = Win) ->
 
 	$W.form = {}
 
-	$W.form.intField = (obj) ->
-		$W('#'+obj.applyTo).addClass += " win-input-number";
+	$W.form.field = (obj) ->
+		switch obj.type
+			when 'integer'
+				$W('#'+obj.idApply).addClass += " win-input-number";
 
-		$W('#'+obj.applyTo)[0].onkeypress = (event)->
-			return _validateIntField({ event:event, eventType:'keypress', input:this })
+				$W('#'+obj.idApply)[0].onkeypress = (event)->
+					return _validateIntField({ event:event, eventType:'keypress', input:this })
 
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateIntField({ event:event, eventType:'change', input:this })
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateIntField({ event:event, eventType:'change', input:this })
 
-	$W.form.doubleField = (obj) ->
-		$W('#'+obj.applyTo).addClass += " win-input-number";
+			when 'double'
+				$W('#'+obj.idApply).addClass += " win-input-number";
 
-		$W('#'+obj.applyTo)[0].onkeypress = (event)->
-			return _validateDoubleField({ event:event, eventType:'keypress', input:this })
+				$W('#'+obj.idApply)[0].onkeypress = (event)->
+					return _validateDoubleField({ event:event, eventType:'keypress', input:this })
 
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateDoubleField({ event:event, eventType:'change', input:this })
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateDoubleField({ event:event, eventType:'change', input:this })
 
-	$W.form.textField = (obj) ->
-		$W('#'+obj.applyTo)[0].onkeyup = (event)->
-			return _validateTextField({ event:event, eventType:'keyup', input:this, type:obj.type })
+			when 'text'
+				$W('#'+obj.idApply)[0].onkeyup = (event)->
+					return _validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
 
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateTextField({ event:event, eventType:'change', input:this, type:obj.type })
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
 
-	$W.form.emailField = (obj) ->
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateEmailField({ event:event, input:this })
+			when 'email'
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateEmailField({ event:event, input:this })
+
+			when 'date'
+				_validateDateField(obj)
+
 
 	_validateIntField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
@@ -70,9 +76,9 @@ do ($W = Win) ->
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 		 	return true
 		else if obj.eventType == 'keyup'
-			if obj.type=='uppercase'
+			if obj.option=='uppercase'
 				obj.input.value = obj.input.value.toUpperCase()
-			else if obj.type=='lowercase'
+			else if obj.option=='lowercase'
 				obj.input.value = obj.input.value.toLowerCase()
 		else if obj.eventType == 'change'
 			console.log('-'+obj.input.value+'-')
@@ -87,11 +93,11 @@ do ($W = Win) ->
 	###
 	# Calendar
 	###
-	$W.form.dateField = (obj) ->
+	_validateDateField = (obj) ->
 		separator    = '-'
-		id           = obj.applyTo
+		id           = obj.idApply
 		format       = obj.format or 'y-m-d'
-		selected     = obj.listeners.select or ''
+		selected     = obj.selected or ''
 
 		# monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 		monthNames   = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -306,8 +312,7 @@ do ($W = Win) ->
 					selectedDay = this.innerHTML
 					inputObj.value = _formatDate(selectedDay, selectedMonth, selectedYear)
 
-					inputCalendar.selected = selected
-					inputCalendar.selected()
+					# inputCalendar.select = selected
 
 					_removeCalendar($W('#date_'+id)[0])
 
@@ -359,10 +364,13 @@ do ($W = Win) ->
 		@param obj calendar $W('#date_'+id)[0]
 		###
 		_setLocate = (targetObj, moveObj) ->
+			console.log(targetObj)
 			coors = _findXY(targetObj)
-			moveObj.style.position = 'absolute'
-			moveObj.style.top      = coors[1] + 23 + 'px'
-			moveObj.style.left     = coors[0] + 'px'
+			console.log(coors)
+			moveObj.getAttribute("style","position:absolute; z-index:8000;")
+			# moveObj.style.position = 'absolute'
+			# moveObj.style.top      = coors[1] + 23 + 'px'
+			# moveObj.style.left     = coors[0] + 'px'
 
 		###
 		_findXY

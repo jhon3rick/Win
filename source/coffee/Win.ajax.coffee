@@ -70,15 +70,12 @@ do ($W = Win) ->
 			xhr.open(method,bodyXhr, true)
 			xhr.onreadystatechange = () ->
 				if xhr.readyState == 4
-
 					divScript = document.getElementById(parent.id)
-					_loadScript(divScript)
 
-					if xhr.status == 404
-						divScript.innerHTML = 'Not found'
-
+					if xhr.status == 404 then divScript.innerHTML = 'Not found'
 					else
 						divScript.innerHTML = xhr.responseText
+						_loadScript(divScript)
 
 
 			xhr.send(null)
