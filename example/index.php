@@ -503,7 +503,7 @@ $contenido ='
 							cls     : "user_black_36",
 							text    : "Nueva ventana",
 							handler : function(){ prueba(); }
-						}/*,"-",
+						},"-",
 						{
 							xtype    : "panel",
 							id       : "panel_prueba",
@@ -520,8 +520,8 @@ $contenido ='
 									prueba : 1
 								}
 							}
-						},'-'*/,
-						/*{
+						},'-',
+						{
 							xtype : "button",
 							id    : "btn_2",
 							cls   : "ic_autorenew_black_36dp",
@@ -542,14 +542,14 @@ $contenido ='
 							cls   : "icon-action-black-ic_perm_identity_black_24dp",
 							text  : "Salir",
 							handler : function(){ alert(4); ventana2(); }
-						}*//*,"-",
+						},"-",
 						{
 							xtype : "tbtext",
 							id    : "btn_1",
 							width : 80,
 							text  : "una demostracion de un texto largo<br>con salto de linea",
 							style : ""
-						}*/
+						}
 					]
 				});
 			// }
@@ -624,7 +624,7 @@ $contenido ='
 									cls   : "user_black_36",
 									text  : "Nueva ventana",
 									handler : function(){ ventana2(); }
-								}/*,"-",
+								},"-",
 								{
 									xtype    : "panel",
 									width    : 160,
@@ -667,7 +667,7 @@ $contenido ='
 									id    : "btn_1",
 									text  : "una demostracion de un texto largo<br>con salto de linea",
 									style : ""
-								}*/
+								}
 							]
 						}/*,
 						{
