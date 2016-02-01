@@ -8,26 +8,26 @@ do ($W = Win) ->
 
 			param = ''
 
-			if typeof(obj.id_ventana)=='undefined'
-				console.warn("Debe enviar el parametro id_ventana, para poder mostrar el loading")
-				return
+			# if typeof(obj.id_ventana)=='undefined'
+			# 	console.warn("Debe enviar el parametro id_ventana, para poder mostrar el loading")
+			# 	return
 
 			if typeof(obj.params)!='undefined'
 				for value of obj.params
 					param += if param=='' then value+"="+obj.params[value] else "&"+value+"="+obj.params[value]
 
-			if obj.modal == true or obj.modal==''
-				obj_loading =
-					id_ventana : obj.id_ventana,
-					text       : obj.text,
-					loader     : obj.loader,
-					icono      : obj.iconFinish,
-					icono      : obj.iconFinish,
-					texto      : obj.textFinish,
-					duracion   : obj.duracionFinish,
-					estado     : 'on'
+			# if obj.modal == true or obj.modal==''
+			# 	obj_loading =
+			# 		id_ventana : obj.id_ventana,
+			# 		text       : obj.text,
+			# 		loader     : obj.loader,
+			# 		icono      : obj.iconFinish,
+			# 		icono      : obj.iconFinish,
+			# 		texto      : obj.textFinish,
+			# 		duracion   : obj.duracionFinish,
+			# 		estado     : 'on'
 
-				Win.loading(obj_loading)
+			# 	Win.loading(obj_loading)
 
 			xhr     = new XMLHttpRequest
 			bodyXhr = obj.url+'?'+param
@@ -36,16 +36,16 @@ do ($W = Win) ->
 			xhr.open(method,bodyXhr, true)
 			xhr.onreadystatechange=() ->
 				if xhr.readyState==4
-					response = xhr.responseText
-					if (obj.modal == true or obj.modal=='') && (obj.autoClose == true || obj.autoClose == '')
-						obj_loading.estado = 'off'
-						Win.loading(obj_loading)
+					response = xhr
+					# if (obj.modal == true or obj.modal=='') && (obj.autoClose == true || obj.autoClose == '')
+					# 	obj_loading.estado = 'off'
+					# 	Win.loading(obj_loading)
 					return obj.success(response,xhr)
 				else
-					if (obj.modal == true or obj.modal=='') && (obj.autoClose == true || obj.autoClose == '')
-						obj_loading.estado = 'off'
-						Win.loading(obj_loading)
-					return obj.failure(xhr)
+					# if (obj.modal == true or obj.modal=='') && (obj.autoClose == true || obj.autoClose == '')
+					# 	obj_loading.estado = 'off'
+					# 	Win.loading(obj_loading)
+					if(obj.failure) then return obj.failure(xhr)
 
 			xhr.send(null)
 
