@@ -40,8 +40,14 @@ do ($W = Win) ->
 		bgTitle  = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
 		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\" onclick=\"#{id}.close()\"></div>" else ""
 
-		left = if body.offsetWidth < width then 0 else (body.offsetWidth - width)/2
-		top  = if body.offsetHeight < height then 0 else (body.offsetHeight - height)/2
+		left = if body.offsetWidth < (width/2) then 0 else (body.offsetWidth - width)/2
+		top  = if body.offsetHeight < (height/2) then 0 else (body.offsetHeight - (height/2))/2
+
+		if !isNaN width then width = width+'px'
+		if !isNaN height then height = height+'px'
+
+		left = left+'px';
+		top = top+'px';
 
 		winModal.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
 									<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
