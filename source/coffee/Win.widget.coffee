@@ -12,6 +12,8 @@
 
 do ($W = Win) ->
 
+	CONTWIDGET = 0;
+
 	# ---------------------------------------------------------------------------
 	# Static Methods
 	# Widgets ventana
@@ -43,14 +45,22 @@ do ($W = Win) ->
 		left = if body.offsetWidth < (width/2) then 0 else (body.offsetWidth - width)/2
 		top  = if body.offsetHeight < (height/2) then 0 else (body.offsetHeight - (height/2))/2
 
+		heightSection = height-28;
+		heightSection = heightSection+'px';
+
+
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
+
+		if id==''
+			CONTWIDGET++
+			id==CONTWIDGET
 
 		left = left+'px';
 		top = top+'px';
 
 		winModal.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
-									<div style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" id=\"#{id}\" class=\"win-marco\">
+									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" class=\"win-marco\">
 										<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -61,13 +71,13 @@ do ($W = Win) ->
 												<div class=\"win-modal-label\" id=\"label-load-#{id}\"></div>
 											</div>
 										</div>
-										<header>
+										<header id=\"win-header-#{id}\">
 											<div class=\"win-title\" id=\"win-title-#{id}\" style=\"#{bgTitle} #{titleStyle}\">
 												<div class=\"win-title-txt\">#{title}</div>
 												#{divClose}
 											</div>
 										</header>
-										<section id=\"win-window-section-#{id}\"></section>
+										<section id=\"win-section-#{id}\" style=\"height:#{heightSection}\"></section>
 									</div>
 								</div>"
 
@@ -76,16 +86,14 @@ do ($W = Win) ->
 		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id, document.getElementById("win-modal-#{id}"), event);
 		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(document.getElementById("win-modal-#{id}"));
 
-		if obj.resize != false
+		if obj.resize
 			_resize($W("#win-resize-top-#{id}")[0])
 			_resize($W("#win-resize-bottom-#{id}")[0])
 			_resize($W("#win-resize-left-#{id}")[0])
 			_resize($W("#win-resize-right-#{id}")[0])
 
-
-		idSection = "win-window-section-#{id}"
-		if obj.items then _router(obj.items, idSection)
-		if obj.autoLoad then  _body(obj, idSection)
+		if obj.items then _router(obj.items, "win-section-#{id}")
+		if obj.autoLoad then  _body(obj, "win-section-#{id}")
 
 		close: () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
@@ -108,19 +116,26 @@ do ($W = Win) ->
 
 	# 	html += "</div>"
 
+	$W.Add = (obj) ->
+		parent = document.getElementById("#{obj.idApply}")
+		if obj.items then _router(obj.items, obj.idApply)
+		if obj.autoLoad then  _body(obj, obj.idApply)
+
+
+
 	$W.tbar = (obj) ->
 		parent = document.getElementById("#{obj.idApply}")
 		parent.className = "win-tbar"
 
 		_router(obj.items, obj.idApply)
 
-	$W.get = (element_id) ->
-		load: (obj) ->
-			dom_element = $W(element_id)[0]
-			$W.Ajax.load(dom_element,obj)
+	# $W.get = (element_id) ->
+	# 	load: (obj) ->
+	# 		o
+	# 		$W.Ajax.load(element_id,obj)
 
-		element: ->
-			return $W(element_id)
+	# 	element: ->
+	# 		return $W(element_id)
 
 	$W.getButton = (id) ->
 		@hiden = (id) ->
@@ -142,7 +157,7 @@ do ($W = Win) ->
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
 			return
-		if !$W("#win-window-body-#{obj.id_ventana}")[0]
+		if !$W("#win-body-#{obj.id_ventana}")[0]
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
 			return
 
@@ -292,31 +307,43 @@ do ($W = Win) ->
 	@param  obj objectDom parent
 	###
 	_panel = (obj, idParent) ->
-		id     = obj.id or idParent
 		width  = obj.width or '160px'
 		height = obj.height or '60px'
 		html   = obj.html or ''
 		style  = obj.style or ''
 
-		document.getElementById(idParent).innerHTML += "<div id=\"win-panel-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">#{html}</div>"
-		panel = document.querySelector("\##{idParent}")
+		if !isNaN width then width = width+'px'
+		if !isNaN height then height = height+'px'
+
+		if obj.id
+			id=obj.id
+		else
+			CONTWIDGET++
+			id="win-panel-#{CONTWIDGET}"
+
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">#{html}</div>"
 
 		if typeof(obj.autoLoad)
-
 			setTimeout () ->
-				$W.Ajax.load(document.querySelector("\##{idParent} > \#win-panel-#{id}"), obj.autoLoad)
+				obj.autoLoad.idApply = id
+				$W.Load(obj.autoLoad)
 
 	###
 	@method _tbar
 	@param  obj objectDom parent and config
 	###
 	_tbar = (obj, idParent) ->
-		id    = obj.id or idParent or ''
 		items = obj.items or ''
 
-		parent = document.getElementById(idParent).innerHTML += "<div class=\"win-tbar\" id=\"win-tbar-#{id}\"></div>"
+		if obj.id
+			id=obj.id
+		else
+			CONTWIDGET++
+			id="win-tbar-#{CONTWIDGET}"
 
-		_router(obj.items, "win-tbar-#{id}")
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\"></div>"
+		if items=='' then return
+		_router(items, "#{id}")
 
 
 	$W.buttongroup = (obj) ->
@@ -328,27 +355,38 @@ do ($W = Win) ->
 	###
 	_button = (obj, idParent) ->
 		text  = obj.text or ''
-		id    = obj.id or idParent
 		cls   = obj.cls or ''
 		width = obj.width or 50
 
-		document.getElementById(idParent).innerHTML += "<div id=\"win-btn-#{id}\" class=\"win-btn\" style=\"width:#{width};\">
+		if obj.id
+			id=obj.id
+		else
+			CONTWIDGET++
+			id="win-btn-#{CONTWIDGET}"
+
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\">
 															<button class=\"#{cls}\">#{text}</button>
 														</div>"
 		if obj.handler
 			setTimeout () ->
-				document.querySelector("\##{idParent} > \#win-btn-#{id}").onclick = obj.handler
+				document.querySelector("\##{idParent} > \##{id}").onclick = obj.handler
 
 	###
 	@method _tbtext
 	@param  obj objectDom parent and config
 	###
 	_tbtext = (obj, idParent) ->
-		id    = obj.id or ''
 		text  = obj.text or ''
 		width = obj.width or '120'
 		style = obj.style or 'left'
-		document.getElementById(idParent).innerHTML  += "<div id=\"win-tbtext-#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\">#{text}</div>"
+
+		if obj.id
+			id=obj.id
+		else
+			CONTWIDGET++
+			id="win-tbtext-#{CONTWIDGET}"
+
+		document.getElementById(idParent).innerHTML  += "<div id=\"#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\">#{text}</div>"
 
 	###
 	@method _separator
@@ -367,16 +405,52 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_body = (obj, idParent) ->
-		id      = obj.id or idParent
 		items   = obj.items or ''
 		html    = obj.html or ''
 		clsBody = obj.clsBody or ''
+		style   = 'overflow:auto;'
 
-		# return
-		document.getElementById(idParent).innerHTML += "<div class=\"win-window-body #{clsBody}\" id=\"win-window-body-#{id}\">#{html}</div>"
-		body = document.querySelector("\##{idParent} > \#win-window-body-#{id}")
+		if obj.scroll is false then style = 'overflow:hidden;'
+		else if obj.scrollX is false then style += 'overflow-x:hidden;'
+		else if obj.scrollY is false then style += 'overflow-y:hidden;'
 
-		if typeof(obj.autoLoad) then $W.Ajax.load(body, obj.autoLoad)
+		if obj.idApply
+			id=obj.idApply
+		else
+			CONTWIDGET++
+			id="win-body-#{CONTWIDGET}"
+
+		parent = document.getElementById(idParent)
+		heightParent = parent.offsetHeight
+
+
+		console.log(heightParent)
+		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\">#{html}</div>"
+
+		alto = 0
+		cont = 0
+		arrayDiv = document.querySelectorAll('#'+idParent+' > div')
+
+		console.log(arrayDiv)
+
+		[].forEach.call(arrayDiv,(element)->
+			console.log(element)
+			if cont == 1 then return
+			else if element.id == id
+				cont++
+				return
+			alto += element.offsetHeight
+		)
+
+		height = if alto == 0 then '100%' else 'calc(100% - '+alto+'px)'
+
+		if typeof(obj.autoLoad)
+			setTimeout () ->
+				console.log(height)
+				document.getElementById(id).style.height = height
+				obj.autoLoad.idApply = id
+				$W.Load(obj.autoLoad)
+
 
 	# ---------------------------------------------------------------------------
 	# Private Method Drag and Drop

@@ -45,7 +45,7 @@
 					<option>Datos</option>
 				</select>
 				<script>
-					alert(321)
+					console.log('bd')
 				</script>";
 	}
 

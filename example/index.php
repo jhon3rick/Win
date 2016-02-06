@@ -482,7 +482,7 @@ $contenido ='
 
 		<script type="text/javascript">
 
-		function prueba(){ alert(21456); }
+		function prueba(){ console.log(21456); }
 
 			// function prueba(){
 
