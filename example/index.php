@@ -8,10 +8,10 @@
 
 		<link rel="stylesheet" href="css/normalize.css" />
 		<link rel="stylesheet" href="../dist/css/Win.min.css" />
+		<link rel="stylesheet" href="../dist/css/Win-theme-blue.min.css" />
 		<link rel="stylesheet" href="css/Win-loaders.css" />
 		<link rel="stylesheet" href="css/icon.css" />
 
-		<link rel="stylesheet" href="css/Win-theme-blue.css" />
 
 		<script src="../dist/js/Win.min.js"></script>
 		<!-- <script src="js/Win.js"></script>
@@ -511,6 +511,7 @@ $contenido ='
 						{
 							xtype    : "panel",
 							id       : "panel_prueba",
+							title    : "prueba",
 							width    : 160,
 							// height   : 56,
 							style    : "background-color:rgb(208, 205, 205)",
@@ -550,7 +551,7 @@ $contenido ='
 						{
 							xtype : "tbtext",
 							id    : "btn_14",
-							width : 80,
+							width : 160,
 							text  : "una demostracion de un texto largo<br>con salto de linea",
 							style : ""
 						}
@@ -673,6 +674,20 @@ $contenido ='
 									id    : "btn_1",
 									text  : "una demostracion de un texto largo<br>con salto de linea",
 									style : ""
+								}
+							]
+						},
+						{
+							xtype : "tabPanel",
+							items : 
+							[
+								{
+									xtype : "tab",
+									title : "tab 1"
+								},
+								{
+									xtype : "tab",
+									title : "tab 2"
 								}
 							]
 						}/*,

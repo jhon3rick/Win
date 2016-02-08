@@ -43,11 +43,7 @@ do ($W = Win) ->
 		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\" onclick=\"#{id}.close()\"></div>" else ""
 
 		left = if body.offsetWidth < (width/2) then 0 else (body.offsetWidth - width)/2
-		top  = if body.offsetHeight < (height/2) then 0 else (body.offsetHeight - (height/2))/2
-
-		heightSection = height-28;
-		heightSection = heightSection+'px';
-
+		top  = if body.offsetHeight < (height/2) then 0 else (body.offsetHeight - height)/2
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
@@ -77,7 +73,7 @@ do ($W = Win) ->
 												#{divClose}
 											</div>
 										</header>
-										<section id=\"win-section-#{id}\" style=\"height:#{heightSection}\"></section>
+										<section id=\"win-section-#{id}\" style=\"height:calc(100% - 27px);\"></section>
 									</div>
 								</div>"
 
@@ -120,8 +116,6 @@ do ($W = Win) ->
 		parent = document.getElementById("#{obj.idApply}")
 		if obj.items then _router(obj.items, obj.idApply)
 		if obj.autoLoad then  _body(obj, obj.idApply)
-
-
 
 	$W.tbar = (obj) ->
 		parent = document.getElementById("#{obj.idApply}")
@@ -279,7 +273,8 @@ do ($W = Win) ->
 					# when 'buttongroup' then $W.buttongroup(json)
 					when 'tbar' then _tbar(json, idParent)
 					when 'panel' then _panel(json, idParent)
-					# when 'tabpanel' then $W.tabpanel(json)
+					when 'tabPanel' then _tabPanel(json, idParent)
+					when 'tab' then _tab(json, idParent)
 					when 'tbtext' then _tbtext(json, idParent)
 					else
 						if json == '-'
@@ -296,36 +291,88 @@ do ($W = Win) ->
 				document.getElementById(idParent).innerHTML += '<div></div>'
 
 	###
-	@method _tabpanel
+	@method _tabPanel
 	@param  obj objectDom parent and config
 	###
-	_tabpanel = (obj) ->
+	_tabPanel = (obj, idParent) ->
 
-	###
-	@method _panel
-	@param  obj objectDom config
-	@param  obj objectDom parent
-	###
-	_panel = (obj, idParent) ->
-		width  = obj.width or '160px'
-		height = obj.height or '60px'
-		html   = obj.html or ''
 		style  = obj.style or ''
+		height = obj.height or '30'
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
+
+		bodyHeight = "calc:(100% - #{height})"
 
 		if obj.id
 			id=obj.id
 		else
 			CONTWIDGET++
+			id=CONTWIDGET
+
+		html = "<div id=\"win-tabpanel-#{id}\" class=\"win-tabpanel\" style=\"width:100%; height:100%; #{style}\">
+					<div id=\"win-tabpanel-head-#{id}\" class=\"win-tabpanel-head\" style=\"width:100%; height:#{height}; #{style}\"></div>
+					<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>
+				</div>" 
+		document.getElementById(idParent).innerHTML += html
+
+		if obj.items then _router(obj.items, "win-tabpanel-head-"+id)
+
+
+	_tab = (obj, idParent) ->
+		title  = obj.title or ''
+		icon  = obj.icon or ''
+
+		if obj.id
+			id=obj.id
+		else
+			CONTWIDGET++
+			id="win-tab-#{CONTWIDGET}"
+		
+
+		console.log(idParent) 
+
+		html = "<div class=\"win-tab\">#{title}</div>";
+		document.getElementById(idParent).innerHTML += html
+
+		# parentTabpanel = document.getElementById(idParent).parentNode
+
+	###  
+	@method _panel
+	@param  obj objectDom config
+	@param  obj objectDom parent
+	###
+	_panel = (obj, idParent) ->
+		width  = obj.width or '160'
+		height = obj.height or '60'
+		html   = obj.html or ''
+		style  = obj.style or ''
+		title  = obj.title or ''
+
+		if title != ''
+			height = height-20
+			title = "<div id=\"title-#{id}\" style=\"width:#{width}; height:20px; #{style}\" class=\"win-panel-title\">#{title}</div>"
+
+		if !isNaN width then width = width+'px'
+		if !isNaN height then height = height+'px'
+
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
 			id="win-panel-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">#{html}</div>"
+		html = "<div id=\"#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">
+					#{title}
+					<div id=\"load-#{id}\" style=\"width:#{width}; height:#{height}; #{style}\">
+						#{html}
+					</div>
+				</div>" 
+
+		document.getElementById(idParent).innerHTML += html
 
 		if typeof(obj.autoLoad)
 			setTimeout () ->
-				obj.autoLoad.idApply = id
+				obj.autoLoad.idApply = 'load-'+id
 				$W.Load(obj.autoLoad)
 
 	###
@@ -333,7 +380,6 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_tbar = (obj, idParent) ->
-		items = obj.items or ''
 
 		if obj.id
 			id=obj.id
@@ -342,8 +388,7 @@ do ($W = Win) ->
 			id="win-tbar-#{CONTWIDGET}"
 
 		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\"></div>"
-		if items=='' then return
-		_router(items, "#{id}")
+		if obj.items then _router(obj.items, "#{id}")
 
 
 	$W.buttongroup = (obj) ->
@@ -424,17 +469,13 @@ do ($W = Win) ->
 		heightParent = parent.offsetHeight
 
 
-		console.log(heightParent)
 		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\">#{html}</div>"
 
 		alto = 0
 		cont = 0
 		arrayDiv = document.querySelectorAll('#'+idParent+' > div')
 
-		console.log(arrayDiv)
-
 		[].forEach.call(arrayDiv,(element)->
-			console.log(element)
 			if cont == 1 then return
 			else if element.id == id
 				cont++
@@ -446,7 +487,6 @@ do ($W = Win) ->
 
 		if typeof(obj.autoLoad)
 			setTimeout () ->
-				console.log(height)
 				document.getElementById(id).style.height = height
 				obj.autoLoad.idApply = id
 				$W.Load(obj.autoLoad)
@@ -544,14 +584,10 @@ do ($W = Win) ->
 			document.documentElement.removeEventListener('mouseup', _stopDrag, false)
 
 		_resizeXLeft = (e) ->
-			# console.log(positionX)
-			# console.log(e.clientX)
-			console.log((positionX + (e.clientX - startX)))
 			objParent.style.left  = (positionX + e.clientX - startX) + 'px'
 			objParent.style.width = (startWidth - e.clientX + startX) + 'px'
 
 		_resizeYTop = (e) ->
-			console.log(attrData)
 			objParent.style.top  = (positionY + e.clientY - startY) + 'px'
 			objParent.style.height = (startHeight - e.clientY + startY) + 'px'
 
