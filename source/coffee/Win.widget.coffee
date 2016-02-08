@@ -313,7 +313,7 @@ do ($W = Win) ->
 		html = "<div id=\"win-tabpanel-#{id}\" class=\"win-tabpanel\" style=\"width:100%; height:100%; #{style}\">
 					<div id=\"win-tabpanel-head-#{id}\" class=\"win-tabpanel-head\" style=\"width:100%; height:#{height}; #{style}\"></div>
 					<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>
-				</div>" 
+				</div>"
 		document.getElementById(idParent).innerHTML += html
 
 		if obj.items then _router(obj.items, "win-tabpanel-head-"+id)
@@ -328,16 +328,38 @@ do ($W = Win) ->
 		else
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
-		
 
-		console.log(idParent) 
 
-		html = "<div class=\"win-tab\">#{title}</div>";
-		document.getElementById(idParent).innerHTML += html
+		console.log(idParent)
+		div = document.createElement("div")
+		div.id = id
+		# div.prototype.estate = 'enable'
+
+
+
+		# console.log(div.estate)
+
+		document.getElementById(idParent).appendChild(div)
+
+		document.querySelectorAll('#'+id).__proto__.estate = 'enable'
+
+
+		# html = "<div id=\"#{id}\" class=\"win-tab\">#{title}</div>";
+
+		# document.getElementById(idParent).innerHTML += html
+
+		setTimeout () ->
+			console.log(document.querySelectorAll('#'+id).estate)
+			# console.log(document.getElementById(id))
+			# document.getElementById(id).estate
+			# div.prototype.estate = 'enable'
+
+			# document.getElementById(id).prototype.estate = 'enable'
+			# document.getElementById(id).prototype.load = 'unload'
 
 		# parentTabpanel = document.getElementById(idParent).parentNode
 
-	###  
+	###
 	@method _panel
 	@param  obj objectDom config
 	@param  obj objectDom parent
@@ -366,7 +388,7 @@ do ($W = Win) ->
 					<div id=\"load-#{id}\" style=\"width:#{width}; height:#{height}; #{style}\">
 						#{html}
 					</div>
-				</div>" 
+				</div>"
 
 		document.getElementById(idParent).innerHTML += html
 
