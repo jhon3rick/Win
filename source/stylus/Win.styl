@@ -166,7 +166,7 @@ input[type=button]
 
 	> div
 		display table-cell
-		vertical-align middle
+		vertical-align top
 
 	/.win-btn
 		padding 1px 5px
@@ -204,27 +204,41 @@ input[type=button]
 		height 60px
 
 	/.win-panel
-		padding 5px
-		
+		// padding 5px
+
 		> div
 			overflow auto
-			
-		/.win-panel-title
-			text-align center
-			
+
+		// /.win-panel-load
+		// 	display table
+
+		// 	> div
+		// 		display table-cell
+
+	/.win-buttongroup
+		// padding 5px
+
+		/.win-buttongroup-body
+			display table
+
+			> div
+				display table-cell
+
+	/.win-buttongroup-title, /.win-panel-title
+		text-align center
+		padding-top 5px
+
 	/.win-tabpanel-head
 		overflow hidden
 		width 100%
 		border-bottom 1px solid
-		
 
-		
-		/.win-tab 
+		/.win-tab
 			float left
 			padding 2px
 			border 1px solid
 			border-left none
-			
+
 
 .win-input-number
 	text-align right

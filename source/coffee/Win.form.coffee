@@ -48,6 +48,46 @@ do ($W = Win) ->
 			when 'date'
 				_validateDateField(obj)
 
+	$W.form.validate = (id) ->
+		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
+
+		[].forEach.call(arrayinput, (input)->
+			type = input.getAttribute('data-validate');
+
+			switch type
+				when 'integer'
+					input.addClass += " win-input-number";
+
+					input.onkeypress = (event)->
+						_validateIntField({ event:event, eventType:'keypress', input:this })
+
+					input.onchange = (event)->
+						_validateIntField({ event:event, eventType:'change', input:this })
+
+				when 'double'
+					input.addClass += " win-input-number";
+
+					input.onkeypress = (event)->
+						_validateDoubleField({ event:event, eventType:'keypress', input:this })
+
+					input.onchange = (event)->
+						_validateDoubleField({ event:event, eventType:'change', input:this })
+
+				when 'text'
+					input.onkeyup = (event)->
+						_validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+
+					input.onchange = (event)->
+						_validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+
+				when 'email'
+					input.onchange = (event)->
+						_validateEmailField({ event:event, input:this })
+
+				when 'date'
+					_validateDateField(obj)
+		)
+
 
 	_validateIntField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which

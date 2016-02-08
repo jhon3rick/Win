@@ -131,20 +131,21 @@ do ($W = Win) ->
 	# 	element: ->
 	# 		return $W(element_id)
 
-	$W.getButton = (id) ->
-		@hiden = (id) ->
-			$W('#id').style('display','none')
+	$W.Element = (id) ->
 
-		@show = (id) ->
-			$W('#id').style('display','block')
+		@.hiden = () ->
+			$W('#'+id).style('display','none')
 
-		@enable = (id) ->
-			$W('#id').style('display','none')
+		@.show = () ->
+			$W('#'+id).style('display','block')
 
-		@disable = (id) ->
-			$W('#id').style('display','block')
+		@.enable = () ->
+			$W('#'+id).style('display','none')
 
-		return id
+		@.disable = () ->
+			$W('#'+id).style('display','block')
+
+		return this
 
 	$W.loading = (obj) ->
 
@@ -270,7 +271,7 @@ do ($W = Win) ->
 
 				switch json.xtype
 					when 'button' then _button(json, idParent)
-					# when 'buttongroup' then $W.buttongroup(json)
+					when 'buttongroup' then _buttongroup(json, idParent)
 					when 'tbar' then _tbar(json, idParent)
 					when 'panel' then _panel(json, idParent)
 					when 'tabPanel' then _tabPanel(json, idParent)
@@ -371,31 +372,34 @@ do ($W = Win) ->
 		style  = obj.style or ''
 		title  = obj.title or ''
 
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id=CONTWIDGET
+
 		if title != ''
 			height = height-20
-			title = "<div id=\"title-#{id}\" style=\"width:#{width}; height:20px; #{style}\" class=\"win-panel-title\">#{title}</div>"
+			title = "<div id=\"win-panel-title-#{id}\" style=\"width:#{width}; height:20px; #{style}\" class=\"win-panel-title\">#{title}</div>"
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
 
-		if obj.id then id=obj.id
-		else
-			CONTWIDGET++
-			id="win-panel-#{CONTWIDGET}"
 
-		html = "<div id=\"#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">
+
+		html = "<div id=\"win-panel-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">
 					#{title}
-					<div id=\"load-#{id}\" style=\"width:#{width}; height:#{height}; #{style}\">
+					<div id=\"win-panel-load-#{id}\" class=\"win-panel-load\" style=\"width:#{width}; height:#{height}; #{style}\">
 						#{html}
 					</div>
 				</div>"
 
 		document.getElementById(idParent).innerHTML += html
 
-		if typeof(obj.autoLoad)
+		if obj.autoLoad
 			setTimeout () ->
-				obj.autoLoad.idApply = 'load-'+id
+				obj.autoLoad.idApply = 'win-panel-load-'+id
 				$W.Load(obj.autoLoad)
+		else if obj.items then _router(obj.items, "win-panel-load-#{id}")
 
 	###
 	@method _tbar
@@ -413,7 +417,34 @@ do ($W = Win) ->
 		if obj.items then _router(obj.items, "#{id}")
 
 
-	$W.buttongroup = (obj) ->
+	_buttongroup = (obj, idParent) ->
+		hidden = obj.hidden or ''
+		width  = obj.width or 0
+		style  = obj.style or ''
+		title  = obj.title or ''
+
+		if width is 0 and obj.items
+			for item in obj.items
+				if !item.hidden
+					width += if item.width > 0 then item.width or 60
+
+		if !isNaN width then width = width+'px'
+		if hidden is true then hidden = "display:none;"
+
+
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id=CONTWIDGET
+
+		if title != ''
+			title = "<div id=\"win-buttongroup-title-#{id}\" style=\"height:20px;\" class=\"win-buttongroup-title\">#{title}</div>"
+
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-buttongroup\" style=\"width:#{width}; #{hidden} #{style}\">
+															#{title}
+															<div id=\"win-buttongroup-body-#{id}\" class=\"win-buttongroup-body\" style=\"#{style}\"></div>
+														</div>"
+		if obj.items then _router(obj.items, "win-buttongroup-body-#{id}")
 
 
 	###
@@ -430,6 +461,8 @@ do ($W = Win) ->
 		else
 			CONTWIDGET++
 			id="win-btn-#{CONTWIDGET}"
+
+		if !isNaN width then width = width+'px'
 
 		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\">
 															<button class=\"#{cls}\">#{text}</button>
