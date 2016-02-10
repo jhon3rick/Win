@@ -73,7 +73,7 @@ do ($W = Win) ->
 												#{divClose}
 											</div>
 										</header>
-										<section id=\"win-section-#{id}\" style=\"height:calc(100% - 27px);\"></section>
+										<section id=\"win-section-#{id}\" style=\"height:calc(100% - 27px);\" data-role=\"win-section\"></section>
 									</div>
 								</div>"
 
@@ -135,9 +135,11 @@ do ($W = Win) ->
 
 		@.hiden = () ->
 			$W('#'+id).style('display','none')
+			_findResizeBody(id)
 
 		@.show = () ->
 			$W('#'+id).style('display','block')
+			_findResizeBody(id)
 
 		@.enable = () ->
 			$W('#'+id).style('display','none')
@@ -311,7 +313,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id=CONTWIDGET
 
-		html = "<div id=\"win-tabpanel-#{id}\" class=\"win-tabpanel\" style=\"width:100%; height:100%; #{style}\">
+		html = "<div id=\"win-tabpanel-#{id}\" class=\"win-tabpanel\" style=\"width:100%; height:100%; #{style}\" data-role=\"win-tabpanel\">
 					<div id=\"win-tabpanel-head-#{id}\" class=\"win-tabpanel-head\" style=\"width:100%; height:#{height}; #{style}\"></div>
 					<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>
 				</div>"
@@ -330,18 +332,11 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
 
-
-		console.log(idParent)
 		div = document.createElement("div")
 		div.id = id
 		# div.prototype.estate = 'enable'
 
-
-
-		# console.log(div.estate)
-
 		document.getElementById(idParent).appendChild(div)
-
 		document.querySelectorAll('#'+id).__proto__.estate = 'enable'
 
 
@@ -384,9 +379,7 @@ do ($W = Win) ->
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
 
-
-
-		html = "<div id=\"win-panel-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\">
+		html = "<div id=\"win-panel-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\" data-role=\"win-panel\">
 					#{title}
 					<div id=\"win-panel-load-#{id}\" class=\"win-panel-load\" style=\"width:#{width}; height:#{height}; #{style}\">
 						#{html}
@@ -413,7 +406,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tbar-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\"></div>"
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\" data-role=\"win-tbar\"></div>"
 		if obj.items then _router(obj.items, "#{id}")
 
 
@@ -440,7 +433,7 @@ do ($W = Win) ->
 		if title != ''
 			title = "<div id=\"win-buttongroup-title-#{id}\" style=\"height:20px;\" class=\"win-buttongroup-title\">#{title}</div>"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-buttongroup\" style=\"width:#{width}; #{hidden} #{style}\">
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-buttongroup\" style=\"width:#{width}; #{hidden} #{style}\" data-role=\"win-buttongroup\">
 															#{title}
 															<div id=\"win-buttongroup-body-#{id}\" class=\"win-buttongroup-body\" style=\"#{style}\"></div>
 														</div>"
@@ -464,7 +457,7 @@ do ($W = Win) ->
 
 		if !isNaN width then width = width+'px'
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\">
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\" data-role=\"win-btn\">
 															<button class=\"#{cls}\">#{text}</button>
 														</div>"
 		if obj.handler
@@ -486,19 +479,19 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tbtext-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML  += "<div id=\"#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\">#{text}</div>"
+		document.getElementById(idParent).innerHTML  += "<div id=\"#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\" data-role=\"win-tbtext\">#{text}</div>"
 
 	###
 	@method _separator
 	@param  obj objectDom parent
 	###
-	_separator = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separator\">|</div>"
+	_separator = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separator\" data-role=\"win-separator\">|</div>"
 
 	###
 	@method _separatorHeight
 	@param  obj objectDom parent
 	###
-	_separatorHeight = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\"></div>"
+	_separatorHeight = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\" data-role=\"win-separatorHeight\"></div>"
 
 	###
 	@method _body
@@ -523,28 +516,55 @@ do ($W = Win) ->
 		parent = document.getElementById(idParent)
 		heightParent = parent.offsetHeight
 
+		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\" data-role=\"win-body\">#{html}</div>"
+		_resizeBody = (idParent)
 
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\">#{html}</div>"
+		if typeof(obj.autoLoad)
+			setTimeout () ->
+				obj.autoLoad.idApply = id
+				$W.Load(obj.autoLoad)
+
+	_findResizeBody = (id) ->
+		role = document.getElementById(id).getAttribute "data-role"
+		if role = "win-btn" or role = "win-buttongroup"
+			div1 = document.getElementById(id).parentNode
+			div2 = document.getElementById(id).parentNode.parentNode
+			div3 = document.getElementById(id).parentNode.parentNode.parentNode
+			body = ''
+
+			role1 = div1.getAttribute "data-role"
+			role2 = div2.getAttribute "data-role"
+			role3 = div3.getAttribute "data-role"
+
+			if role1 is "win-body" or role1 is "win-section" then body = div1
+			else if role2 is "win-body" or role2 is "win-section" then body = div2
+			else if role3 is "win-body" or role3 is "win-section" then body = div3
+
+			if body != ''
+				_resizeBody(body.id)
+
+	_resizeBody = (idParent) ->
 
 		alto = 0
-		cont = 0
+		body = ''
 		arrayDiv = document.querySelectorAll('#'+idParent+' > div')
 
 		[].forEach.call(arrayDiv,(element)->
-			if cont == 1 then return
-			else if element.id == id
-				cont++
+			role = element.getAttribute "data-role"
+
+			if body != '' then return
+			else if role is "win-body"
+				body = element
 				return
+
 			alto += element.offsetHeight
 		)
 
 		height = if alto == 0 then '100%' else 'calc(100% - '+alto+'px)'
 
-		if typeof(obj.autoLoad)
+		if body != ''
 			setTimeout () ->
-				document.getElementById(id).style.height = height
-				obj.autoLoad.idApply = id
-				$W.Load(obj.autoLoad)
+				body.style.height = height
 
 
 	# ---------------------------------------------------------------------------

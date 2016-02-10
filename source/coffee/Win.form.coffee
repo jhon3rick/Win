@@ -51,12 +51,15 @@ do ($W = Win) ->
 	$W.form.validate = (id) ->
 		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
 
-		[].forEach.call(arrayinput, (input)->
-			type = input.getAttribute('data-validate');
+		[].forEach.call(campos, (input)->
+			type = input.getAttribute('data-validate')
+
+			# console.log(type)
 
 			switch type
+
 				when 'integer'
-					input.addClass += " win-input-number";
+					input.className += " win-input-number";
 
 					input.onkeypress = (event)->
 						_validateIntField({ event:event, eventType:'keypress', input:this })
@@ -65,7 +68,7 @@ do ($W = Win) ->
 						_validateIntField({ event:event, eventType:'change', input:this })
 
 				when 'double'
-					input.addClass += " win-input-number";
+					input.className += " win-input-number"
 
 					input.onkeypress = (event)->
 						_validateDoubleField({ event:event, eventType:'keypress', input:this })
