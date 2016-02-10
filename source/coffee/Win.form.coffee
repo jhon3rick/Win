@@ -145,12 +145,12 @@ do ($W = Win) ->
 
 	_validatePercentField = (obj) ->
 
-		min = obj.input.getAttribute('data-min')
-		max = obj.input.getAttribute('data-max')
+		min = (obj.input.getAttribute('data-min'))*1
+		max = (obj.input.getAttribute('data-max'))*1
 
 		# if obj.input.value < '' then obj.input.value  = 0
 		if obj.input.value < min then obj.input.value = obj.input.value
-		# if obj.input.value > max then obj.input.value = 100
+		if obj.input.value > max then obj.input.value = 100
 
 
 
