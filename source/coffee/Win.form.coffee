@@ -48,6 +48,14 @@ do ($W = Win) ->
 			when 'date'
 				_validateDateField(obj)
 
+			when 'percent'
+				# $W('#'+obj.idApply).addClass += " win-input-number";
+				$W('#'+obj.idApply)[0].onkeyup = (event)->
+					return _validatePercentField({ event:event, eventType:'keyup', input:this, option:obj.option })
+
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validatePercentField({ event:event, eventType:'change', input:this })
+
 	$W.form.validate = (id) ->
 		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
 
@@ -86,6 +94,10 @@ do ($W = Win) ->
 				when 'email'
 					input.onchange = (event)->
 						_validateEmailField({ event:event, input:this })
+
+				when 'percent'
+					input.onchange = (event)->
+						_validatePercentField({ event:event, input:this })
 
 				when 'date'
 					_validateDateField(obj)
@@ -127,11 +139,23 @@ do ($W = Win) ->
 			console.log('-'+obj.input.value+'-')
 			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
 
+
 	_validateEmailField = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
 		if !validate
 			obj.input.value=""
 			obj.input.focus()
+
+	_validatePercentField = (obj) ->
+
+		min = obj.input.getAttribute('data-min')
+		max = obj.input.getAttribute('data-max')
+
+		# if obj.input.value < '' then obj.input.value  = 0
+		if obj.input.value < min then obj.input.value = obj.input.value
+		# if obj.input.value > max then obj.input.value = 100
+
+
 
 	###
 	# Calendar

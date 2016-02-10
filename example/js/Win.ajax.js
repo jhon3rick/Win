@@ -11,104 +11,91 @@
  */
 
 (function() {
-  $W.Ajax = (function() {
-    return {
-      request: function(obj) {
-        var bodyXhr, method, obj_loading, parametros, value, xhr;
-        parametros = '';
-        if (typeof obj.id_ventana === 'undefined') {
-          console.warn("Debe enviar el parametro id_ventana, para poder mostrar el loading");
-          return;
+  (function($W) {
+    var _loadScript;
+    $W.Ajax = function(obj) {
+      var bodyXhr, method, param, value, xhr;
+      param = '';
+      if (typeof obj.params !== 'undefined') {
+        for (value in obj.params) {
+          param += param === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
         }
-        if (typeof obj.params !== 'undefined') {
-          for (value in obj.params) {
-            parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
-          }
-        }
-        if (obj.modal === true || obj.modal === '') {
-          obj_loading = {
-            id_ventana: obj.id_ventana,
-            text: obj.text,
-            loader: obj.loader,
-            icono: obj.iconFinish,
-            icono: obj.iconFinish,
-            texto: obj.textFinish,
-            duracion: obj.duracionFinish,
-            estado: 'on'
-          };
-          Win.loading(obj_loading);
-        }
-        xhr = new XMLHttpRequest;
-        bodyXhr = obj.url + '?' + parametros;
-        method = obj.method || 'POST';
-        xhr.open(method, bodyXhr, true);
-        xhr.onreadystatechange = function() {
-          var response;
-          if (xhr.readyState === 4) {
-            response = xhr.responseText;
-            if ((obj.modal === true || obj.modal === '') && (obj.autoClose === true || obj.autoClose === '')) {
-              obj_loading.estado = 'off';
-              Win.loading(obj_loading);
-            }
-            return obj.success(response, xhr);
-          } else {
-            if ((obj.modal === true || obj.modal === '') && (obj.autoClose === true || obj.autoClose === '')) {
-              obj_loading.estado = 'off';
-              Win.loading(obj_loading);
-            }
+      }
+      xhr = new XMLHttpRequest;
+      bodyXhr = obj.url;
+      method = obj.method || 'POST';
+      xhr.open(method, bodyXhr, true);
+      if (method === 'POST') {
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded", true);
+      }
+      xhr.onreadystatechange = function() {
+        var response;
+        if (xhr.readyState === 4) {
+          response = xhr;
+          return obj.success(response, xhr);
+        } else {
+          if (obj.failure) {
             return obj.failure(xhr);
           }
-        };
-        return xhr.send(null);
-      },
-      load: function(dom_element, obj) {
-        var bodyXhr, eval_script, extract_script, method, parametros, tagScript, text, value, xhr;
-        parametros = '';
-        tagScript = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)';
-        if (typeof obj.params !== 'undefined') {
-          for (value in obj.params) {
-            parametros += parametros === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
+        }
+      };
+      return xhr.send(param);
+    };
+    $W.Load = function(obj) {
+      var bodyXhr, method, param, text, value, xhr;
+      if (!obj.idApply) {
+        alert('idApply Obligatorio');
+        return;
+      } else if (typeof document.getElementById(obj.idApply) === 'null') {
+        alert('No se encontro elemento en el arbol Dom');
+        return;
+      }
+      param = '';
+      if (typeof obj.params !== 'undefined') {
+        for (value in obj.params) {
+          param += param === '' ? value + "=" + obj.params[value] : "&" + value + "=" + obj.params[value];
+        }
+      }
+      text = obj.text || 'cargando...';
+      document.getElementById(obj.idApply).innerHTML = "<div class=\"win-content-min-load\" > <div class=\"win-content-min-load-img\"> <div class=\"win-min-load-ajax\"></div> </div> <div class=\"win-content-min-load-label\">" + text + "</div> </div>";
+      xhr = new XMLHttpRequest;
+      bodyXhr = obj.url + '?';
+      method = obj.method || 'POST';
+      xhr.open(method, bodyXhr, true);
+      if (method === 'POST') {
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded", true);
+      }
+      xhr.onreadystatechange = function() {
+        var divScript;
+        if (xhr.readyState === 4) {
+          divScript = document.getElementById(obj.idApply);
+          if (xhr.status === 404) {
+            return divScript.innerHTML = 'Not found';
+          } else {
+            divScript.innerHTML = xhr.responseText;
+            return _loadScript(divScript);
           }
         }
-        text = obj.text || 'cargando...';
-        dom_element.innerHTML = "<div class=\"win-content-min-load\" > <div class=\"win-content-min-load-img\"> <div class=\"win-min-load-ajax\"></div> </div> <div class=\"win-content-min-load-label\">" + text + "</div> </div>";
-        xhr = new XMLHttpRequest;
-        bodyXhr = obj.url + '?' + parametros;
-        method = obj.method || 'POST';
-        xhr.open(method, bodyXhr, true);
-        xhr.onreadystatechange = function() {
-          var i, j, len, responseHtml, results, script;
-          if (xhr.readyState === 4) {
-            responseHtml = xhr.responseText;
-            dom_element.innerHTML = responseHtml;
-            script = dom_element.getElementsByTagName('script');
-            results = [];
-            for (j = 0, len = script.length; j < len; j++) {
-              i = script[j];
-              tagScript = document.createElement('script');
-              i.parentNode.replaceChild(tagScript, i);
-              results.push(tagScript.innerHTML = i.innerHTML);
-            }
-            return results;
-          }
-        };
-        xhr.send(null);
-        extract_script = function(string) {
-          var SearchExp;
-          SearchExp = new RegExp(tagScript, 'img');
-          return string.replace(SearchExp, '');
-        };
-        return eval_script = function(string) {
-          var script, scripts;
-          scripts = string.match(new RegExp(tagScript, 'img')) || [];
-          script = '';
-          scripts.map(function(script_map) {
-            return script += (script_map.match(new RegExp(tagScript, 'im')) || ['', ''])[1];
-          });
-          return eval(script);
-        };
-      }
+      };
+      return xhr.send(param);
     };
-  })();
+
+    /*
+    	@method _loadScript
+    	@param  obj objectDom load script
+     */
+    return _loadScript = function(obj) {
+      var i, j, len, results, tagScript, tagsScript;
+      tagsScript = obj.getElementsByTagName('script');
+      results = [];
+      for (j = 0, len = tagsScript.length; j < len; j++) {
+        i = tagsScript[j];
+        tagScript = document.createElement('script');
+        i.parentNode.replaceChild(tagScript, i);
+        results.push(tagScript.innerHTML = i.innerHTML);
+      }
+      return results;
+    };
+  })(Win);
 
 }).call(this);

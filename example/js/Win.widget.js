@@ -19,10 +19,10 @@
 (function() {
   "use strict";
   (function($W) {
-    var _button, _draggMove, _draggStart, _draggStop, _panel, _resize, _router, _separator, _separatorHeight, _tabpanel, _tbar, _tbtext;
+    var CONTWIDGET, _body, _button, _buttongroup, _draggMove, _draggStart, _draggStop, _panel, _resize, _router, _separator, _separatorHeight, _tab, _tabPanel, _tbar, _tbtext;
+    CONTWIDGET = 0;
     $W.Window = function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, elementsNav, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
-      elementsNav = '';
+      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
       width = obj.width || 300;
       height = obj.height || 300;
       id = obj.id || '';
@@ -38,35 +38,45 @@
       bodyStyle = obj.bodyStyle || '';
       bodyColor = obj.bodyColor || '#FFF';
       body = $W('body')[0];
-      winModal = document.createElement('div');
       win = this;
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
+      winModal = document.createElement('div');
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
       divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : "";
-      winModal.setAttribute("id", "win-modal-" + id);
-      winModal.setAttribute("class", "win-modal");
-      left = body.offsetWidth < width ? 0 : (body.offsetWidth - width) / 2;
-      top = body.offsetHeight < height ? 0 : (body.offsetHeight - height) / 2;
-      if (typeof obj.items !== 'undefined') {
-        elementsNav = _router(obj.items);
+      left = body.offsetWidth < (width / 2) ? 0 : (body.offsetWidth - width) / 2;
+      top = body.offsetHeight < (height / 2) ? 0 : (body.offsetHeight - height) / 2;
+      if (!isNaN(width)) {
+        width = width + 'px';
       }
-      winModal.innerHTML = "<div style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" id=\"" + id + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <nav>" + elementsNav + "</nav> <div class=\"win-window-body " + clsBody + "\" id=\"win_window_" + id + "\">" + html + "</div> </div>";
+      if (!isNaN(height)) {
+        height = height + 'px';
+      }
+      if (id === '') {
+        CONTWIDGET++;
+        id === CONTWIDGET;
+      }
+      left = left + 'px';
+      top = top + 'px';
+      winModal.innerHTML += "<div id=\"win-modal-" + id + "\" class=\"win-modal\"> <div id=\"" + id + "\" style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header id=\"win-header-" + id + "\"> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <section id=\"win-section-" + id + "\" style=\"height:calc(100% - 27px);\"></section> </div> </div>";
       body.appendChild(winModal);
       $W("#win-title-" + id)[0].onmousedown = function() {
-        return _draggStart(id, winModal, event);
+        return _draggStart(id, document.getElementById("win-modal-" + id), event);
       };
       $W("#win-title-" + id)[0].onmouseup = function() {
-        return _draggStop(winModal);
+        return _draggStop(document.getElementById("win-modal-" + id));
       };
-      if (obj.resize !== false) {
+      if (obj.resize) {
         _resize($W("#win-resize-top-" + id)[0]);
         _resize($W("#win-resize-bottom-" + id)[0]);
         _resize($W("#win-resize-left-" + id)[0]);
         _resize($W("#win-resize-right-" + id)[0]);
       }
-      if (typeof obj.autoLoad !== 'undefined') {
-        $W.Ajax.load($W("#win_window_" + id)[0], obj.autoLoad);
+      if (obj.items) {
+        _router(obj.items, "win-section-" + id);
+      }
+      if (obj.autoLoad) {
+        _body(obj, "win-section-" + id);
       }
       return {
         close: function() {
@@ -74,45 +84,36 @@
         }
       };
     };
-    $W.aside = function(obj) {};
-    $W.tabpanel = function(obj) {
-      var html;
-      console.log(obj);
-      html = "<div id=\"" + obj.id + "\">";
-      obj.items.forEach(json, index, element)(function() {
-        return html += "<div id=\"" + json.id + "\">" + json.title + "</div>";
-      });
-      return html += "</div>";
+    $W.Add = function(obj) {
+      var parent;
+      parent = document.getElementById("" + obj.idApply);
+      if (obj.items) {
+        _router(obj.items, obj.idApply);
+      }
+      if (obj.autoLoad) {
+        return _body(obj, obj.idApply);
+      }
     };
     $W.tbar = function(obj) {
-      return document.getElementById("\#" + obj.applyTo).innerHTML = ("<div class=\"win-tbar\" id=\"win-tbar-" + id + "\">") + _router(obj.items, tbar) + "</div>";
+      var parent;
+      parent = document.getElementById("" + obj.idApply);
+      parent.className = "win-tbar";
+      return _router(obj.items, obj.idApply);
     };
-    $W.getButton = function(id) {
-      this.hiden = function(id) {
-        return $W('#id').style('display', 'none');
+    $W.Element = function(id) {
+      this.hiden = function() {
+        return $W('#' + id).style('display', 'none');
       };
-      this.show = function(id) {
-        return $W('#id').style('display', 'block');
+      this.show = function() {
+        return $W('#' + id).style('display', 'block');
       };
-      this.enable = function(id) {
-        return $W('#id').style('display', 'none');
+      this.enable = function() {
+        return $W('#' + id).style('display', 'none');
       };
-      this.disable = function(id) {
-        return $W('#id').style('display', 'block');
+      this.disable = function() {
+        return $W('#' + id).style('display', 'block');
       };
-      return id;
-    };
-    $W.get = function(element_id) {
-      return {
-        load: function(obj) {
-          var dom_element;
-          dom_element = $W(element_id)[0];
-          return $W.Ajax.load(dom_element, obj);
-        },
-        element: function() {
-          return $W(element_id);
-        }
-      };
+      return this;
     };
     $W.loading = function(obj) {
       var duracion, estilo_texto, evento_icono, icono, iconos, loader, mask, text, texto;
@@ -120,7 +121,7 @@
         console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
         return;
       }
-      if (!$W("#win_window_" + obj.id_ventana)[0]) {
+      if (!$W("#win-body-" + obj.id_ventana)[0]) {
         console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana ' + id_ventana);
         return;
       }
@@ -205,6 +206,296 @@
         resize: false
       });
     };
+
+    /*
+    	@method _router
+    	@param  arr child
+    	@param  obj ObjetoDom idParent
+     */
+    _router = function(obj, idParent) {
+      var float;
+      if (typeof obj === 'object') {
+        float = 'left';
+        obj.forEach(function(json, index, element) {
+          switch (json.xtype) {
+            case 'button':
+              return _button(json, idParent);
+            case 'buttongroup':
+              return _buttongroup(json, idParent);
+            case 'tbar':
+              return _tbar(json, idParent);
+            case 'panel':
+              return _panel(json, idParent);
+            case 'tabPanel':
+              return _tabPanel(json, idParent);
+            case 'tab':
+              return _tab(json, idParent);
+            case 'tbtext':
+              return _tbtext(json, idParent);
+            default:
+              if (json === '-') {
+                return _separator(idParent);
+              } else if (json === '--') {
+                return _separatorHeight(idParent);
+              } else if (json === '->') {
+                float = 'right';
+                return document.getElementById(idParent).innerHTML += '<div></div>';
+              }
+          }
+        });
+        if (float === 'left') {
+          return document.getElementById(idParent).innerHTML += '<div></div>';
+        }
+      }
+    };
+
+    /*
+    	@method _tabPanel
+    	@param  obj objectDom parent and config
+     */
+    _tabPanel = function(obj, idParent) {
+      var bodyHeight, height, html, id, style, width;
+      style = obj.style || '';
+      height = obj.height || '30';
+      if (!isNaN(width)) {
+        width = width + 'px';
+      }
+      if (!isNaN(height)) {
+        height = height + 'px';
+      }
+      bodyHeight = "calc:(100% - " + height + ")";
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = CONTWIDGET;
+      }
+      html = "<div id=\"win-tabpanel-" + id + "\" class=\"win-tabpanel\" style=\"width:100%; height:100%; " + style + "\"> <div id=\"win-tabpanel-head-" + id + "\" class=\"win-tabpanel-head\" style=\"width:100%; height:" + height + "; " + style + "\"></div> <div id=\"win-tabpanel-body-" + id + "\" class=\"win-tabpanel-body\" style=\"height:" + bodyHeight + ";\"></div> </div>";
+      document.getElementById(idParent).innerHTML += html;
+      if (obj.items) {
+        return _router(obj.items, "win-tabpanel-head-" + id);
+      }
+    };
+    _tab = function(obj, idParent) {
+      var div, icon, id, title;
+      title = obj.title || '';
+      icon = obj.icon || '';
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = "win-tab-" + CONTWIDGET;
+      }
+      console.log(idParent);
+      div = document.createElement("div");
+      div.id = id;
+      document.getElementById(idParent).appendChild(div);
+      document.querySelectorAll('#' + id).__proto__.estate = 'enable';
+      return setTimeout(function() {
+        return console.log(document.querySelectorAll('#' + id).estate);
+      });
+    };
+
+    /*
+    	@method _panel
+    	@param  obj objectDom config
+    	@param  obj objectDom parent
+     */
+    _panel = function(obj, idParent) {
+      var height, html, id, style, title, width;
+      width = obj.width || '160';
+      height = obj.height || '60';
+      html = obj.html || '';
+      style = obj.style || '';
+      title = obj.title || '';
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = CONTWIDGET;
+      }
+      if (title !== '') {
+        height = height - 20;
+        title = "<div id=\"win-panel-title-" + id + "\" style=\"width:" + width + "; height:20px; " + style + "\" class=\"win-panel-title\">" + title + "</div>";
+      }
+      if (!isNaN(width)) {
+        width = width + 'px';
+      }
+      if (!isNaN(height)) {
+        height = height + 'px';
+      }
+      html = "<div id=\"win-panel-" + id + "\" class=\"win-panel\" style=\"width:" + width + "; height:" + height + "; " + style + "\"> " + title + " <div id=\"win-panel-load-" + id + "\" class=\"win-panel-load\" style=\"width:" + width + "; height:" + height + "; " + style + "\"> " + html + " </div> </div>";
+      document.getElementById(idParent).innerHTML += html;
+      if (obj.autoLoad) {
+        return setTimeout(function() {
+          obj.autoLoad.idApply = 'win-panel-load-' + id;
+          return $W.Load(obj.autoLoad);
+        });
+      } else if (obj.items) {
+        return _router(obj.items, "win-panel-load-" + id);
+      }
+    };
+
+    /*
+    	@method _tbar
+    	@param  obj objectDom parent and config
+     */
+    _tbar = function(obj, idParent) {
+      var id;
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = "win-tbar-" + CONTWIDGET;
+      }
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-tbar\"></div>";
+      if (obj.items) {
+        return _router(obj.items, "" + id);
+      }
+    };
+    _buttongroup = function(obj, idParent) {
+      var hidden, i, id, item, len, ref, style, title, width;
+      hidden = obj.hidden || '';
+      width = obj.width || 0;
+      style = obj.style || '';
+      title = obj.title || '';
+      if (width === 0 && obj.items) {
+        ref = obj.items;
+        for (i = 0, len = ref.length; i < len; i++) {
+          item = ref[i];
+          if (!item.hidden) {
+            width += item.width > 0 ? item.width || 60 : void 0;
+          }
+        }
+      }
+      if (!isNaN(width)) {
+        width = width + 'px';
+      }
+      if (hidden === true) {
+        hidden = "display:none;";
+      }
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = CONTWIDGET;
+      }
+      if (title !== '') {
+        title = "<div id=\"win-buttongroup-title-" + id + "\" style=\"height:20px;\" class=\"win-buttongroup-title\">" + title + "</div>";
+      }
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-buttongroup\" style=\"width:" + width + "; " + hidden + " " + style + "\"> " + title + " <div id=\"win-buttongroup-body-" + id + "\" class=\"win-buttongroup-body\" style=\"" + style + "\"></div> </div>";
+      if (obj.items) {
+        return _router(obj.items, "win-buttongroup-body-" + id);
+      }
+    };
+
+    /*
+    	@method _button
+    	@param  obj objectDom parent and config
+     */
+    _button = function(obj, idParent) {
+      var cls, id, text, width;
+      text = obj.text || '';
+      cls = obj.cls || '';
+      width = obj.width || 50;
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = "win-btn-" + CONTWIDGET;
+      }
+      if (!isNaN(width)) {
+        width = width + 'px';
+      }
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-btn\" style=\"width:" + width + ";\"> <button class=\"" + cls + "\">" + text + "</button> </div>";
+      if (obj.handler) {
+        return setTimeout(function() {
+          return document.querySelector("\#" + idParent + " > \#" + id).onclick = obj.handler;
+        });
+      }
+    };
+
+    /*
+    	@method _tbtext
+    	@param  obj objectDom parent and config
+     */
+    _tbtext = function(obj, idParent) {
+      var id, style, text, width;
+      text = obj.text || '';
+      width = obj.width || '120';
+      style = obj.style || 'left';
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = "win-tbtext-" + CONTWIDGET;
+      }
+      return document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-tbtext\" style=\"width:" + width + "; " + style + "\">" + text + "</div>";
+    };
+
+    /*
+    	@method _separator
+    	@param  obj objectDom parent
+     */
+    _separator = function(idParent) {
+      return document.getElementById(idParent).innerHTML += "<div class=\"win-separator\">|</div>";
+    };
+
+    /*
+    	@method _separatorHeight
+    	@param  obj objectDom parent
+     */
+    _separatorHeight = function(idParent) {
+      return document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\"></div>";
+    };
+
+    /*
+    	@method _body
+    	@param  obj objectDom parent and config
+     */
+    _body = function(obj, idParent) {
+      var alto, arrayDiv, clsBody, cont, height, heightParent, html, id, items, parent, style;
+      items = obj.items || '';
+      html = obj.html || '';
+      clsBody = obj.clsBody || '';
+      style = 'overflow:auto;';
+      if (obj.scroll === false) {
+        style = 'overflow:hidden;';
+      } else if (obj.scrollX === false) {
+        style += 'overflow-x:hidden;';
+      } else if (obj.scrollY === false) {
+        style += 'overflow-y:hidden;';
+      }
+      if (obj.idApply) {
+        id = obj.idApply;
+      } else {
+        CONTWIDGET++;
+        id = "win-body-" + CONTWIDGET;
+      }
+      parent = document.getElementById(idParent);
+      heightParent = parent.offsetHeight;
+      parent.innerHTML += "<div id=\"" + id + "\" class=\"win-body " + clsBody + "\" style=\"" + style + "\">" + html + "</div>";
+      alto = 0;
+      cont = 0;
+      arrayDiv = document.querySelectorAll('#' + idParent + ' > div');
+      [].forEach.call(arrayDiv, function(element) {
+        if (cont === 1) {
+          return;
+        } else if (element.id === id) {
+          cont++;
+          return;
+        }
+        return alto += element.offsetHeight;
+      });
+      height = alto === 0 ? '100%' : 'calc(100% - ' + alto + 'px)';
+      if (typeof obj.autoLoad) {
+        return setTimeout(function() {
+          document.getElementById(id).style.height = height;
+          obj.autoLoad.idApply = id;
+          return $W.Load(obj.autoLoad);
+        });
+      }
+    };
     _draggStart = function(id, divParent, evt) {
       var cHe, cWi, diffX, diffY, divLeft, divTop, domMove, eHe, eWi, posX, posY;
       domMove = document.getElementById(id);
@@ -244,7 +535,7 @@
     };
 
     /*
-    	_draggMove
+    	@method _draggMove
     	@param obj object DOM move
     	@param int position x
     	@param int position y
@@ -255,7 +546,7 @@
     };
 
     /*
-    	_draggMove
+    	@method _draggMove
     	@param obj object parent DOM move
      */
     _draggStop = function(objDom) {
@@ -266,10 +557,10 @@
     };
 
     /*
-    	_resize
+    	@method _resize
     	@param obj object DOM resize
      */
-    _resize = function(objDom) {
+    return _resize = function(objDom) {
       var _doDrag, _initDrag, _resizeXLeft, _resizeXRight, _resizeYBottom, _resizeYTop, _stopDrag, attrData, objParent, positionX, positionY, startHeight, startWidth, startX, startY;
       startX = 0;
       startY = 0;
@@ -306,12 +597,10 @@
         return document.documentElement.removeEventListener('mouseup', _stopDrag, false);
       };
       _resizeXLeft = function(e) {
-        console.log(positionX + (e.clientX - startX));
         objParent.style.left = (positionX + e.clientX - startX) + 'px';
         return objParent.style.width = (startWidth - e.clientX + startX) + 'px';
       };
       _resizeYTop = function(e) {
-        console.log(attrData);
         objParent.style.top = (positionY + e.clientY - startY) + 'px';
         return objParent.style.height = (startHeight - e.clientY + startY) + 'px';
       };
@@ -325,125 +614,6 @@
           return objParent.style.height = (startHeight + e.clientY - startY) + 'px';
         }
       };
-    };
-
-    /*
-    	@method _router
-    	@param  arr child
-    	@param  obj ObjetoDom parent
-     */
-    _router = function(obj, parent) {
-      var align, html;
-      html = "";
-      if (typeof obj === 'object') {
-        align = 'left';
-        obj.forEach(function(json, index, element) {
-          console.log(json.xtype);
-          if (json.xtype === 'button') {
-            return html += _button(json);
-          } else if (json.xtype === 'buttongroup') {
-            return html += $W.buttongroup(json);
-          } else if (json.xtype === 'tbar') {
-            return html += _tbar(json);
-          } else if (json.xtype === 'panel') {
-            return html += _panel(json);
-          } else if (json.xtype === 'tabpanel') {
-            return html += $W.tabpanel(json);
-          } else if (json.xtype === 'tbtext') {
-            json.align = align;
-            return html += _tbtext(json);
-          } else if (json === '-') {
-            return html += _separator();
-          } else if (json === '--') {
-            return html += _separatorHeight();
-          } else if (json === '->') {
-            align = 'right';
-            return html += "<div></div>";
-          }
-        });
-        if (align === '') {
-          html += '<div></div>';
-        }
-      }
-      return html;
-    };
-
-    /*
-    		@method _separator
-    		@param  obj objectDom parent
-     */
-    _separator = function() {
-      var html;
-      return html = "<div class=\"win-separator\">|</div>";
-    };
-
-    /*
-    		@method _separatorHeight
-    		@param  obj objectDom parent
-     */
-    _separatorHeight = function() {
-      var html;
-      return html = "<div class=\"win-separatorHeight\"></div>";
-    };
-    $W.buttongroup = function(obj) {};
-
-    /*
-    		@method _button
-    		@param  obj objectDom parent and config
-     */
-    _button = function(obj) {
-      var click, cls, html, id, text, width;
-      text = obj.text || '';
-      id = obj.id || '';
-      cls = obj.cls || '';
-      width = obj.width || 50;
-      click = obj.handler || '';
-      return html = "<div id=\"" + id + "\" class=\"win-btn\" style=\"width: " + width + "px;\" onclick=\"" + click + "\"> <button class=\"" + cls + "\">" + text + "</button> </div>";
-    };
-
-    /*
-    		@method _panel
-    		@param  obj objectDom parent and config
-     */
-    _panel = function(obj) {
-      var bodyStyle, height, html, id, width;
-      id = obj.id || '';
-      width = obj.width || 'auto';
-      height = obj.height || 'auto';
-      html = obj.html || '';
-      bodyStyle = obj.bodyStyle || '';
-      console.log(html);
-      return html = "<div id=\"" + id + "\" class=\"win-panel\" style=\"width:" + width + "; height:" + height + "; " + bodyStyle + "\" onload=\"alert(3)\">" + html + "</div>";
-    };
-
-    /*
-    		@method _tabpanel
-    		@param  obj objectDom parent and config
-     */
-    _tabpanel = function(obj) {};
-
-    /*
-    		@method _tbtext
-    		@param  obj objectDom parent and config
-     */
-    _tbtext = function(obj) {
-      var align, html, id, text;
-      id = obj.id || '';
-      text = obj.text || '';
-      align = obj.align || 'left';
-      return html = "<div id=\"win-tbtext-" + id + "\" class=\"win-tbtext\" style=\"text-align:" + align + ";\">" + text + "</div>";
-    };
-
-    /*
-    		@method _tbar
-    		@param  obj objectDom parent and config
-     */
-    return _tbar = function(obj) {
-      var id, items, tbar;
-      id = obj.id || '';
-      items = obj.items || '';
-      tbar = $W("#win-tbar-" + obj.applyTo)[0];
-      return ("<div class=\"win-tbar\" id=\"win-tbar-" + id + "\">") + _router(obj.items, tbar) + "</div>";
     };
   })(Win);
 
