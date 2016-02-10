@@ -569,3 +569,21 @@ input[data-icon="warning"]
 	background-image url(../img/icons/18dp/warning.png)
 	background-repeat no-repeat
 
+[data-tooltip]
+	position relative
+
+[data-tooltip]:after
+	content            attr(data-tooltip)
+	color              #fff
+	background         #333
+	background         #2a80b9
+	padding            5px
+	position           absolute
+	left               -9999px
+	opacity            0
+	bottom             100%
+	white-space        nowrap
+	-webkit-transition 0.25s linear opacity
+[data-tooltip]:hover:after
+		left    5px
+		opacity 1
