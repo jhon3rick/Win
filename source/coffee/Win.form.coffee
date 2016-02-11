@@ -50,11 +50,12 @@ do ($W = Win) ->
 
 			when 'percent'
 				# $W('#'+obj.idApply).addClass += " win-input-number";
-				$W('#'+obj.idApply)[0].onkeyup = (event)->
-					return _validatePercentField({ event:event, eventType:'keyup', input:this, option:obj.option })
+				$W('#'+obj.idApply)[0].onkeydown = (event)->
+					if event.keyCode==13
+						return _validatePercentField({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validatePercentField({ event:event, eventType:'change', input:this })
+					return _validatePercentField({ event:event, input:this })
 
 	$W.form.validate = (id) ->
 		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
@@ -107,7 +108,7 @@ do ($W = Win) ->
 	_validateIntField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-		 	return true
+			return true
 		else if obj.eventType == 'keypress'
 			return (/\d/).test(String.fromCharCode(tecla))
 		else if obj.eventType == 'change'
@@ -116,7 +117,7 @@ do ($W = Win) ->
 	_validateDoubleField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-		 	return true
+			return true
 		else if obj.eventType == 'keypress'
 			return (/[\d.]/).test(String.fromCharCode(tecla))
 		else if obj.eventType == 'change'
@@ -129,7 +130,7 @@ do ($W = Win) ->
 	_validateTextField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-		 	return true
+			return true
 		else if obj.eventType == 'keyup'
 			if obj.option=='uppercase'
 				obj.input.value = obj.input.value.toUpperCase()
@@ -147,13 +148,24 @@ do ($W = Win) ->
 			obj.input.focus()
 
 	_validatePercentField = (obj) ->
+		max = obj.input.getAttribute('data-max') * 1
+		min = obj.input.getAttribute('data-min') * 1
+		result = obj.input.value * 1
+		if result <= max
+			if result >= min
+				console.log  'valor aceptado'
+			else
+				alert 'no se aceptan  menores a ' + min
+				obj.input.value = ''
+				obj.input.focus()
+		else
+			alert 'no se aceptan muneros mayores a' + max
+			obj.input.value = ''
+			obj.input.focus()
 
-		min = obj.input.getAttribute('data-min')
-		max = obj.input.getAttribute('data-max')
+		return true
 
-		# if obj.input.value < '' then obj.input.value  = 0
-		if obj.input.value < min then obj.input.value = obj.input.value
-		# if obj.input.value > max then obj.input.value = 100
+
 
 
 
