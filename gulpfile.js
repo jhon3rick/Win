@@ -37,7 +37,7 @@
     coffee: ['./source/coffee/*.coffee'],
     stylus: ['./source/stylus/*.styl'],
     jshint: ['./build/js/*.js'],
-    modules: ['./source/coffee/Win.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.element.coffee', './source/coffee/Win.css.coffee', './source/coffee/Win.events.coffee', './source/coffee/Win.query.coffee', './source/coffee/Win.output.coffee', './source/coffee/Win.form.coffee', './source/coffee/Win.widget.coffee', './source/coffee/Win.ajax.coffee']
+    modules: ['./source/coffee/Win.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.element.coffee', './source/coffee/Win.css.coffee', './source/coffee/Win.events.coffee', './source/coffee/Win.query.coffee', './source/coffee/Win.output.coffee', './source/coffee/Win.form.coffee', './source/coffee/Win.widget.coffee', './source/coffee/Win.ajax.coffee', './source/coffee/Win.grilla.coffee']
   };
 
   banner = ["/**", " * <%= pkg.name %> - <%= pkg.description %>", " * @version v<%= pkg.version %>", " * @link    <%= pkg.homepage %>", " * @author  <%= pkg.author.name %> (Twitter <%= pkg.author.twitter %> || email <%= pkg.author.mail %>)", " * @license <%= pkg.license %>", " */", ""].join("\n");

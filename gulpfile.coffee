@@ -32,7 +32,8 @@ path =
 
 					'./source/coffee/Win.form.coffee',
 					'./source/coffee/Win.widget.coffee',
-					'./source/coffee/Win.ajax.coffee']
+					'./source/coffee/Win.ajax.coffee',
+					'./source/coffee/Win.grilla.coffee']
 
 	# modules     : ['./source/coffee/*.coffee']
 

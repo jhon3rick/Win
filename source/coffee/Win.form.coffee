@@ -14,6 +14,143 @@ do ($W = Win) ->
 
 	$W.form = {}
 
+	#############################################################
+	# LOAD FORM INSERT OR UPDATE
+	#############################################################
+	$W.form.ini = (obj) ->
+		console.log obj
+		index = obj.index or ''
+		name = obj.name or ''
+		url = obj.url or ''
+		size = obj.size or {}
+		field = obj.field or {}
+		opcionClass = obj.opcionClass or ''
+		idApply = "parent_form_#{name}"
+
+		fTbar = obj.fTbar or false
+		btnInsert = obj.btnInsert or ''
+		btnDelete = obj.btnDelete or ''
+
+		htmlForm = _routerForm name,field,size
+
+		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\" style=\"margin:0; padding:0;\"></div>
+														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" style=\"float:left; width:100%; overflow:auto;\">
+															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px; overflow:hidden;\">#{htmlForm}<div>
+														</form>"
+		if fTbar is true then _createBtnTbar name,opcionClass,url,index,btnInsert,btnDelete
+		$W.form.validate idApply
+
+
+	_createBtnTbar = (name,opcionClass,url,index,btnInsert,btnDelete) ->
+		arrayBtn = []
+		txtBoton = if opcionClass=='vUpdate' then 'Actualizar' else 'Guardar'
+
+		if btnInsert is true
+			arrayBtn.push {
+				xtype   : "button",
+				id      : "fInsert_#{name}",
+				cls     : "user_black_36",
+				text    : txtBoton,
+				handler : () -> $W.grilla.fSave name,url,index
+			}
+
+		if btnDelete is true and opcionClass is 'vUpdate'
+			arrayBtn.push {
+				xtype   : "button",
+				id      : "fDelete_#{name}",
+				cls     : "user_black_36",
+				text    : "Eliminar",
+				handler : () -> $W.grilla.fDelete name,url,index
+			}
+
+		$W.tbar {
+			idApply : "form_tbar_#{name}",
+			items   : arrayBtn
+		}
+
+	_routerForm = (name,obj,size) ->
+		html = ""
+		for own field, value of obj
+			switch value.type
+				when 'TextField' then html+=_createTextField name,field,value,size
+				when 'ComboBox' then html+=_createComboBox name,field,value,size
+				when 'TextArea' then html+=_createTextArea name,field,value,size
+				when 'Separador' then html+=_createSeparador value
+		html
+
+	###
+	# METHOD STATIC
+	# CREATE FIELD INPUT
+	###
+	_createTextField = (name,field,obj,size) ->
+		type    = 'text'
+		display = 'block'
+		validate = obj.validate or ''
+
+		if validate != '' then validate = "data-validate=\"#{validate}\""
+
+		if obj.hidden is true or obj.hidden == "true" or obj.hidden == "hidden"
+			type    = 'hidden';
+			display = 'none';
+
+		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
+
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px; position:relative; display:#{display}\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px; position:relative;\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}px; position:relative;\">
+				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
+			</div>
+		</div>"
+
+	###
+	# METHOD STATIC
+	# CREATE FIELD SELECT
+	###
+	_createComboBox = (name,field,obj,size) ->
+		style  = if obj.required is true and obj.value == '' then 'empy' else 'none'
+		option = obj.option or {}
+		htmlOption = _createOptionCombo obj.value,option
+
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
+				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
+			</div>
+		</div>"
+
+	_createOptionCombo = (value,obj) ->
+		html = "<option value=\"\">Seleccione...</option>"
+		for own key, option of obj
+			selected = if option.index is value then "selected" else ""
+			html += "<option value=\"#{option.index}\" #{selected}>#{option.value}</option>"
+		html
+
+	###
+	# METHOD STATIC
+	# CREATE FIELD TEXTAREA
+	###
+	_createTextArea = (name,field,obj,size) ->
+		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
+
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
+				<textarea id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px; height:#{obj.height}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{obj.value}</textarea>
+			</div>
+		</div>"
+
+	###
+	# METHOD STATIC
+	# CREATE SEPARATOR
+	###
+	_createSeparador = (obj) ->
+		"<div class=\"form_separador\">
+			<div style=\"width:80%; float:left\">#{obj.text}</div>
+		</div>"
+
+	#############################################################
+	# VALIDATE INPUT
+	#############################################################
 	$W.form.field = (obj) ->
 		switch obj.type
 			when 'integer'
@@ -57,13 +194,14 @@ do ($W = Win) ->
 				$W('#'+obj.idApply)[0].onchange = (event)->
 					return _validatePercentField({ event:event, input:this })
 
+	###
+	# VALIDATE INPUT FORM
+	###
 	$W.form.validate = (id) ->
 		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
 
 		[].forEach.call(campos, (input)->
 			type = input.getAttribute('data-validate')
-
-			# console.log(type)
 
 			switch type
 
@@ -104,7 +242,9 @@ do ($W = Win) ->
 					_validateDateField(obj)
 		)
 
-
+	###
+	# METHOD STATIC VALIDATE
+	###
 	_validateIntField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
@@ -164,10 +304,6 @@ do ($W = Win) ->
 			obj.input.focus()
 
 		return true
-
-
-
-
 
 	###
 	# Calendar
@@ -323,32 +459,32 @@ do ($W = Win) ->
 			for i in [0...6]
 				j = i+6
 
-				option += """<div>
-								<div class="date-change-month">#{monthNames[i].substr(0,3)}</div>
-								<div class="date-change-month">#{monthNames[j].substr(0,3)}</div>
-							</div>"""
+				option += "<div>
+								<div class=\"date-change-month\">#{monthNames[i].substr(0,3)}</div>
+								<div class=\"date-change-month\">#{monthNames[j].substr(0,3)}</div>
+							</div>"
 
-			html  = """<tr>
-							<td colspan="2" rowspan="7" class="content-month">#{option}</td>
-							<td colspan="2" class="content-year">
-								<div id="change-year-down-#{id}" class="calendar-change" style="float:left;"> < </div>
-								<div id="change-year-top-#{id}" class="calendar-change" style="float:right;"> > </div>
-							</td>
-						</tr>"""
+			html  = "<tr>
+						<td colspan=\"2\" rowspan=\"7\" class=\"content-month\">#{option}</td>
+						<td colspan=\"2\" class=\"content-year\">
+							<div id=\"change-year-down-#{id}\" class=\"calendar-change\" style=\"float:left;\"> < </div>
+							<div id=\"change-year-top-#{id}\" class=\"calendar-change\" style=\"float:right;\"> > </div>
+						</td>
+					</tr>"
 			for i in [0...6]
-				html += """<tr>
-								<td>#{year1++}</td>
-								<td>#{year2++}</td>
-							</tr>"""
+				html += "<tr>
+							<td>#{year1++}</td>
+							<td>#{year2++}</td>
+						</tr>"
 
-			html += """<tr style="border-top:1px solid #fff;">
-							<td colspan=2 style="padding:0px; border-right:1px solid #fff;">
-								<input type="button" style="width:100%; padding:3px;" value="Aceptar">
-							</td>
-							<td colspan=2 style="padding:0px;">
-								<input type="button" style="width:100%; padding:3px;" value="Volver" id="boton-back-calendar-#{id}">
-							</td>
-						</tr>"""
+			html += "<tr style=\"border-top:1px solid #fff;\">
+						<td colspan=2 style=\"padding:0px; border-right:1px solid #fff;\">
+							<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Aceptar\">
+						</td>
+						<td colspan=2 style=\"padding:0px;\">
+							<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Volver\" id=\"boton-back-calendar-#{id}\">
+						</td>
+					</tr>"
 
 
 			$W('#win-calendar-'+id).hide()
