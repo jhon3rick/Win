@@ -32,7 +32,8 @@ path =
 
 					'./source/coffee/Win.form.coffee',
 					'./source/coffee/Win.widget.coffee',
-					'./source/coffee/Win.ajax.coffee']
+					'./source/coffee/Win.ajax.coffee',
+					'./source/coffee/Win.grilla.coffee']
 
 	# modules     : ['./source/coffee/*.coffee']
 
@@ -103,6 +104,12 @@ gulp.task 'default', ->
 
 gulp.task 'compile_watch', ->
 	gulp.watch path.coffee, ['minCoffee']
+	gulp.watch path.stylus, ['minStylus']
+
+gulp.task 'coffee_watch', ->
+	gulp.watch path.coffee, ['minCoffee']
+
+gulp.task 'stylus_watch', ->
 	gulp.watch path.stylus, ['minStylus']
 
 gulp.task 'compile_google', ['closure','minStylus']

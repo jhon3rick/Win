@@ -13,6 +13,9 @@ $bgColorTbar = #C0DDF0
 	// SEPARATOR
 	$colorSeparator = #2A80B9
 
+	// PANEL
+	$colorTitlePanel = #0067AB
+
 // VENTANA WIN
 $wMarco = #FFF
 
@@ -26,6 +29,7 @@ $colorInputButton = $colorCalendar
 
 .win-marco
 	background-color $wMarco
+	border 1px solid $bgColorTitle
 
 	/.win-title
 		background-color $bgColorTitle
@@ -52,6 +56,16 @@ $colorInputButton = $colorCalendar
 
 		/.win-separatorHeight
 			border-color $colorSeparator
+
+		/.win-panel-title, /.win-group-title
+			color $colorTitlePanel
+
+	/.win-tabpanel-head
+		border-color $colorSeparator
+
+		/.win-tab
+			border-color $colorSeparator
+			min-width 50px
 
 .win-calendar, .win-calendar-year
 	background $bgCalendar

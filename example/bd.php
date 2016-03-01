@@ -43,7 +43,10 @@
 					<option>Datos</option>
 					<option>Datos</option>
 					<option>Datos</option>
-				</select>";
+				</select>
+				<script>
+					console.log('bd')
+				</script>";
 	}
 
 	function prueba_ajax_request(){

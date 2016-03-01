@@ -19,67 +19,146 @@
 (function() {
   "use strict";
   (function($W) {
-    var _validateDoubleField, _validateEmailField, _validateIntField, _validateTextField;
+    var _validateDateField, _validateDoubleField, _validateEmailField, _validateIntField, _validatePorcentField, _validateTextField;
     $W.form = {};
-    $W.form.intField = function(obj) {
-      $W('#' + obj.applyTo).addClass += " win-input-number";
-      $W('#' + obj.applyTo)[0].onkeypress = function(event) {
-        return _validateIntField({
-          event: event,
-          eventType: 'keypress',
-          input: this
-        });
-      };
-      return $W('#' + obj.applyTo)[0].onchange = function(event) {
-        return _validateIntField({
-          event: event,
-          eventType: 'change',
-          input: this
-        });
-      };
+    $W.form.field = function(obj) {
+      switch (obj.type) {
+        case 'integer':
+          $W('#' + obj.idApply).addClass += " win-input-number";
+          $W('#' + obj.idApply)[0].onkeypress = function(event) {
+            return _validateIntField({
+              event: event,
+              eventType: 'keypress',
+              input: this
+            });
+          };
+          return $W('#' + obj.idApply)[0].onchange = function(event) {
+            return _validateIntField({
+              event: event,
+              eventType: 'change',
+              input: this
+            });
+          };
+        case 'double':
+          $W('#' + obj.idApply).addClass += " win-input-number";
+          $W('#' + obj.idApply)[0].onkeypress = function(event) {
+            return _validateDoubleField({
+              event: event,
+              eventType: 'keypress',
+              input: this
+            });
+          };
+          return $W('#' + obj.idApply)[0].onchange = function(event) {
+            return _validateDoubleField({
+              event: event,
+              eventType: 'change',
+              input: this
+            });
+          };
+        case 'text':
+          $W('#' + obj.idApply)[0].onkeyup = function(event) {
+            return _validateTextField({
+              event: event,
+              eventType: 'keyup',
+              input: this,
+              option: obj.option
+            });
+          };
+          return $W('#' + obj.idApply)[0].onchange = function(event) {
+            return _validateTextField({
+              event: event,
+              eventType: 'change',
+              input: this,
+              option: obj.option
+            });
+          };
+        case 'email':
+          return $W('#' + obj.idApply)[0].onchange = function(event) {
+            return _validateEmailField({
+              event: event,
+              input: this
+            });
+          };
+        case 'date':
+          return _validateDateField(obj);
+        case 'porcentaje':
+          return _validatePorcentField(obj);
+      }
     };
-    $W.form.doubleField = function(obj) {
-      $W('#' + obj.applyTo).addClass += " win-input-number";
-      $W('#' + obj.applyTo)[0].onkeypress = function(event) {
-        return _validateDoubleField({
-          event: event,
-          eventType: 'keypress',
-          input: this
-        });
-      };
-      return $W('#' + obj.applyTo)[0].onchange = function(event) {
-        return _validateDoubleField({
-          event: event,
-          eventType: 'change',
-          input: this
-        });
-      };
-    };
-    $W.form.textField = function(obj) {
-      $W('#' + obj.applyTo)[0].onkeyup = function(event) {
-        return _validateTextField({
-          event: event,
-          eventType: 'keyup',
-          input: this,
-          type: obj.type
-        });
-      };
-      return $W('#' + obj.applyTo)[0].onchange = function(event) {
-        return _validateTextField({
-          event: event,
-          eventType: 'change',
-          input: this,
-          type: obj.type
-        });
-      };
-    };
-    $W.form.emailField = function(obj) {
-      return $W('#' + obj.applyTo)[0].onchange = function(event) {
-        return _validateEmailField({
-          event: event,
-          input: this
-        });
-      };
+    $W.form.validate = function(id) {
+      var campos;
+      campos = document.getElementById(id).querySelectorAll("input, textarea, select");
+      return [].forEach.call(arrayinput, function(input) {
+        var type;
+        type = input.getAttribute('data-validate');
+        switch (type) {
+          case 'integer':
+            input.addClass += " win-input-number";
+            input.onkeypress = function(event) {
+              return _validateIntField({
+                event: event,
+                eventType: 'keypress',
+                input: this
+              });
+            };
+            return input.onchange = function(event) {
+              return _validateIntField({
+                event: event,
+                eventType: 'change',
+                input: this
+              });
+            };
+          case 'double':
+            input.addClass += " win-input-number";
+            input.onkeypress = function(event) {
+              return _validateDoubleField({
+                event: event,
+                eventType: 'keypress',
+                input: this
+              });
+            };
+            return input.onchange = function(event) {
+              return _validateDoubleField({
+                event: event,
+                eventType: 'change',
+                input: this
+              });
+            };
+          case 'text':
+            input.onkeyup = function(event) {
+              return _validateTextField({
+                event: event,
+                eventType: 'keyup',
+                input: this,
+                option: obj.option
+              });
+            };
+            return input.onchange = function(event) {
+              return _validateTextField({
+                event: event,
+                eventType: 'change',
+                input: this,
+                option: obj.option
+              });
+            };
+          case 'email':
+            return input.onchange = function(event) {
+              return _validateEmailField({
+                event: event,
+                input: this
+              });
+            };
+          case 'porcent':
+            return input.onchange = function(event) {
+              return _validatePorcentField({
+                event: event,
+                input: this
+              });
+            };
+          case 'date':
+            return _validateDateField(obj);
+        }
+      });
     };
     _validateIntField = function(obj) {
       var tecla;
@@ -114,9 +193,9 @@
       if (tecla === 8 || tecla === 9 || tecla === 0 || tecla === 13) {
         return true;
       } else if (obj.eventType === 'keyup') {
-        if (obj.type === 'uppercase') {
+        if (obj.option === 'uppercase') {
           return obj.input.value = obj.input.value.toUpperCase();
-        } else if (obj.type === 'lowercase') {
+        } else if (obj.option === 'lowercase') {
           return obj.input.value = obj.input.value.toLowerCase();
         }
       } else if (obj.eventType === 'change') {
@@ -132,16 +211,19 @@
         return obj.input.focus();
       }
     };
+    _validatePorcentField = function(obj) {
+      return console.log('udhdh');
+    };
 
     /*
     	 * Calendar
      */
-    return $W.form.dateField = function(obj) {
+    return _validateDateField = function(obj) {
       var _changeToCalendarDay, _changeYear, _drawCalendar, _findXY, _formatDate, _getDayName, _getDaysInMonth, _getFirstDayofMonth, _getMonthName, _removeCalendar, _setLocate, _setupDays, arrayDate, dayNames, format, formatField, id, inputCalendar, monthNames, selected, selectedDay, selectedMonth, selectedYear, separator, valueField, weekDays;
       separator = '-';
-      id = obj.applyTo;
+      id = obj.idApply;
       format = obj.format || 'y-m-d';
-      selected = obj.listeners.select || '';
+      selected = obj.selected || '';
       monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
@@ -318,8 +400,6 @@
           results.push(i.onclick = function() {
             selectedDay = this.innerHTML;
             inputObj.value = _formatDate(selectedDay, selectedMonth, selectedYear);
-            inputCalendar.selected = selected;
-            inputCalendar.selected();
             return _removeCalendar($W('#date_' + id)[0]);
           });
         }
@@ -380,10 +460,10 @@
        */
       _setLocate = function(targetObj, moveObj) {
         var coors;
+        console.log(targetObj);
         coors = _findXY(targetObj);
-        moveObj.style.position = 'absolute';
-        moveObj.style.top = coors[1] + 23 + 'px';
-        return moveObj.style.left = coors[0] + 'px';
+        console.log(coors);
+        return moveObj.getAttribute("style", "position:absolute; z-index:8000;");
       };
 
       /*

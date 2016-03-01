@@ -14,39 +14,241 @@ do ($W = Win) ->
 
 	$W.form = {}
 
-	$W.form.intField = (obj) ->
-		$W('#'+obj.applyTo).addClass += " win-input-number";
+	#############################################################
+	# LOAD FORM INSERT OR UPDATE
+	#############################################################
+	$W.form.ini = (obj) ->
+		console.log obj
+		index = obj.index or ''
+		name = obj.name or ''
+		url = obj.url or ''
+		size = obj.size or {}
+		field = obj.field or {}
+		opcionClass = obj.opcionClass or ''
+		idApply = "parent_form_#{name}"
 
-		$W('#'+obj.applyTo)[0].onkeypress = (event)->
-			return _validateIntField({ event:event, eventType:'keypress', input:this })
+		fTbar = obj.fTbar or false
+		btnInsert = obj.btnInsert or ''
+		btnDelete = obj.btnDelete or ''
 
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateIntField({ event:event, eventType:'change', input:this })
+		htmlForm = _routerForm name,field,size
 
-	$W.form.doubleField = (obj) ->
-		$W('#'+obj.applyTo).addClass += " win-input-number";
+		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\" style=\"margin:0; padding:0;\"></div>
+														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" style=\"float:left; width:100%; overflow:auto;\">
+															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px; overflow:hidden;\">#{htmlForm}<div>
+														</form>"
+		if fTbar is true then _createBtnTbar name,opcionClass,url,index,btnInsert,btnDelete
+		$W.form.validate idApply
 
-		$W('#'+obj.applyTo)[0].onkeypress = (event)->
-			return _validateDoubleField({ event:event, eventType:'keypress', input:this })
 
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateDoubleField({ event:event, eventType:'change', input:this })
+	_createBtnTbar = (name,opcionClass,url,index,btnInsert,btnDelete) ->
+		arrayBtn = []
+		txtBoton = if opcionClass=='vUpdate' then 'Actualizar' else 'Guardar'
 
-	$W.form.textField = (obj) ->
-		$W('#'+obj.applyTo)[0].onkeyup = (event)->
-			return _validateTextField({ event:event, eventType:'keyup', input:this, type:obj.type })
+		if btnInsert is true
+			arrayBtn.push {
+				xtype   : "button",
+				id      : "fInsert_#{name}",
+				cls     : "user_black_36",
+				text    : txtBoton,
+				handler : () -> $W.grilla.fSave name,url,index
+			}
 
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateTextField({ event:event, eventType:'change', input:this, type:obj.type })
+		if btnDelete is true and opcionClass is 'vUpdate'
+			arrayBtn.push {
+				xtype   : "button",
+				id      : "fDelete_#{name}",
+				cls     : "user_black_36",
+				text    : "Eliminar",
+				handler : () -> $W.grilla.fDelete name,url,index
+			}
 
-	$W.form.emailField = (obj) ->
-		$W('#'+obj.applyTo)[0].onchange = (event)->
-			return _validateEmailField({ event:event, input:this })
+		$W.tbar {
+			idApply : "form_tbar_#{name}",
+			items   : arrayBtn
+		}
 
+	_routerForm = (name,obj,size) ->
+		html = ""
+		for own field, value of obj
+			switch value.type
+				when 'TextField' then html+=_createTextField name,field,value,size
+				when 'ComboBox' then html+=_createComboBox name,field,value,size
+				when 'TextArea' then html+=_createTextArea name,field,value,size
+				when 'Separador' then html+=_createSeparador value
+		html
+
+	###
+	# METHOD STATIC
+	# CREATE FIELD INPUT
+	###
+	_createTextField = (name,field,obj,size) ->
+		type    = 'text'
+		display = 'block'
+		validate = obj.validate or ''
+
+		if validate != '' then validate = "data-validate=\"#{validate}\""
+
+		if obj.hidden is true or obj.hidden == "true" or obj.hidden == "hidden"
+			type    = 'hidden';
+			display = 'none';
+
+		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
+
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px; position:relative; display:#{display}\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px; position:relative;\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}px; position:relative;\">
+				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
+			</div>
+		</div>"
+
+	###
+	# METHOD STATIC
+	# CREATE FIELD SELECT
+	###
+	_createComboBox = (name,field,obj,size) ->
+		style  = if obj.required is true and obj.value == '' then 'empy' else 'none'
+		option = obj.option or {}
+		htmlOption = _createOptionCombo obj.value,option
+
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
+				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
+			</div>
+		</div>"
+
+	_createOptionCombo = (value,obj) ->
+		html = "<option value=\"\">Seleccione...</option>"
+		for own key, option of obj
+			selected = if option.index is value then "selected" else ""
+			html += "<option value=\"#{option.index}\" #{selected}>#{option.value}</option>"
+		html
+
+	###
+	# METHOD STATIC
+	# CREATE FIELD TEXTAREA
+	###
+	_createTextArea = (name,field,obj,size) ->
+		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
+
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
+				<textarea id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px; height:#{obj.height}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{obj.value}</textarea>
+			</div>
+		</div>"
+
+	###
+	# METHOD STATIC
+	# CREATE SEPARATOR
+	###
+	_createSeparador = (obj) ->
+		"<div class=\"form_separador\">
+			<div style=\"width:80%; float:left\">#{obj.text}</div>
+		</div>"
+
+	#############################################################
+	# VALIDATE INPUT
+	#############################################################
+	$W.form.field = (obj) ->
+		switch obj.type
+			when 'integer'
+				$W('#'+obj.idApply).addClass += " win-input-number";
+
+				$W('#'+obj.idApply)[0].onkeypress = (event)->
+					return _validateIntField({ event:event, eventType:'keypress', input:this })
+
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateIntField({ event:event, eventType:'change', input:this })
+
+			when 'double'
+				$W('#'+obj.idApply).addClass += " win-input-number";
+
+				$W('#'+obj.idApply)[0].onkeypress = (event)->
+					return _validateDoubleField({ event:event, eventType:'keypress', input:this })
+
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateDoubleField({ event:event, eventType:'change', input:this })
+
+			when 'text'
+				$W('#'+obj.idApply)[0].onkeyup = (event)->
+					return _validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+
+			when 'email'
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validateEmailField({ event:event, input:this })
+
+			when 'date'
+				_validateDateField(obj)
+
+			when 'percent'
+				# $W('#'+obj.idApply).addClass += " win-input-number";
+				$W('#'+obj.idApply)[0].onkeydown = (event)->
+					if event.keyCode==13
+						return _validatePercentField({ event:event, eventType:'keypress', input:this })
+
+				$W('#'+obj.idApply)[0].onchange = (event)->
+					return _validatePercentField({ event:event, input:this })
+
+	###
+	# VALIDATE INPUT FORM
+	###
+	$W.form.validate = (id) ->
+		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
+
+		[].forEach.call(campos, (input)->
+			type = input.getAttribute('data-validate')
+
+			switch type
+
+				when 'integer'
+					input.className += " win-input-number";
+
+					input.onkeypress = (event)->
+						_validateIntField({ event:event, eventType:'keypress', input:this })
+
+					input.onchange = (event)->
+						_validateIntField({ event:event, eventType:'change', input:this })
+
+				when 'double'
+					input.className += " win-input-number"
+
+					input.onkeypress = (event)->
+						_validateDoubleField({ event:event, eventType:'keypress', input:this })
+
+					input.onchange = (event)->
+						_validateDoubleField({ event:event, eventType:'change', input:this })
+
+				when 'text'
+					input.onkeyup = (event)->
+						_validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+
+					input.onchange = (event)->
+						_validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+
+				when 'email'
+					input.onchange = (event)->
+						_validateEmailField({ event:event, input:this })
+
+				when 'percent'
+					input.onchange = (event)->
+						_validatePercentField({ event:event, input:this })
+
+				when 'date'
+					_validateDateField(obj)
+		)
+
+	###
+	# METHOD STATIC VALIDATE
+	###
 	_validateIntField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-		 	return true
+			return true
 		else if obj.eventType == 'keypress'
 			return (/\d/).test(String.fromCharCode(tecla))
 		else if obj.eventType == 'change'
@@ -55,7 +257,7 @@ do ($W = Win) ->
 	_validateDoubleField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-		 	return true
+			return true
 		else if obj.eventType == 'keypress'
 			return (/[\d.]/).test(String.fromCharCode(tecla))
 		else if obj.eventType == 'change'
@@ -68,15 +270,16 @@ do ($W = Win) ->
 	_validateTextField = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-		 	return true
+			return true
 		else if obj.eventType == 'keyup'
-			if obj.type=='uppercase'
+			if obj.option=='uppercase'
 				obj.input.value = obj.input.value.toUpperCase()
-			else if obj.type=='lowercase'
+			else if obj.option=='lowercase'
 				obj.input.value = obj.input.value.toLowerCase()
 		else if obj.eventType == 'change'
 			console.log('-'+obj.input.value+'-')
 			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+
 
 	_validateEmailField = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
@@ -84,14 +287,32 @@ do ($W = Win) ->
 			obj.input.value=""
 			obj.input.focus()
 
+	_validatePercentField = (obj) ->
+		max = obj.input.getAttribute('data-max') * 1
+		min = obj.input.getAttribute('data-min') * 1
+		result = obj.input.value * 1
+		if result <= max
+			if result >= min
+				console.log  'valor aceptado'
+			else
+				alert 'no se aceptan  menores a ' + min
+				obj.input.value = ''
+				obj.input.focus()
+		else
+			alert 'no se aceptan muneros mayores a' + max
+			obj.input.value = ''
+			obj.input.focus()
+
+		return true
+
 	###
 	# Calendar
 	###
-	$W.form.dateField = (obj) ->
+	_validateDateField = (obj) ->
 		separator    = '-'
-		id           = obj.applyTo
+		id           = obj.idApply
 		format       = obj.format or 'y-m-d'
-		selected     = obj.listeners.select or ''
+		selected     = obj.selected or ''
 
 		# monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 		monthNames   = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -238,32 +459,32 @@ do ($W = Win) ->
 			for i in [0...6]
 				j = i+6
 
-				option += """<div>
-								<div class="date-change-month">#{monthNames[i].substr(0,3)}</div>
-								<div class="date-change-month">#{monthNames[j].substr(0,3)}</div>
-							</div>"""
+				option += "<div>
+								<div class=\"date-change-month\">#{monthNames[i].substr(0,3)}</div>
+								<div class=\"date-change-month\">#{monthNames[j].substr(0,3)}</div>
+							</div>"
 
-			html  = """<tr>
-							<td colspan="2" rowspan="7" class="content-month">#{option}</td>
-							<td colspan="2" class="content-year">
-								<div id="change-year-down-#{id}" class="calendar-change" style="float:left;"> < </div>
-								<div id="change-year-top-#{id}" class="calendar-change" style="float:right;"> > </div>
-							</td>
-						</tr>"""
+			html  = "<tr>
+						<td colspan=\"2\" rowspan=\"7\" class=\"content-month\">#{option}</td>
+						<td colspan=\"2\" class=\"content-year\">
+							<div id=\"change-year-down-#{id}\" class=\"calendar-change\" style=\"float:left;\"> < </div>
+							<div id=\"change-year-top-#{id}\" class=\"calendar-change\" style=\"float:right;\"> > </div>
+						</td>
+					</tr>"
 			for i in [0...6]
-				html += """<tr>
-								<td>#{year1++}</td>
-								<td>#{year2++}</td>
-							</tr>"""
+				html += "<tr>
+							<td>#{year1++}</td>
+							<td>#{year2++}</td>
+						</tr>"
 
-			html += """<tr style="border-top:1px solid #fff;">
-							<td colspan=2 style="padding:0px; border-right:1px solid #fff;">
-								<input type="button" style="width:100%; padding:3px;" value="Aceptar">
-							</td>
-							<td colspan=2 style="padding:0px;">
-								<input type="button" style="width:100%; padding:3px;" value="Volver" id="boton-back-calendar-#{id}">
-							</td>
-						</tr>"""
+			html += "<tr style=\"border-top:1px solid #fff;\">
+						<td colspan=2 style=\"padding:0px; border-right:1px solid #fff;\">
+							<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Aceptar\">
+						</td>
+						<td colspan=2 style=\"padding:0px;\">
+							<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Volver\" id=\"boton-back-calendar-#{id}\">
+						</td>
+					</tr>"
 
 
 			$W('#win-calendar-'+id).hide()
@@ -306,8 +527,7 @@ do ($W = Win) ->
 					selectedDay = this.innerHTML
 					inputObj.value = _formatDate(selectedDay, selectedMonth, selectedYear)
 
-					inputCalendar.selected = selected
-					inputCalendar.selected()
+					# inputCalendar.select = selected
 
 					_removeCalendar($W('#date_'+id)[0])
 
@@ -359,10 +579,13 @@ do ($W = Win) ->
 		@param obj calendar $W('#date_'+id)[0]
 		###
 		_setLocate = (targetObj, moveObj) ->
+			console.log(targetObj)
 			coors = _findXY(targetObj)
-			moveObj.style.position = 'absolute'
-			moveObj.style.top      = coors[1] + 23 + 'px'
-			moveObj.style.left     = coors[0] + 'px'
+			console.log(coors)
+			moveObj.getAttribute("style","position:absolute; z-index:8000;")
+			# moveObj.style.position = 'absolute'
+			# moveObj.style.top      = coors[1] + 23 + 'px'
+			# moveObj.style.left     = coors[0] + 'px'
 
 		###
 		_findXY
