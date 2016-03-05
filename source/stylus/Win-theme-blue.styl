@@ -1,3 +1,6 @@
+//=================// ORIGINAL //=================//
+
+/*
 // TITLE
 $colorTitle   = #FFFF
 $bgColorTitle = #2A80B9
@@ -26,6 +29,37 @@ $colorCalendar = #FFF
 // INPUT BUTTON
 $bgInputButton    = $bgCalendar
 $colorInputButton = $colorCalendar
+*/
+
+
+// TITLE
+$colorTitle   = #FFFF
+$bgColorTitle = #2A80B9
+
+// TBAR
+$colorTbar   = #FFFF
+$bgColorTbar = #2A80B9
+
+	// BOTON
+	$BgBtnHover    = #86bee3
+	$bordeBtnHover = #2A80B9
+
+	// SEPARATOR
+	$colorSeparator = #FFF
+
+	// PANEL
+	$colorTitlePanel = #FFF
+
+// VENTANA WIN
+$wMarco = #FFF
+
+// CALENDAR
+$bgCalendar = #2A80B9
+$colorCalendar = #FFF
+
+// INPUT BUTTON
+$bgInputButton    = $bgCalendar
+$colorInputButton = $colorCalendar
 
 .win-marco
 	background-color $wMarco
@@ -41,9 +75,12 @@ $colorInputButton = $colorCalendar
 
 	/.win-tbar
 		background-color $bgColorTbar
-		color $colorTbar
+
+		*
+			color $colorTbar
 
 		/.win-btn
+			background $bgCalendar
 
 			&:hover
 				background-color $BgBtnHover
@@ -66,6 +103,10 @@ $colorInputButton = $colorCalendar
 		/.win-tab
 			border-color $colorSeparator
 			min-width 50px
+
+.win-menu
+	background-color $bgColorTitle
+	color $colorTitle
 
 .win-calendar, .win-calendar-year
 	background $bgCalendar

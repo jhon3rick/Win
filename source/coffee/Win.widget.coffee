@@ -12,7 +12,9 @@
 
 do ($W = Win) ->
 
-	CONTWIDGET = 0;
+	CONTWIDGET = 0
+	ELEMENT_ARRAY = {}
+	CTXMENU = false
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
@@ -25,7 +27,6 @@ do ($W = Win) ->
 		title       = obj.title or ''
 		titleStyle  = obj.titleStyle or ''
 		modal       = obj.modal or ''
-		autoScroll  = obj.autoScroll or ''
 		autoDestroy = obj.autoDestroy or ''
 		autoLoad    = obj.autoLoad or ''
 		html        = obj.html or ''
@@ -42,21 +43,18 @@ do ($W = Win) ->
 		bgTitle  = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
 		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\" onclick=\"#{id}.close()\"></div>" else ""
 
-		left = if body.offsetWidth < (width/2) then 0 else (body.offsetWidth - width)/2
-		top  = if body.offsetHeight < (height/2) then 0 else (body.offsetHeight - height)/2
-
 		if !isNaN width then width = width+'px'
+		else if width is 'auto' then width='calc(100% - 20px)'
+
 		if !isNaN height then height = height+'px'
+		else if height == 'auto' then height='calc(100% - 20px)'
 
 		if id==''
 			CONTWIDGET++
 			id==CONTWIDGET
 
-		left = left+'px';
-		top = top+'px';
-
 		winModal.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
-									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; top:#{top}; left:#{left}; #{bgBody} #{bodyStyle}\" class=\"win-marco\">
+									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{bodyStyle}\" class=\"win-marco\">
 										<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -78,6 +76,14 @@ do ($W = Win) ->
 								</div>"
 
 		body.appendChild(winModal)
+
+		widthVentana  = document.getElementById(id).offsetWidth
+		heightVentana = document.getElementById(id).offsetHeight
+
+		left = if body.offsetWidth < (widthVentana/2) then 0 else (body.offsetWidth - widthVentana)/2
+		top  = if body.offsetHeight < (heightVentana/2) then 0 else (body.offsetHeight - heightVentana)/2
+
+		$W("##{id}").css("left","#{left}px").css("top","#{top}px")
 
 		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id, document.getElementById("win-modal-#{id}"), event);
 		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(document.getElementById("win-modal-#{id}"));
@@ -113,41 +119,54 @@ do ($W = Win) ->
 	# 	html += "</div>"
 
 	$W.Add = (obj) ->
-		parent = document.getElementById("#{obj.idApply}")
-		if obj.items then _router(obj.items, obj.idApply)
-		if obj.autoLoad then  _body(obj, obj.idApply)
+		# SI ES TBAR
+		typeParent = document.getElementById(obj.idApply).getAttribute("data-role")
+		if typeParent is "win-tbar"
+			lastDiv = document.getElementById(obj.idApply).lastChild
 
-	$W.tbar = (obj) ->
+			if lastDiv != null
+				type = lastDiv.getAttribute("data-rol")
+				if type is "div-empty" then  lastDiv.parentNode.removeChild(lastDiv)
+
+		if obj.items then _router(obj.items, obj.idApply)
+		if obj.autoLoad then _body(obj, obj.idApply)
+
+	$W.Tbar = (obj) ->
 		parent = document.getElementById("#{obj.idApply}")
 		parent.className = "win-tbar"
+		parent.setAttribute("data-rol","win-tbar")
 
 		_router(obj.items, obj.idApply)
 
-	# $W.get = (element_id) ->
-	# 	load: (obj) ->
-	# 		o
-	# 		$W.Ajax.load(element_id,obj)
-
-	# 	element: ->
-	# 		return $W(element_id)
-
 	$W.Element = (id) ->
 
-		@.hiden = () ->
+		@.hidden = () ->
 			$W('#'+id).style('display','none')
 			_findResizeBody(id)
+			ELEMENT_ARRAY[id].hidden = true
 
 		@.show = () ->
 			$W('#'+id).style('display','block')
 			_findResizeBody(id)
+			ELEMENT_ARRAY[id].hidden = false
 
 		@.enable = () ->
-			$W('#'+id).style('display','none')
+			document.getElementById(id).setAttribute('data-state','enable')
+			ELEMENT_ARRAY[id].state = "enable"
 
 		@.disable = () ->
-			$W('#'+id).style('display','block')
+			document.getElementById(id).setAttribute('data-state','disable')
+			ELEMENT_ARRAY[id].state = "disable"
 
 		return this
+
+	$W.BlockBtn = (id) ->
+		if ELEMENT_ARRAY[id].state == "disable" then return
+
+		$W.Element(id).disable()
+		setTimeout(()->
+			if document.getElementById(id) then $W.Element(id).enable()
+		, 2000)
 
 	$W.loading = (obj) ->
 
@@ -255,10 +274,57 @@ do ($W = Win) ->
 			resize      : false
 		);
 
+
+	$W.CtxMenu = (obj) ->
+		document.getElementById(obj.idApply).oncontextmenu = (e) -> # Use document as opposed to window for IE8 compatibility
+			obj.objApply = e.srcElement
+			obj.clientX = event.clientX
+			obj.clientY = event.clientY
+
+			$W.Menu(obj)
+
+			false
+
+	$W.Menu = (obj) ->
+		html = ""
+		_deleteCtxMenu()
+		CTXMENU = true
+
+		if obj.items
+			for own key, arr of obj.items
+				html += "<div data-option=\"top-#{key}\">
+							<div>#{arr.text}</div>
+						</div>"
+
+		divHtml = if obj.objApply then obj.objApply else document.getElementById(obj.idElement)
+		divHtml.innerHTML += "<div class=\"win-menu\" data-role=\"win-menu\" style=\"top:#{event.clientY}px; left:#{event.clientX}px;\">#{html}</div>"
+
+		if obj.items
+			setTimeout () ->
+				for own key, arr of obj.items
+					_menuOption obj.idApply,key,arr.handler
+
+	_menuOption = (idApply,key,handler) ->
+		document.getElementById(idApply).querySelector("[data-option=top-#{key}]").onclick = () ->
+			_deleteCtxMenu()
+			handler(this)
+
 	# ---------------------------------------------------------------------------
 	# Static Methods
 	# Private Elements
 	# ---------------------------------------------------------------------------
+	###
+	@method _deleteCtxMenu
+	###
+	_deleteCtxMenu = () ->
+		if CTXMENU is true
+			array = document.querySelectorAll("[data-role=win-menu]")
+
+			[].forEach.call(array, (menu) ->
+				menu.parentNode.removeChild(menu)
+			)
+
+		CTXMENU = false
 
 	###
 	@method _router
@@ -267,18 +333,18 @@ do ($W = Win) ->
 	###
 	_router = (obj, idParent) ->
 		if typeof(obj) == 'object'
-			float  = 'left'
+			float = 'left'
 
 			obj.forEach (json,index,element) ->
 
 				switch json.xtype
 					when 'button' then _button(json, idParent)
-					when 'buttongroup' then _buttongroup(json, idParent)
+					when 'buttongroup' then _buttonGroup(json, idParent)
 					when 'tbar' then _tbar(json, idParent)
 					when 'panel' then _panel(json, idParent)
 					when 'tabPanel' then _tabPanel(json, idParent)
 					when 'tab' then _tab(json, idParent)
-					when 'tbtext' then _tbtext(json, idParent)
+					when 'tbtext' then _tbText(json, idParent)
 					else
 						if json == '-'
 							_separator(idParent)
@@ -288,10 +354,10 @@ do ($W = Win) ->
 
 						else if json == '->'
 							float = 'right'
-							document.getElementById(idParent).innerHTML += '<div></div>'
+							document.getElementById(idParent).innerHTML += '<div data-rol="div-empty"></div>'
 
 			if float == 'left'
-				document.getElementById(idParent).innerHTML += '<div></div>'
+				document.getElementById(idParent).innerHTML += '<div data-rol="div-empty"></div>'
 
 	###
 	@method _tabPanel
@@ -410,7 +476,7 @@ do ($W = Win) ->
 		if obj.items then _router(obj.items, "#{id}")
 
 
-	_buttongroup = (obj, idParent) ->
+	_buttonGroup = (obj, idParent) ->
 		hidden = obj.hidden or ''
 		width  = obj.width or 0
 		style  = obj.style or ''
@@ -424,11 +490,12 @@ do ($W = Win) ->
 		if !isNaN width then width = width+'px'
 		if hidden is true then hidden = "display:none;"
 
-
 		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
 			id=CONTWIDGET
+
+		ELEMENT_ARRAY[id] = { state:"enable", hidden:hidden }
 
 		if title != ''
 			title = "<div id=\"win-buttongroup-title-#{id}\" style=\"height:20px;\" class=\"win-buttongroup-title\">#{title}</div>"
@@ -445,15 +512,18 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_button = (obj, idParent) ->
+
 		text  = obj.text or ''
 		cls   = obj.cls or ''
 		width = obj.width or 50
+		hidden = obj.hidden or false
 
-		if obj.id
-			id=obj.id
+		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-btn-#{CONTWIDGET}"
+
+		ELEMENT_ARRAY[id] = { state:"enable", hidden:hidden }
 
 		if !isNaN width then width = width+'px'
 
@@ -462,13 +532,15 @@ do ($W = Win) ->
 														</div>"
 		if obj.handler
 			setTimeout () ->
-				document.querySelector("\##{idParent} > \##{id}").onclick = obj.handler
+				document.querySelector("\##{idParent} > \##{id}").onclick = () ->
+					if ELEMENT_ARRAY[id].state == "disable" then return
+					obj.handler(this)
 
 	###
-	@method _tbtext
+	@method _tbText
 	@param  obj objectDom parent and config
 	###
-	_tbtext = (obj, idParent) ->
+	_tbText = (obj, idParent) ->
 		text  = obj.text or ''
 		width = obj.width or '120'
 		style = obj.style or 'left'
@@ -501,11 +573,11 @@ do ($W = Win) ->
 		items   = obj.items or ''
 		html    = obj.html or ''
 		clsBody = obj.clsBody or ''
-		style   = 'overflow:auto;'
+		style   = 'overflow:hidden;'
 
-		if obj.scroll is false then style = 'overflow:hidden;'
-		else if obj.scrollX is false then style += 'overflow-x:hidden;'
-		else if obj.scrollY is false then style += 'overflow-y:hidden;'
+		if obj.scrollY is true then style += 'overflow-y:auto;'
+		else if obj.scrollX is true then style += 'overflow-x:auto;'
+		if obj.scroll is true then style = 'overflow:auto;'
 
 		if obj.idApply
 			id=obj.idApply
@@ -525,6 +597,8 @@ do ($W = Win) ->
 				$W.Load(obj.autoLoad)
 
 	_findResizeBody = (id) ->
+		if !document.getElementById(id) then return
+
 		role = document.getElementById(id).getAttribute "data-role"
 		if role = "win-btn" or role = "win-buttongroup"
 			div1 = document.getElementById(id).parentNode

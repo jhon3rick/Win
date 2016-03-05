@@ -12,14 +12,13 @@
 
 do ($W = Win) ->
 
-	$W.form = {}
+	$W.Form = {}
 
 	#############################################################
 	# LOAD FORM INSERT OR UPDATE
 	#############################################################
-	$W.form.ini = (obj) ->
-		console.log obj
-		index = obj.index or ''
+	$W.Form.ini = (obj) ->
+		indexClass = obj.indexClass or ''
 		name = obj.name or ''
 		url = obj.url or ''
 		size = obj.size or {}
@@ -37,11 +36,11 @@ do ($W = Win) ->
 														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" style=\"float:left; width:100%; overflow:auto;\">
 															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px; overflow:hidden;\">#{htmlForm}<div>
 														</form>"
-		if fTbar is true then _createBtnTbar name,opcionClass,url,index,btnInsert,btnDelete
-		$W.form.validate idApply
+		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,btnInsert,btnDelete
+		$W.Form.validate idApply
 
 
-	_createBtnTbar = (name,opcionClass,url,index,btnInsert,btnDelete) ->
+	_createBtnTbar = (name,opcionClass,url,indexClass,btnInsert,btnDelete) ->
 		arrayBtn = []
 		txtBoton = if opcionClass=='vUpdate' then 'Actualizar' else 'Guardar'
 
@@ -51,7 +50,7 @@ do ($W = Win) ->
 				id      : "fInsert_#{name}",
 				cls     : "user_black_36",
 				text    : txtBoton,
-				handler : () -> $W.grilla.fSave name,url,index
+				handler : () -> $W.Grilla.fSave name,url,indexClass
 			}
 
 		if btnDelete is true and opcionClass is 'vUpdate'
@@ -60,10 +59,10 @@ do ($W = Win) ->
 				id      : "fDelete_#{name}",
 				cls     : "user_black_36",
 				text    : "Eliminar",
-				handler : () -> $W.grilla.fDelete name,url,index
+				handler : () -> $W.Grilla.fDelete name,url,indexClass
 			}
 
-		$W.tbar {
+		$W.Tbar {
 			idApply : "form_tbar_#{name}",
 			items   : arrayBtn
 		}
@@ -151,53 +150,53 @@ do ($W = Win) ->
 	#############################################################
 	# VALIDATE INPUT
 	#############################################################
-	$W.form.field = (obj) ->
+	$W.Form.field = (obj) ->
 		switch obj.type
 			when 'integer'
 				$W('#'+obj.idApply).addClass += " win-input-number";
 
 				$W('#'+obj.idApply)[0].onkeypress = (event)->
-					return _validateIntField({ event:event, eventType:'keypress', input:this })
+					return _validateInteger({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateIntField({ event:event, eventType:'change', input:this })
+					return _validateInteger({ event:event, eventType:'change', input:this })
 
 			when 'double'
 				$W('#'+obj.idApply).addClass += " win-input-number";
 
 				$W('#'+obj.idApply)[0].onkeypress = (event)->
-					return _validateDoubleField({ event:event, eventType:'keypress', input:this })
+					return _validateDouble({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateDoubleField({ event:event, eventType:'change', input:this })
+					return _validateDouble({ event:event, eventType:'change', input:this })
 
 			when 'text'
 				$W('#'+obj.idApply)[0].onkeyup = (event)->
-					return _validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+					return _validateText({ event:event, eventType:'keyup', input:this, option:obj.option })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+					return _validateText({ event:event, eventType:'change', input:this, option:obj.option })
 
 			when 'email'
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateEmailField({ event:event, input:this })
+					return _validateEmail({ event:event, input:this })
 
 			when 'date'
-				_validateDateField(obj)
+				_validateDate(obj)
 
 			when 'percent'
 				# $W('#'+obj.idApply).addClass += " win-input-number";
 				$W('#'+obj.idApply)[0].onkeydown = (event)->
 					if event.keyCode==13
-						return _validatePercentField({ event:event, eventType:'keypress', input:this })
+						return _validatePercent({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validatePercentField({ event:event, input:this })
+					return _validatePercent({ event:event, input:this })
 
 	###
 	# VALIDATE INPUT FORM
 	###
-	$W.form.validate = (id) ->
+	$W.Form.validate = (id) ->
 		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
 
 		[].forEach.call(campos, (input)->
@@ -209,43 +208,57 @@ do ($W = Win) ->
 					input.className += " win-input-number";
 
 					input.onkeypress = (event)->
-						_validateIntField({ event:event, eventType:'keypress', input:this })
+						_validateInteger({ event:event, eventType:'keypress', input:this })
 
 					input.onchange = (event)->
-						_validateIntField({ event:event, eventType:'change', input:this })
+						_validateInteger({ event:event, eventType:'change', input:this })
 
 				when 'double'
 					input.className += " win-input-number"
 
 					input.onkeypress = (event)->
-						_validateDoubleField({ event:event, eventType:'keypress', input:this })
+						_validateDouble({ event:event, eventType:'keypress', input:this })
 
 					input.onchange = (event)->
-						_validateDoubleField({ event:event, eventType:'change', input:this })
+						_validateDouble({ event:event, eventType:'change', input:this })
 
-				when 'text'
+				when 'upercase'
 					input.onkeyup = (event)->
-						_validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+						_validateUperCase({ event:event, eventType:'keyup', input:this })
 
 					input.onchange = (event)->
-						_validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+						_validateUperCase({ event:event, eventType:'change', input:this })
+
+				when 'lowercase'
+					input.onkeyup = (event)->
+						_validateLowerCase({ event:event, eventType:'keyup', input:this })
+
+					input.onchange = (event)->
+						_validateLowerCase({ event:event, eventType:'change', input:this })
 
 				when 'email'
 					input.onchange = (event)->
-						_validateEmailField({ event:event, input:this })
+						_validateEmail({ event:event, input:this })
 
 				when 'percent'
 					input.onchange = (event)->
-						_validatePercentField({ event:event, input:this })
+						_validatePercent({ event:event, input:this })
 
 				when 'date'
-					_validateDateField(obj)
+					_validateDate(obj)
+
+				else
+					input.onkeyup = (event)->
+						_validateText({ event:event, eventType:'keyup', input:this })
+
+					input.onchange = (event)->
+						_validateText({ event:event, eventType:'change', input:this })
 		)
 
 	###
 	# METHOD STATIC VALIDATE
 	###
-	_validateIntField = (obj) ->
+	_validateInteger = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 			return true
@@ -254,7 +267,7 @@ do ($W = Win) ->
 		else if obj.eventType == 'change'
 			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
 
-	_validateDoubleField = (obj) ->
+	_validateDouble = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 			return true
@@ -267,27 +280,40 @@ do ($W = Win) ->
 				arrayValue = (obj.input.value).split(".")
 				obj.input.value = arrayValue[0]+'.'+arrayValue[1]
 
-	_validateTextField = (obj) ->
+	_validateText = (obj) ->
+		tecla = if document.all then obj.event.keyCode else obj.event.which
+		if tecla==8 or tecla==9 or tecla==0 or tecla==13
+			return true
+		else if obj.eventType == 'keyup' or obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+
+	_validateUperCase = (obj) ->
+		tecla = if document.all then obj.event.keyCode else obj.event.which
+		if tecla==8 or tecla==9 or tecla==0 or tecla==13
+			return true
+		else if obj.eventType == 'keyup'
+			obj.input.value = obj.input.value.toUpperCase()
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+		else if obj.eventType == 'change'
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+
+	_validateLowerCase = (obj) ->
 		tecla = if document.all then obj.event.keyCode else obj.event.which
 		if tecla==8 or tecla==9 or tecla==0 or tecla==13
 			return true
 		else if obj.eventType == 'keyup'
 			if obj.option=='uppercase'
-				obj.input.value = obj.input.value.toUpperCase()
-			else if obj.option=='lowercase'
 				obj.input.value = obj.input.value.toLowerCase()
 		else if obj.eventType == 'change'
-			console.log('-'+obj.input.value+'-')
 			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
 
 
-	_validateEmailField = (obj) ->
+	_validateEmail = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
 		if !validate
 			obj.input.value=""
 			obj.input.focus()
 
-	_validatePercentField = (obj) ->
+	_validatePercent = (obj) ->
 		max = obj.input.getAttribute('data-max') * 1
 		min = obj.input.getAttribute('data-min') * 1
 		result = obj.input.value * 1
@@ -308,7 +334,7 @@ do ($W = Win) ->
 	###
 	# Calendar
 	###
-	_validateDateField = (obj) ->
+	_validateDate = (obj) ->
 		separator    = '-'
 		id           = obj.idApply
 		format       = obj.format or 'y-m-d'
