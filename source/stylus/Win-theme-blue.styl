@@ -31,7 +31,6 @@ $bgInputButton    = $bgCalendar
 $colorInputButton = $colorCalendar
 */
 
-
 // TITLE
 $colorTitle   = #FFFF
 $bgColorTitle = #2A80B9
@@ -41,7 +40,7 @@ $colorTbar   = #FFFF
 $bgColorTbar = #2A80B9
 
 	// BOTON
-	$BgBtnHover    = #86bee3
+	$BgBtnHover    = #008FEF
 	$bordeBtnHover = #2A80B9
 
 	// SEPARATOR
@@ -97,12 +96,17 @@ $colorInputButton = $colorCalendar
 		/.win-panel-title, /.win-group-title
 			color $colorTitlePanel
 
-	/.win-tabpanel-head
-		border-color $colorSeparator
+	/.win-tabpanel
+		// border-color $colorSeparator
+		background-color $bgColorTitle
 
-		/.win-tab
-			border-color $colorSeparator
-			min-width 50px
+		/.win-tab[data-activo=false]
+			color $colorSeparator
+			background-color $bgColorTitle
+
+		/.win-tab[data-activo=true]
+			background-color $colorSeparator
+			color $bgColorTitle
 
 .win-menu
 	background-color $bgColorTitle

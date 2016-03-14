@@ -12,6 +12,7 @@
   font-style: normal;
 }
 .icon {
+  text-align: center;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -177,6 +178,12 @@
 }
 .icon-inverse {
   color: #ffffff;
+}
+
+.icon:before {
+  line-height: 100%;
+  /*width : 100%;*/
+  font-size : 2em;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */

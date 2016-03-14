@@ -1,13 +1,3 @@
-###
-# Validacion campos formulario
-#
-# tecla==8 		//BACKSPACE
-# tecla==9 		//TAB
-# tecla==0 		//TAB
-# tecla==13 	//ENTER
-#
-###
-
 "use strict"
 
 do ($W = Win) ->
@@ -18,6 +8,8 @@ do ($W = Win) ->
 	# LOAD FORM INSERT OR UPDATE
 	#############################################################
 	$W.Form.ini = (obj) ->
+		if obj is null then return
+
 		indexClass = obj.indexClass or ''
 		name = obj.name or ''
 		url = obj.url or ''
@@ -27,33 +19,52 @@ do ($W = Win) ->
 		idApply = "parent_form_#{name}"
 
 		fTbar = obj.fTbar or false
-		btnInsert = obj.btnInsert or ''
-		btnDelete = obj.btnDelete or ''
+		fPermisoInsert = obj.fPermisoInsert or false
+		fPermisoUpdate = obj.fPermisoUpdate or false
+		fPermisoDelete = obj.fPermisoDelete or false
 
-		htmlForm = _routerForm name,field,size
+		# VALIDATE PERMISSION INSERT
+		if opcionClass=='vInsert' and fPermisoInsert isnt true and fPermisoInsert isnt "true" then return
+
+		htmlForm = _routerForm opcionClass,name,field,size
 
 		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\" style=\"margin:0; padding:0;\"></div>
-														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" style=\"float:left; width:100%; overflow:auto;\">
-															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px; overflow:hidden;\">#{htmlForm}<div>
+														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"float:left; width:100%; height:100%; overflow:auto;\">
+															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px;\">#{htmlForm}<div>
 														</form>"
-		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,btnInsert,btnDelete
+		# CREATE TBAR
+		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete
+
+		# VALIDATE PERMISSION UPDATE
+		if opcionClass=='vUpdate' and fPermisoUpdate isnt true and fPermisoUpdate isnt "true" then $W("#form_#{name} input, #form_#{name} select, #form_#{name} textarea").attr("disabled","true")
+
+		# VALIDATE INPUT FORM
 		$W.Form.validate idApply
 
 
-	_createBtnTbar = (name,opcionClass,url,indexClass,btnInsert,btnDelete) ->
+	_createBtnTbar = (name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete) ->
 		arrayBtn = []
-		txtBoton = if opcionClass=='vUpdate' then 'Actualizar' else 'Guardar'
 
-		if btnInsert is true
+		if opcionClass=='vInsert' and fPermisoInsert isnt false  and fPermisoInsert isnt "false"
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fInsert_#{name}",
 				cls     : "user_black_36",
-				text    : txtBoton,
+				text    : "Guardar",
 				handler : () -> $W.Grilla.fSave name,url,indexClass
 			}
 
-		if btnDelete is true and opcionClass is 'vUpdate'
+		else if opcionClass=='vUpdate' and fPermisoUpdate isnt false  and fPermisoUpdate isnt "false"
+			arrayBtn.push {
+				xtype   : "button",
+				id      : "fUpdate_#{name}",
+				cls     : "user_black_36",
+				text    : "Actualizar",
+				handler : () -> $W.Grilla.fSave name,url,indexClass
+			}
+
+
+		if opcionClass=='vUpdate' and fPermisoDelete isnt false  and fPermisoDelete isnt "false"
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fDelete_#{name}",
@@ -67,7 +78,8 @@ do ($W = Win) ->
 			items   : arrayBtn
 		}
 
-	_routerForm = (name,obj,size) ->
+	_routerForm = (opcionClass,name,obj,size) ->
+
 		html = ""
 		for own field, value of obj
 			switch value.type
@@ -97,7 +109,7 @@ do ($W = Win) ->
 		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px; position:relative; display:#{display}\">
 			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px; position:relative;\">#{obj.label}</div>
 			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}px; position:relative;\">
-				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
+				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-value=\"#{obj.value}\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
 			</div>
 		</div>"
 
@@ -113,7 +125,7 @@ do ($W = Win) ->
 		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
 			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
 			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
-				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
+				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-value=\"#{obj.value}\" data-textdb=\"#{obj.textdb}\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
 			</div>
 		</div>"
 
@@ -245,7 +257,7 @@ do ($W = Win) ->
 						_validatePercent({ event:event, input:this })
 
 				when 'date'
-					_validateDate(obj)
+					_validateDate(input)
 
 				else
 					input.onkeyup = (event)->
@@ -259,20 +271,17 @@ do ($W = Win) ->
 	# METHOD STATIC VALIDATE
 	###
 	_validateInteger = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
-		else if obj.eventType == 'keypress'
-			return (/\d/).test(String.fromCharCode(tecla))
-		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		else if obj.eventType == 'keypress' then return (/\d/).test(String.fromCharCode(key))
+		else if obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
 
 	_validateDouble = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
-		else if obj.eventType == 'keypress'
-			return (/[\d.]/).test(String.fromCharCode(tecla))
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		else if obj.eventType == 'keypress' then return (/[\d.]/).test(String.fromCharCode(key))
 		else if obj.eventType == 'change'
 			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
 			validate = !!(obj.input.value).toString().match(/(^-?\d\d*[\.|,]\d*$)|(^-?\d\d*$)|(^-?[\.|,]\d\d*$)/)
@@ -281,30 +290,31 @@ do ($W = Win) ->
 				obj.input.value = arrayValue[0]+'.'+arrayValue[1]
 
 	_validateText = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
-		else if obj.eventType == 'keyup' or obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		# else if obj.eventType == 'keypress' then return (/[^\#\-\"\']/).test(String.fromCharCode(key))
+		else if obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
 	_validateUperCase = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
 		else if obj.eventType == 'keyup'
 			obj.input.value = obj.input.value.toUpperCase()
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
 	_validateLowerCase = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
+		key = if document.all then obj.event.keyCode else obj.event.which
+		if _keyEnable(key) then return true
+
 		else if obj.eventType == 'keyup'
 			if obj.option=='uppercase'
 				obj.input.value = obj.input.value.toLowerCase()
 		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
 
 	_validateEmail = (obj) ->
@@ -332,11 +342,30 @@ do ($W = Win) ->
 		return true
 
 	###
+	# KEY CODE
+	#
+	# key==8 		// BACKSPACE
+	# key==9 		// TAB
+	# key==0 		// TAB
+	# key==13 		// ENTER
+	# key==37 		// CURSOR LEFT
+	# key==39 		// CURSOR RIGHT
+	# key==38 		// CURSOR TOP
+	# key==40 		// CURSOR BOTTOM
+	#
+	###
+	_keyEnable = (key) ->
+		if key==8 or key==9 or key==0 or key==13 or key==37 or key==38 or key==39 or key==40 then return true
+		return false
+
+	###
 	# Calendar
 	###
 	_validateDate = (obj) ->
+		if obj is null then return
+
 		separator    = '-'
-		id           = obj.idApply
+		id           = obj.idApply or obj.id
 		format       = obj.format or 'y-m-d'
 		selected     = obj.selected or ''
 
@@ -348,7 +377,7 @@ do ($W = Win) ->
 		weekDays   = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
 
 		# ATRAPA EL ELEMENTO
-		inputCalendar = $W('#'+id)[0]
+		inputCalendar = if id != '' then document.getElementById(id) or obj
 		inputCalendar.dataset.icon = 'date'
 
 		if typeof(obj.value)!='undefined' then inputCalendar.value = obj.value
@@ -388,18 +417,18 @@ do ($W = Win) ->
 		###
 		_drawCalendar = (inputObj) ->
 
-			html = """<table id="win-calendar-year-#{id}" cellpadding="0" cellspacing="0" class="win-calendar-year" style="display:block;"></table>
-					<table id="win-calendar-#{id}" cellpadding="0" cellspacing="0" class="win-calendar">
+			html = "<table id=\"win-calendar-year-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>
+					<table id=\"win-calendar-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">
 						<tr>
-							<td id="prev-month-#{id}" class="calendar-change"> < </td>
-							<td id="title-date-#{id}" colspan="5" class="calendar-header">"""+_getMonthName(selectedMonth)+' ' +selectedYear+"""</td>
-							<td id="next-month-#{id}" class="calendar-change"> > </td>
+							<td id=\"prev-month-#{id}\" class=\"calendar-change\"> < </td>
+							<td id=\"title-date-#{id}\" colspan=\"5\" class=\"calendar-header\">"+_getMonthName(selectedMonth)+" "+selectedYear+"</td>
+							<td id=\"next-month-#{id}\" class=\"calendar-change\"> > </td>
 						</tr>
-						<tr class="weekDaysTitleRow">"""
+						<tr class=\"weekDaysTitleRow\">"
 
 			# CALENDAR DAYS
 			for day in weekDays
-				html += """<td>#{day}</td>"""
+				html += "<td>#{day}</td>"
 
 			daysInMonth = _getDaysInMonth(selectedYear, selectedMonth)
 			startDay    = _getFirstDayofMonth(selectedYear, selectedMonth)
@@ -418,23 +447,23 @@ do ($W = Win) ->
 
 			# CALENDAR ROWS
 			for e in [0...numRows]
-				html += '<tr class="weekDaysRow">'
+				html += "<tr class=\"weekDaysRow\">"
 
 				for f in [0...7]
 					if printDate == today and selectedYear == thisYear and selectedMonth == thisMonth and noPrintDays == 0
-						html += '<td id="today" class="weekDaysCell">'
-					else html += '<td class="weekDaysCell">'
+						html += "<td id=\"today\" class=\"weekDaysCell\">"
+					else html += "<td class=\"weekDaysCell\">"
 
 					if noPrintDays == 0
 						if printDate <= daysInMonth then html += "<a>#{printDate}</a>"
 						printDate++
 
-					html += '</td>'
+					html += "</td>"
 					if noPrintDays > 0 then noPrintDays--
 
-				html += '</tr>'
+				html += "</tr>"
 
-			html += '</table>'
+			html += "</table>"
 
 			# ADD CALENDAR TO ELEMENT TO CALENDAR DIV
 			if $W('#date_'+id).length > 0
@@ -449,7 +478,7 @@ do ($W = Win) ->
 				_setLocate(inputCalendar, divCalendar)
 
 			$W('#title-date-'+id)[0].onclick = () ->
-				year  = (this.innerHTML).split(' ')[1] * 1
+				year = (this.innerHTML).split(' ')[1] * 1
 				_changeYear(year-5)
 
 			# NEXT AND PREVIOUS MONTH
@@ -605,9 +634,9 @@ do ($W = Win) ->
 		@param obj calendar $W('#date_'+id)[0]
 		###
 		_setLocate = (targetObj, moveObj) ->
-			console.log(targetObj)
+			# console.log(targetObj)
 			coors = _findXY(targetObj)
-			console.log(coors)
+			# console.log(coors)
 			moveObj.getAttribute("style","position:absolute; z-index:8000;")
 			# moveObj.style.position = 'absolute'
 			# moveObj.style.top      = coors[1] + 23 + 'px'

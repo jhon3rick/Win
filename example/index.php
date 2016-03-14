@@ -125,6 +125,7 @@
 					<div onclick="load_file('tbar')">Tbar</div>
 					<div onclick="load_file('ventana')">Ventana</div>
 					<div onclick="load_file('add')">Add</div>
+					<div onclick="load_file('icons')">Icons</div>
 				</div>
 				<div id="menu-right"></div>
 			</div>

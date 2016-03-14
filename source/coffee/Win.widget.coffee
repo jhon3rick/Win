@@ -109,14 +109,18 @@ do ($W = Win) ->
 	# $W.aside = (obj) ->
 
 
-	# $W.tabpanel = (obj) ->
-	# 	console.log(obj);
-	# 	html = "<div id=\"#{obj.id}\">"
+	$W.TabPanel = (obj) ->
 
-	# 	(obj.items).forEach(json,index,element) ->
-	# 		html += "<div id=\"#{json.id}\">#{json.title}</div>"
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id="win-tab-#{CONTWIDGET}"
 
-	# 	html += "</div>"
+		html = ""
+		(obj.items).forEach(json,index,element) ->
+			html += "<div id=\"#{id}\">#{json.title}</div>"
+
+		"<div id=\"#{obj.id}\">#{html}</div>"
 
 	$W.Add = (obj) ->
 		# SI ES TBAR
@@ -125,7 +129,7 @@ do ($W = Win) ->
 			lastDiv = document.getElementById(obj.idApply).lastChild
 
 			if lastDiv != null
-				type = lastDiv.getAttribute("data-rol")
+				type = lastDiv.getAttribute("data-role")
 				if type is "div-empty" then  lastDiv.parentNode.removeChild(lastDiv)
 
 		if obj.items then _router(obj.items, obj.idApply)
@@ -134,7 +138,7 @@ do ($W = Win) ->
 	$W.Tbar = (obj) ->
 		parent = document.getElementById("#{obj.idApply}")
 		parent.className = "win-tbar"
-		parent.setAttribute("data-rol","win-tbar")
+		parent.setAttribute("data-role","win-tbar")
 
 		_router(obj.items, obj.idApply)
 
@@ -342,7 +346,7 @@ do ($W = Win) ->
 					when 'buttongroup' then _buttonGroup(json, idParent)
 					when 'tbar' then _tbar(json, idParent)
 					when 'panel' then _panel(json, idParent)
-					when 'tabPanel' then _tabPanel(json, idParent)
+					when 'tabpanel' then _tabPanel(json, idParent)
 					when 'tab' then _tab(json, idParent)
 					when 'tbtext' then _tbText(json, idParent)
 					else
@@ -354,10 +358,10 @@ do ($W = Win) ->
 
 						else if json == '->'
 							float = 'right'
-							document.getElementById(idParent).innerHTML += '<div data-rol="div-empty"></div>'
+							document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
 
 			if float == 'left'
-				document.getElementById(idParent).innerHTML += '<div data-rol="div-empty"></div>'
+				document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
 
 	###
 	@method _tabPanel
@@ -371,55 +375,46 @@ do ($W = Win) ->
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
 
-		bodyHeight = "calc:(100% - #{height})"
+		bodyHeight = "calc(100% - #{height})"
 
-		if obj.id
-			id=obj.id
+		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
-			id=CONTWIDGET
+			id="win-tabpanel-#{CONTWIDGET}"
 
-		html = "<div id=\"win-tabpanel-#{id}\" class=\"win-tabpanel\" style=\"width:100%; height:100%; #{style}\" data-role=\"win-tabpanel\">
-					<div id=\"win-tabpanel-head-#{id}\" class=\"win-tabpanel-head\" style=\"width:100%; height:#{height}; #{style}\"></div>
-					<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>
-				</div>"
+		html = "<div id=\"#{id}\" class=\"win-tabpanel\" style=\"height:#{height}; #{style}\" data-role=\"win-tabpanel\"></div>
+				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>"
+
 		document.getElementById(idParent).innerHTML += html
 
-		if obj.items then _router(obj.items, "win-tabpanel-head-"+id)
-
+		if obj.items then _router(obj.items, id)
 
 	_tab = (obj, idParent) ->
 		title  = obj.title or ''
-		icon  = obj.icon or ''
+		iconCls  = obj.iconCls or ''
 
-		if obj.id
-			id=obj.id
+		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
 
-		div = document.createElement("div")
-		div.id = id
-		# div.prototype.estate = 'enable'
-
-		document.getElementById(idParent).appendChild(div)
-		document.querySelectorAll('#'+id).__proto__.estate = 'enable'
-
-
-		# html = "<div id=\"#{id}\" class=\"win-tab\">#{title}</div>";
-
-		# document.getElementById(idParent).innerHTML += html
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-activo=\"false\" data-load=\"false\"><span class=\"icon-tab form\"></span><span>#{title}</span></div>"
+		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:hidden;\" data-activo=\"false\">#{id}</div>"
 
 		setTimeout () ->
-			console.log(document.querySelectorAll('#'+id).estate)
-			# console.log(document.getElementById(id))
-			# document.getElementById(id).estate
-			# div.prototype.estate = 'enable'
+			document.getElementById(id).onclick = () ->
+				$W("##{idParent} > [data-activo=true]").attr "data-activo","false"
+				this.setAttribute "data-activo","true"
 
-			# document.getElementById(id).prototype.estate = 'enable'
-			# document.getElementById(id).prototype.load = 'unload'
+				$W("#win-tabpanel-body-#{idParent} > [data-activo=true]").attr "data-activo","false"
+				$W("#win-tab-body-#{id}").attr "data-activo","true"
 
-		# parentTabpanel = document.getElementById(idParent).parentNode
+				load = this.getAttribute "data-load"
+				if load is "false"
+					this.setAttribute "data-load","true"
+					obj.autoLoad.idApply = "win-tab-body-#{id}"
+					$W.Load(obj.autoLoad)
+
 
 	###
 	@method _panel
@@ -513,9 +508,10 @@ do ($W = Win) ->
 	###
 	_button = (obj, idParent) ->
 
-		text  = obj.text or ''
-		cls   = obj.cls or ''
-		width = obj.width or 50
+		text   = obj.text or ''
+		cls    = obj.cls or 'save'
+		align  = obj.align or 'top'
+		width  = obj.width or 50
 		hidden = obj.hidden or false
 
 		if obj.id then id=obj.id
@@ -527,14 +523,18 @@ do ($W = Win) ->
 
 		if !isNaN width then width = width+'px'
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\" data-role=\"win-btn\">
-															<button class=\"#{cls}\">#{text}</button>
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn #{align} #{cls}\" style=\"width:#{width};\" data-role=\"win-btn\">
+															<button class=\"\">#{text}</button>
 														</div>"
+		_findResizeBody(id)
+
 		if obj.handler
 			setTimeout () ->
 				document.querySelector("\##{idParent} > \##{id}").onclick = () ->
 					if ELEMENT_ARRAY[id].state == "disable" then return
-					obj.handler(this)
+
+					$W.BlockBtn id
+					obj.handler this
 
 	###
 	@method _tbText
@@ -621,7 +621,7 @@ do ($W = Win) ->
 
 		alto = 0
 		body = ''
-		arrayDiv = document.querySelectorAll('#'+idParent+' > div')
+		arrayDiv = document.querySelectorAll('#'+idParent+' > div, #'+idParent+' > form')
 
 		[].forEach.call(arrayDiv,(element)->
 			role = element.getAttribute "data-role"
