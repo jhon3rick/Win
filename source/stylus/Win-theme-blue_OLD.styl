@@ -1,10 +1,43 @@
+//=================// ORIGINAL //=================//
+
+/*
 // TITLE
 $colorTitle   = #FFFF
 $bgColorTitle = #2A80B9
 
 // TBAR
-$colorTbar   = #333
-$bgColorTbar = #FFF
+$colorTbar   = #636363
+$bgColorTbar = #C0DDF0
+
+	// BOTON
+	$BgBtnHover    = #86bee3
+	$bordeBtnHover = #2A80B9
+
+	// SEPARATOR
+	$colorSeparator = #2A80B9
+
+	// PANEL
+	$colorTitlePanel = #0067AB
+
+// VENTANA WIN
+$wMarco = #FFF
+
+// CALENDAR
+$bgCalendar = #2A80B9
+$colorCalendar = #FFF
+
+// INPUT BUTTON
+$bgInputButton    = $bgCalendar
+$colorInputButton = $colorCalendar
+*/
+
+// TITLE
+$colorTitle   = #FFFF
+$bgColorTitle = #2A80B9
+
+// TBAR
+$colorTbar   = #FFFF
+$bgColorTbar = #2A80B9
 
 	// BOTON
 	$BgBtnHover    = #008FEF
@@ -18,7 +51,7 @@ $bgColorTbar = #FFF
 
 	// TABPANEL
 	// $bgColorTabPanel = #D2E6F5
-	$bgColorTabPanel = $bgColorTitle
+	$bgColorTabPanel = #2B6A94
 
 // VENTANA WIN
 $wMarco = #FFF
@@ -41,18 +74,17 @@ $colorInputButton = $colorCalendar
 
 	/.win-tbar
 		background-color $bgColorTbar
-		border-bottom 1px solid #888
-		width calc(100% - 20px)
-		margin 0 10px
+		width 100%
+		margin 0
 
 		*
 			color $colorTbar
 
 		/.win-btn
-			background #FFF
+			background $bgCalendar
 
 			&:hover
-				background-color #BAD8EC
+				background-color $BgBtnHover
 
 			&:active
 				background-color $BgBtnActive
@@ -73,14 +105,12 @@ $colorInputButton = $colorCalendar
 			background-color $bgColorTitle
 			color $colorSeparator
 
-			&[data-activo=true]
-				color $colorTbar
-				background-color #FFF
-				border-bottom 2px solid #FFF
+		/.win-tab[data-activo=true]
+			border-bottom 2px solid #FFF
 
-			&[data-activo=false]
-				background-color $bgColorTitle
-				border-bottom 2px solid $bgColorTitle
+		/.win-tab[data-activo=false]
+			background-color $bgColorTabPanel
+			border-bottom 2px solid $bgColorTabPanel
 
 .win-menu
 	background-color $bgColorTitle
@@ -113,13 +143,13 @@ input[type=button]
 
 	&:hover
 		background-color #DDD
-		color $colorTbar
+		color #333
 
 
 	&:active
 		background-color $BgBtnActive
-		color $colorTbar
+		color #333
 
 .form_separador
-	color $bgColorTitle
-	border-bottom 1px solid $bgColorTitle
+	background-color #2A80B9
+	color #FFF

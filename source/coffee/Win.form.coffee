@@ -7,7 +7,7 @@ do ($W = Win) ->
 	#############################################################
 	# LOAD FORM INSERT OR UPDATE
 	#############################################################
-	$W.Form.ini = (obj) ->
+	$W.Form.ini = (obj,varPost) ->
 		if obj is null then return
 
 		indexClass = obj.indexClass or ''
@@ -23,17 +23,19 @@ do ($W = Win) ->
 		fPermisoUpdate = obj.fPermisoUpdate or false
 		fPermisoDelete = obj.fPermisoDelete or false
 
+		varPost = varPost or {}
+
 		# VALIDATE PERMISSION INSERT
 		if opcionClass=='vInsert' and fPermisoInsert isnt true and fPermisoInsert isnt "true" then return
 
 		htmlForm = _routerForm opcionClass,name,field,size
 
-		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\" style=\"margin:0; padding:0;\"></div>
+		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\"></div>
 														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"float:left; width:100%; height:100%; overflow:auto;\">
 															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px;\">#{htmlForm}<div>
 														</form>"
 		# CREATE TBAR
-		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete
+		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost
 
 		# VALIDATE PERMISSION UPDATE
 		if opcionClass=='vUpdate' and fPermisoUpdate isnt true and fPermisoUpdate isnt "true" then $W("#form_#{name} input, #form_#{name} select, #form_#{name} textarea").attr("disabled","true")
@@ -41,26 +43,25 @@ do ($W = Win) ->
 		# VALIDATE INPUT FORM
 		$W.Form.validate idApply
 
-
-	_createBtnTbar = (name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete) ->
+	_createBtnTbar = (name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost) ->
 		arrayBtn = []
 
 		if opcionClass=='vInsert' and fPermisoInsert isnt false  and fPermisoInsert isnt "false"
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fInsert_#{name}",
-				cls     : "user_black_36",
+				cls     : "grilla_save_24",
 				text    : "Guardar",
-				handler : () -> $W.Grilla.fSave name,url,indexClass
+				handler : () -> $W.Form.fSave name,url,indexClass,varPost
 			}
 
 		else if opcionClass=='vUpdate' and fPermisoUpdate isnt false  and fPermisoUpdate isnt "false"
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fUpdate_#{name}",
-				cls     : "user_black_36",
+				cls     : "grilla_save_24",
 				text    : "Actualizar",
-				handler : () -> $W.Grilla.fSave name,url,indexClass
+				handler : () -> $W.Form.fSave name,url,indexClass,varPost
 			}
 
 
@@ -68,9 +69,9 @@ do ($W = Win) ->
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fDelete_#{name}",
-				cls     : "user_black_36",
+				cls     : "grilla_delete_24",
 				text    : "Eliminar",
-				handler : () -> $W.Grilla.fDelete name,url,indexClass
+				handler : () -> $W.Form.fDelete name,url,indexClass,varPost
 			}
 
 		$W.Tbar {

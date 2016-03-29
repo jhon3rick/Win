@@ -35,7 +35,7 @@ do ($W = Win) ->
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
 		body        = $W('body')[0]
-		win         = this
+		parent      = this
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
 		winModal    = document.createElement('div')
 
@@ -85,8 +85,8 @@ do ($W = Win) ->
 
 		$W("##{id}").css("left","#{left}px").css("top","#{top}px")
 
-		$W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id, document.getElementById("win-modal-#{id}"), event);
-		$W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(document.getElementById("win-modal-#{id}"));
+		# $W("#win-title-#{id}")[0].onmousedown = () -> _draggStart(id, document.getElementById("win-modal-#{id}"), event);
+		# $W("#win-title-#{id}")[0].onmouseup   = () -> _draggStop(document.getElementById("win-modal-#{id}"));
 
 		if obj.resize
 			_resize($W("#win-resize-top-#{id}")[0])
@@ -94,6 +94,9 @@ do ($W = Win) ->
 			_resize($W("#win-resize-left-#{id}")[0])
 			_resize($W("#win-resize-right-#{id}")[0])
 
+		if obj.tbar then console.log obj.tbar
+
+		if obj.tbar then _tbar({items:obj.tbar}, "win-section-#{id}")
 		if obj.items then _router(obj.items, "win-section-#{id}")
 		if obj.autoLoad then  _body(obj, "win-section-#{id}")
 
@@ -170,7 +173,7 @@ do ($W = Win) ->
 		$W.Element(id).disable()
 		setTimeout(()->
 			if document.getElementById(id) then $W.Element(id).enable()
-		, 2000)
+		, 1500)
 
 	$W.loading = (obj) ->
 
@@ -368,14 +371,14 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_tabPanel = (obj, idParent) ->
-
 		style  = obj.style or ''
-		height = obj.height or '30'
+		height = obj.height or ''
+		bodyHeight = ''
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
 
-		bodyHeight = "calc(100% - #{height})"
+		if height != '' then bodyHeight = "calc(100% - #{height})"
 
 		if obj.id then id=obj.id
 		else
@@ -388,6 +391,9 @@ do ($W = Win) ->
 		document.getElementById(idParent).innerHTML += html
 
 		if obj.items then _router(obj.items, id)
+
+		heightTabPanel = document.getElementById(id).offsetHeight
+		document.getElementById("win-tabpanel-body-#{id}").style.height = "calc(100% - #{heightTabPanel}px)"
 
 	_tab = (obj, idParent) ->
 		title  = obj.title or ''
@@ -523,8 +529,8 @@ do ($W = Win) ->
 
 		if !isNaN width then width = width+'px'
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn #{align} #{cls}\" style=\"width:#{width};\" data-role=\"win-btn\">
-															<button class=\"\">#{text}</button>
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\" data-role=\"win-btn\">
+															<button class=\"#{cls}\">#{text}</button>
 														</div>"
 		_findResizeBody(id)
 
@@ -586,8 +592,6 @@ do ($W = Win) ->
 			id="win-body-#{CONTWIDGET}"
 
 		parent = document.getElementById(idParent)
-		heightParent = parent.offsetHeight
-
 		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\" data-role=\"win-body\">#{html}</div>"
 		_resizeBody = (idParent)
 
