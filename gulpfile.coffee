@@ -29,6 +29,7 @@ path =
 					'./source/coffee/Win.events.coffee',
 					'./source/coffee/Win.query.coffee',
 					'./source/coffee/Win.output.coffee',
+					'./source/coffee/Win.script.coffee',
 
 					'./source/coffee/Win.form.coffee',
 					'./source/coffee/Win.widget.coffee',

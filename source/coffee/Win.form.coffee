@@ -1,25 +1,16 @@
-###
-# Validacion campos formulario
-#
-# tecla==8 		//BACKSPACE
-# tecla==9 		//TAB
-# tecla==0 		//TAB
-# tecla==13 	//ENTER
-#
-###
-
 "use strict"
 
 do ($W = Win) ->
 
-	$W.form = {}
+	$W.Form = {}
 
 	#############################################################
 	# LOAD FORM INSERT OR UPDATE
 	#############################################################
-	$W.form.ini = (obj) ->
-		console.log obj
-		index = obj.index or ''
+	$W.Form.ini = (obj,varPost) ->
+		if obj is null then return
+
+		indexClass = obj.indexClass or ''
 		name = obj.name or ''
 		url = obj.url or ''
 		size = obj.size or {}
@@ -28,47 +19,68 @@ do ($W = Win) ->
 		idApply = "parent_form_#{name}"
 
 		fTbar = obj.fTbar or false
-		btnInsert = obj.btnInsert or ''
-		btnDelete = obj.btnDelete or ''
+		fPermisoInsert = obj.fPermisoInsert or false
+		fPermisoUpdate = obj.fPermisoUpdate or false
+		fPermisoDelete = obj.fPermisoDelete or false
 
-		htmlForm = _routerForm name,field,size
+		varPost = varPost or {}
 
-		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\" style=\"margin:0; padding:0;\"></div>
-														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" style=\"float:left; width:100%; overflow:auto;\">
-															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px; overflow:hidden;\">#{htmlForm}<div>
+		# VALIDATE PERMISSION INSERT
+		if opcionClass=='vInsert' and fPermisoInsert isnt true and fPermisoInsert isnt "true" then return
+
+		htmlForm = _routerForm opcionClass,name,field,size
+
+		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\"></div>
+														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"float:left; width:100%; height:100%; overflow:auto;\">
+															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px;\">#{htmlForm}<div>
 														</form>"
-		if fTbar is true then _createBtnTbar name,opcionClass,url,index,btnInsert,btnDelete
-		$W.form.validate idApply
+		# CREATE TBAR
+		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost
 
+		# VALIDATE PERMISSION UPDATE
+		if opcionClass=='vUpdate' and fPermisoUpdate isnt true and fPermisoUpdate isnt "true" then $W("#form_#{name} input, #form_#{name} select, #form_#{name} textarea").attr("disabled","true")
 
-	_createBtnTbar = (name,opcionClass,url,index,btnInsert,btnDelete) ->
+		# VALIDATE INPUT FORM
+		$W.Form.validate idApply
+
+	_createBtnTbar = (name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost) ->
 		arrayBtn = []
-		txtBoton = if opcionClass=='vUpdate' then 'Actualizar' else 'Guardar'
 
-		if btnInsert is true
+		if opcionClass=='vInsert' and fPermisoInsert isnt false  and fPermisoInsert isnt "false"
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fInsert_#{name}",
-				cls     : "user_black_36",
-				text    : txtBoton,
-				handler : () -> $W.grilla.fSave name,url,index
+				cls     : "grilla_save_24",
+				text    : "Guardar",
+				handler : () -> $W.Form.fSave name,url,indexClass,varPost
 			}
 
-		if btnDelete is true and opcionClass is 'vUpdate'
+		else if opcionClass=='vUpdate' and fPermisoUpdate isnt false  and fPermisoUpdate isnt "false"
+			arrayBtn.push {
+				xtype   : "button",
+				id      : "fUpdate_#{name}",
+				cls     : "grilla_save_24",
+				text    : "Actualizar",
+				handler : () -> $W.Form.fSave name,url,indexClass,varPost
+			}
+
+
+		if opcionClass=='vUpdate' and fPermisoDelete isnt false  and fPermisoDelete isnt "false"
 			arrayBtn.push {
 				xtype   : "button",
 				id      : "fDelete_#{name}",
-				cls     : "user_black_36",
+				cls     : "grilla_delete_24",
 				text    : "Eliminar",
-				handler : () -> $W.grilla.fDelete name,url,index
+				handler : () -> $W.Form.fDelete name,url,indexClass,varPost
 			}
 
-		$W.tbar {
+		$W.Tbar {
 			idApply : "form_tbar_#{name}",
 			items   : arrayBtn
 		}
 
-	_routerForm = (name,obj,size) ->
+	_routerForm = (opcionClass,name,obj,size) ->
+
 		html = ""
 		for own field, value of obj
 			switch value.type
@@ -98,7 +110,7 @@ do ($W = Win) ->
 		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px; position:relative; display:#{display}\">
 			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px; position:relative;\">#{obj.label}</div>
 			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}px; position:relative;\">
-				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
+				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-value=\"#{obj.value}\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
 			</div>
 		</div>"
 
@@ -114,7 +126,7 @@ do ($W = Win) ->
 		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
 			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
 			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
-				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
+				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-value=\"#{obj.value}\" data-textdb=\"#{obj.textdb}\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
 			</div>
 		</div>"
 
@@ -151,53 +163,53 @@ do ($W = Win) ->
 	#############################################################
 	# VALIDATE INPUT
 	#############################################################
-	$W.form.field = (obj) ->
+	$W.Form.field = (obj) ->
 		switch obj.type
 			when 'integer'
 				$W('#'+obj.idApply).addClass += " win-input-number";
 
 				$W('#'+obj.idApply)[0].onkeypress = (event)->
-					return _validateIntField({ event:event, eventType:'keypress', input:this })
+					return _validateInteger({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateIntField({ event:event, eventType:'change', input:this })
+					return _validateInteger({ event:event, eventType:'change', input:this })
 
 			when 'double'
 				$W('#'+obj.idApply).addClass += " win-input-number";
 
 				$W('#'+obj.idApply)[0].onkeypress = (event)->
-					return _validateDoubleField({ event:event, eventType:'keypress', input:this })
+					return _validateDouble({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateDoubleField({ event:event, eventType:'change', input:this })
+					return _validateDouble({ event:event, eventType:'change', input:this })
 
 			when 'text'
 				$W('#'+obj.idApply)[0].onkeyup = (event)->
-					return _validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+					return _validateText({ event:event, eventType:'keyup', input:this, option:obj.option })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+					return _validateText({ event:event, eventType:'change', input:this, option:obj.option })
 
 			when 'email'
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validateEmailField({ event:event, input:this })
+					return _validateEmail({ event:event, input:this })
 
 			when 'date'
-				_validateDateField(obj)
+				_validateDate(obj)
 
 			when 'percent'
 				# $W('#'+obj.idApply).addClass += " win-input-number";
 				$W('#'+obj.idApply)[0].onkeydown = (event)->
 					if event.keyCode==13
-						return _validatePercentField({ event:event, eventType:'keypress', input:this })
+						return _validatePercent({ event:event, eventType:'keypress', input:this })
 
 				$W('#'+obj.idApply)[0].onchange = (event)->
-					return _validatePercentField({ event:event, input:this })
+					return _validatePercent({ event:event, input:this })
 
 	###
 	# VALIDATE INPUT FORM
 	###
-	$W.form.validate = (id) ->
+	$W.Form.validate = (id) ->
 		campos = document.getElementById(id).querySelectorAll("input, textarea, select")
 
 		[].forEach.call(campos, (input)->
@@ -209,57 +221,68 @@ do ($W = Win) ->
 					input.className += " win-input-number";
 
 					input.onkeypress = (event)->
-						_validateIntField({ event:event, eventType:'keypress', input:this })
+						_validateInteger({ event:event, eventType:'keypress', input:this })
 
 					input.onchange = (event)->
-						_validateIntField({ event:event, eventType:'change', input:this })
+						_validateInteger({ event:event, eventType:'change', input:this })
 
 				when 'double'
 					input.className += " win-input-number"
 
 					input.onkeypress = (event)->
-						_validateDoubleField({ event:event, eventType:'keypress', input:this })
+						_validateDouble({ event:event, eventType:'keypress', input:this })
 
 					input.onchange = (event)->
-						_validateDoubleField({ event:event, eventType:'change', input:this })
+						_validateDouble({ event:event, eventType:'change', input:this })
 
-				when 'text'
+				when 'upercase'
 					input.onkeyup = (event)->
-						_validateTextField({ event:event, eventType:'keyup', input:this, option:obj.option })
+						_validateUperCase({ event:event, eventType:'keyup', input:this })
 
 					input.onchange = (event)->
-						_validateTextField({ event:event, eventType:'change', input:this, option:obj.option })
+						_validateUperCase({ event:event, eventType:'change', input:this })
+
+				when 'lowercase'
+					input.onkeyup = (event)->
+						_validateLowerCase({ event:event, eventType:'keyup', input:this })
+
+					input.onchange = (event)->
+						_validateLowerCase({ event:event, eventType:'change', input:this })
 
 				when 'email'
 					input.onchange = (event)->
-						_validateEmailField({ event:event, input:this })
+						_validateEmail({ event:event, input:this })
 
 				when 'percent'
 					input.onchange = (event)->
-						_validatePercentField({ event:event, input:this })
+						_validatePercent({ event:event, input:this })
 
 				when 'date'
-					_validateDateField(obj)
+					_validateDate(input)
+
+				else
+					input.onkeyup = (event)->
+						_validateText({ event:event, eventType:'keyup', input:this })
+
+					input.onchange = (event)->
+						_validateText({ event:event, eventType:'change', input:this })
 		)
 
 	###
 	# METHOD STATIC VALIDATE
 	###
-	_validateIntField = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
-		else if obj.eventType == 'keypress'
-			return (/\d/).test(String.fromCharCode(tecla))
-		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
+	_validateInteger = (obj) ->
+		key = if document.all then obj.event.keyCode else obj.event.which
 
-	_validateDoubleField = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
-		else if obj.eventType == 'keypress'
-			return (/[\d.]/).test(String.fromCharCode(tecla))
+		if _keyEnable(key) then return true
+		else if obj.eventType == 'keypress' then return (/\d/).test(String.fromCharCode(key))
+		else if obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
+
+	_validateDouble = (obj) ->
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		else if obj.eventType == 'keypress' then return (/[\d.]/).test(String.fromCharCode(key))
 		else if obj.eventType == 'change'
 			obj.input.value = (obj.input.value).replace(/[^\d.]/g,'')
 			validate = !!(obj.input.value).toString().match(/(^-?\d\d*[\.|,]\d*$)|(^-?\d\d*$)|(^-?[\.|,]\d\d*$)/)
@@ -267,27 +290,41 @@ do ($W = Win) ->
 				arrayValue = (obj.input.value).split(".")
 				obj.input.value = arrayValue[0]+'.'+arrayValue[1]
 
-	_validateTextField = (obj) ->
-		tecla = if document.all then obj.event.keyCode else obj.event.which
-		if tecla==8 or tecla==9 or tecla==0 or tecla==13
-			return true
+	_validateText = (obj) ->
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		# else if obj.eventType == 'keypress' then return (/[^\#\-\"\']/).test(String.fromCharCode(key))
+		else if obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
+
+	_validateUperCase = (obj) ->
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		else if obj.eventType == 'keyup'
+			obj.input.value = obj.input.value.toUpperCase()
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
+		else if obj.eventType == 'change'
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
+
+	_validateLowerCase = (obj) ->
+		key = if document.all then obj.event.keyCode else obj.event.which
+		if _keyEnable(key) then return true
+
 		else if obj.eventType == 'keyup'
 			if obj.option=='uppercase'
-				obj.input.value = obj.input.value.toUpperCase()
-			else if obj.option=='lowercase'
 				obj.input.value = obj.input.value.toLowerCase()
 		else if obj.eventType == 'change'
-			console.log('-'+obj.input.value+'-')
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\'|^\s+|\s+$]/g,'')
+			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
 
-	_validateEmailField = (obj) ->
+	_validateEmail = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
 		if !validate
 			obj.input.value=""
 			obj.input.focus()
 
-	_validatePercentField = (obj) ->
+	_validatePercent = (obj) ->
 		max = obj.input.getAttribute('data-max') * 1
 		min = obj.input.getAttribute('data-min') * 1
 		result = obj.input.value * 1
@@ -306,11 +343,30 @@ do ($W = Win) ->
 		return true
 
 	###
+	# KEY CODE
+	#
+	# key==8 		// BACKSPACE
+	# key==9 		// TAB
+	# key==0 		// TAB
+	# key==13 		// ENTER
+	# key==37 		// CURSOR LEFT
+	# key==39 		// CURSOR RIGHT
+	# key==38 		// CURSOR TOP
+	# key==40 		// CURSOR BOTTOM
+	#
+	###
+	_keyEnable = (key) ->
+		if key==8 or key==9 or key==0 or key==13 or key==37 or key==38 or key==39 or key==40 then return true
+		return false
+
+	###
 	# Calendar
 	###
-	_validateDateField = (obj) ->
+	_validateDate = (obj) ->
+		if obj is null then return
+
 		separator    = '-'
-		id           = obj.idApply
+		id           = obj.idApply or obj.id
 		format       = obj.format or 'y-m-d'
 		selected     = obj.selected or ''
 
@@ -322,7 +378,7 @@ do ($W = Win) ->
 		weekDays   = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
 
 		# ATRAPA EL ELEMENTO
-		inputCalendar = $W('#'+id)[0]
+		inputCalendar = if id != '' then document.getElementById(id) or obj
 		inputCalendar.dataset.icon = 'date'
 
 		if typeof(obj.value)!='undefined' then inputCalendar.value = obj.value
@@ -362,18 +418,18 @@ do ($W = Win) ->
 		###
 		_drawCalendar = (inputObj) ->
 
-			html = """<table id="win-calendar-year-#{id}" cellpadding="0" cellspacing="0" class="win-calendar-year" style="display:block;"></table>
-					<table id="win-calendar-#{id}" cellpadding="0" cellspacing="0" class="win-calendar">
+			html = "<table id=\"win-calendar-year-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>
+					<table id=\"win-calendar-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">
 						<tr>
-							<td id="prev-month-#{id}" class="calendar-change"> < </td>
-							<td id="title-date-#{id}" colspan="5" class="calendar-header">"""+_getMonthName(selectedMonth)+' ' +selectedYear+"""</td>
-							<td id="next-month-#{id}" class="calendar-change"> > </td>
+							<td id=\"prev-month-#{id}\" class=\"calendar-change\"> < </td>
+							<td id=\"title-date-#{id}\" colspan=\"5\" class=\"calendar-header\">"+_getMonthName(selectedMonth)+" "+selectedYear+"</td>
+							<td id=\"next-month-#{id}\" class=\"calendar-change\"> > </td>
 						</tr>
-						<tr class="weekDaysTitleRow">"""
+						<tr class=\"weekDaysTitleRow\">"
 
 			# CALENDAR DAYS
 			for day in weekDays
-				html += """<td>#{day}</td>"""
+				html += "<td>#{day}</td>"
 
 			daysInMonth = _getDaysInMonth(selectedYear, selectedMonth)
 			startDay    = _getFirstDayofMonth(selectedYear, selectedMonth)
@@ -392,23 +448,23 @@ do ($W = Win) ->
 
 			# CALENDAR ROWS
 			for e in [0...numRows]
-				html += '<tr class="weekDaysRow">'
+				html += "<tr class=\"weekDaysRow\">"
 
 				for f in [0...7]
 					if printDate == today and selectedYear == thisYear and selectedMonth == thisMonth and noPrintDays == 0
-						html += '<td id="today" class="weekDaysCell">'
-					else html += '<td class="weekDaysCell">'
+						html += "<td id=\"today\" class=\"weekDaysCell\">"
+					else html += "<td class=\"weekDaysCell\">"
 
 					if noPrintDays == 0
 						if printDate <= daysInMonth then html += "<a>#{printDate}</a>"
 						printDate++
 
-					html += '</td>'
+					html += "</td>"
 					if noPrintDays > 0 then noPrintDays--
 
-				html += '</tr>'
+				html += "</tr>"
 
-			html += '</table>'
+			html += "</table>"
 
 			# ADD CALENDAR TO ELEMENT TO CALENDAR DIV
 			if $W('#date_'+id).length > 0
@@ -423,7 +479,7 @@ do ($W = Win) ->
 				_setLocate(inputCalendar, divCalendar)
 
 			$W('#title-date-'+id)[0].onclick = () ->
-				year  = (this.innerHTML).split(' ')[1] * 1
+				year = (this.innerHTML).split(' ')[1] * 1
 				_changeYear(year-5)
 
 			# NEXT AND PREVIOUS MONTH
@@ -579,9 +635,9 @@ do ($W = Win) ->
 		@param obj calendar $W('#date_'+id)[0]
 		###
 		_setLocate = (targetObj, moveObj) ->
-			console.log(targetObj)
+			# console.log(targetObj)
 			coors = _findXY(targetObj)
-			console.log(coors)
+			# console.log(coors)
 			moveObj.getAttribute("style","position:absolute; z-index:8000;")
 			# moveObj.style.position = 'absolute'
 			# moveObj.style.top      = coors[1] + 23 + 'px'
