@@ -45,34 +45,32 @@ do ($W = Win) ->
 
 	_createBtnTbar = (name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost) ->
 		arrayBtn = []
+		console.log url
 
 		if opcionClass=='vInsert' and fPermisoInsert isnt false  and fPermisoInsert isnt "false"
-			arrayBtn.push {
+			arrayBtn.push
 				xtype   : "button",
 				id      : "fInsert_#{name}",
-				cls     : "grilla_save_24",
+				cls     : "grilla_save",
 				text    : "Guardar",
 				handler : () -> $W.Form.fSave name,url,indexClass,varPost
-			}
 
 		else if opcionClass=='vUpdate' and fPermisoUpdate isnt false  and fPermisoUpdate isnt "false"
-			arrayBtn.push {
+			arrayBtn.push
 				xtype   : "button",
 				id      : "fUpdate_#{name}",
-				cls     : "grilla_save_24",
+				cls     : "grilla_save",
 				text    : "Actualizar",
 				handler : () -> $W.Form.fSave name,url,indexClass,varPost
-			}
-
 
 		if opcionClass=='vUpdate' and fPermisoDelete isnt false  and fPermisoDelete isnt "false"
-			arrayBtn.push {
+			arrayBtn.push
 				xtype   : "button",
 				id      : "fDelete_#{name}",
-				cls     : "grilla_delete_24",
+				cls     : "grilla_delete",
 				text    : "Eliminar",
 				handler : () -> $W.Form.fDelete name,url,indexClass,varPost
-			}
+
 
 		$W.Tbar {
 			idApply : "form_tbar_#{name}",

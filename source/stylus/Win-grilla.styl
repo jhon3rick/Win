@@ -52,8 +52,36 @@ mix_background($image)
 		height 22px
 		cursor default
 
-.grilla_title_label:first-child
-	width 38px
+		&:first-child
+			width 38px
+
+		&:hover .grilla_title_order > div
+			visibility visible
+
+		.grilla_title_order
+			float left
+			margin-left -16px
+			width 16px
+			height 100%
+
+			> div
+				height 50%
+				background-size 8px
+				background-repeat no-repeat
+				background-position center
+				visibility hidden
+
+			[data-order="upOn"],
+			[data-order="upOff"]
+				background-image url('../img/up.png')
+
+			[data-order="downOn"],
+			[data-order="downOff"]
+				background-image url('../img/down.png')
+
+			[data-order="upOn"],
+			[data-order="downOn"]
+				visibility visible
 
 
 .grilla_footer
@@ -175,9 +203,9 @@ mix_background($image)
 
 		/.grilla_type_search
 			float left
-			margin 5px 0px 2px -231px
+			margin 6px 0px 2px -231px
 			width 20px
-			height 21px
+			height 20px
 			background-image url('../img/search.png')
 			background-repeat no-repeat
 			background-position center
@@ -270,14 +298,14 @@ mix_background($image)
 	overflow hidden
 
 	& > div
-		height 100%
 		padding-top	5px
+		float left
+		height 100%
 
 	/.grilla_col_first
-		padding 5px 6px 0 0
+		padding 0
 		cursor default
-		float left
-		width 38px
+		width 35px
 
 		/.grilla_fila_cont
 			text-align right
@@ -287,7 +315,7 @@ mix_background($image)
 
 		/.grilla_fila_image
 			float left
-			margin 0 0 0 2px
+			margin-left 2px
 			width $sizeImage
 			height $sizeImage
 
@@ -304,13 +332,17 @@ mix_background($image)
 .grilla_fila_image[data-icon="deleteRow"]
 	mix_background '../img/delete.png'
 
-.grilla_content_fila [data-state="fInsert"],
-.grilla_content_fila [data-state="insertRow"]
+.grilla_fila[data-state="fInsert"],
+.grilla_fila[data-state="insertRow"]
 	color #008200
 
-.grilla_content_fila [data-state="fDelete"],
-.grilla_content_fila [data-state="deleteRow"]
+.grilla_fila[data-state="fDelete"],
+.grilla_fila[data-state="deleteRow"]
 	color #F00
+
+.grilla_fila[data-state="fUpdate"],
+.grilla_fila[data-state="updateRow"]
+	color #E05F06
 
 .grilla_ventana
 	overflow hidden
@@ -347,6 +379,6 @@ mix_background($image)
 	overflow hidden
 
 // ICONS
-.grilla_add_24{background-image:url("../img/icons/24px/add_24.png")}
-.grilla_save_24{background-image:url("../img/icons/24px/save_24.png")}
-.grilla_delete_24{background-image:url("../img/icons/24px/delete_24.png")}
+.grilla_add{background-image:url("../img/icons/24px/grilla_add.png")}
+.grilla_save{background-image:url("../img/icons/24px/grilla_save.png")}
+.grilla_delete{background-image:url("../img/icons/24px/grilla_delete.png")}

@@ -11,13 +11,14 @@ $bgColorTbar = #FFF
 	$bordeBtnHover = #2A80B9
 
 	// SEPARATOR
-	$colorSeparator = #FFF
+	$colorSeparator = #888
 
 	// PANEL
-	$colorTitlePanel = #FFF
+	$colorTitlePanel = #333
 
 	// TABPANEL
 	// $bgColorTabPanel = #D2E6F5
+	$colorTabPanel = #FFF
 	$bgColorTabPanel = $bgColorTitle
 
 // VENTANA WIN
@@ -66,12 +67,15 @@ $colorInputButton = $colorCalendar
 		/.win-panel-title, /.win-group-title
 			color $colorTitlePanel
 
+		/.grilla_title_label:hover
+			background-color #DDD
+
 	/.win-tabpanel
 		background-color $bgColorTabPanel
 
 		/.win-tab
 			background-color $bgColorTitle
-			color $colorSeparator
+			color $colorTabPanel
 
 			&[data-activo=true]
 				color $colorTbar
@@ -114,7 +118,6 @@ input[type=button]
 	&:hover
 		background-color #DDD
 		color $colorTbar
-
 
 	&:active
 		background-color $BgBtnActive

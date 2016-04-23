@@ -32,6 +32,7 @@ do ($W = Win) ->
 		html        = obj.html or ''
 		drag        = obj.drag or ''
 		theme       = obj.theme or ''
+		style   = obj.style or ''
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
 		body        = $W('body')[0]
@@ -54,7 +55,7 @@ do ($W = Win) ->
 			id==CONTWIDGET
 
 		winModal.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
-									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{bodyStyle}\" class=\"win-marco\">
+									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{style}\" class=\"win-marco\">
 										<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -548,8 +549,10 @@ do ($W = Win) ->
 	###
 	_tbText = (obj, idParent) ->
 		text  = obj.text or ''
-		width = obj.width or '120'
+		width = obj.width or 120
 		style = obj.style or 'left'
+
+		if width > 0 then width = width+'px'
 
 		if obj.id
 			id=obj.id
@@ -576,10 +579,12 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_body = (obj, idParent) ->
-		items   = obj.items or ''
-		html    = obj.html or ''
-		clsBody = obj.clsBody or ''
-		style   = 'overflow:hidden;'
+		console.log obj
+		items = obj.items or ''
+		html  = obj.html or ''
+		style = 'overflow:hidden;'
+		clsBody   = obj.clsBody or ''
+		bodyStyle = obj.bodyStyle or ''
 
 		if obj.scrollY is true then style += 'overflow-y:auto;'
 		else if obj.scrollX is true then style += 'overflow-x:auto;'
@@ -592,11 +597,13 @@ do ($W = Win) ->
 			id="win-body-#{CONTWIDGET}"
 
 		parent = document.getElementById(idParent)
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\" data-role=\"win-body\">#{html}</div>"
-		_resizeBody = (idParent)
+		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style} #{bodyStyle}\" data-role=\"win-body\">#{html}</div>"
 
-		if typeof(obj.autoLoad)
-			setTimeout () ->
+
+		setTimeout () ->
+			_resizeBody(idParent)
+
+			if typeof(obj.autoLoad)
 				obj.autoLoad.idApply = id
 				$W.Load(obj.autoLoad)
 
@@ -625,7 +632,7 @@ do ($W = Win) ->
 
 		alto = 0
 		body = ''
-		arrayDiv = document.querySelectorAll('#'+idParent+' > div, #'+idParent+' > form')
+		arrayDiv = document.querySelectorAll('#'+idParent+' > [data-role]')
 
 		[].forEach.call(arrayDiv,(element)->
 			role = element.getAttribute "data-role"
