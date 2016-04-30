@@ -527,8 +527,8 @@ do ($W = Win) ->
 					</tr>"
 			for i in [0...6]
 				html += "<tr>
-							<td>#{year1++}</td>
-							<td>#{year2++}</td>
+							<td data-year=\"false\">#{year1++}</td>
+							<td data-year=\"false\">#{year2++}</td>
 						</tr>"
 
 			html += "<tr style=\"border-top:1px solid #fff;\">
@@ -543,6 +543,8 @@ do ($W = Win) ->
 
 			$W('#win-calendar-'+id).hide()
 			$W('#win-calendar-year-'+id).show().html(html)
+			$W('#win-calendar-year-'+id+' td').onclick = () ->
+				console.log(this);
 
 			$W("#change-year-top-#{id}")[0].onclick = () ->
 				_changeYear(year2)
@@ -557,7 +559,7 @@ do ($W = Win) ->
 		_removeCalendar
 		###
 		_changeToCalendarDay = () ->
-			$W('#win-calendar-year-'+id).hide().html('')
+			$W('#win-calendar-year-'+id).hide()
 			$W('#win-calendar-'+id).show()
 
 		###

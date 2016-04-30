@@ -176,7 +176,12 @@ do ($W = Win) ->
 			if document.getElementById(id) then $W.Element(id).enable()
 		, 1500)
 
-	$W.loading = (obj) ->
+	$W.Loading = (obj) ->
+
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id="win-tab-#{CONTWIDGET}"
 
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
@@ -207,7 +212,7 @@ do ($W = Win) ->
 			if obj
 				icono        = iconos[obj.icono] or iconos['sucess']
 				evento_icono = obj.evento_icono or ''
-				texto        = obj.texto or 'Informacion Almacenada'
+				texto        = obj.texto or 'OK...'
 				duracion     = obj.duracion or '2000'
 				estilo_texto = obj.estilo_texto or 'padding-top: 10px;font-size: 12px;color:#FFF;'
 			else
@@ -217,16 +222,13 @@ do ($W = Win) ->
 				duracion     = '2000'
 				estilo_texto = 'padding-top:10px; font-size:12px; color:#FFF;'
 
-			if duracion=='infinito'
-				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\">
-																			<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
-																			<div class=\"win-modal-label label-finish\">#{texto}</div>
-																		</div>";
-			else
-				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\">
-																			<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
-																			<div class=\"win-modal-label label-finish\">#{texto}</div>
-																		</div>";
+				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\">
+																			<div class=\"win-modal-img-finish\">
+																				<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
+																			</div>
+																				<div class=\"win-modal-label label-finish\">#{texto}</div>
+																		<div>";
+
 				setTimeout ( ->
 					mask.style.visibility = 'hidden'
 				), duracion
@@ -267,7 +269,7 @@ do ($W = Win) ->
 						<input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode); return false;\">
 					</div>"
 
-		new $W.Window(
+		new $W.Window({
 			width       : width,
 			height      : height,
 			id          : 'Win_ventana_confirm',
@@ -280,7 +282,7 @@ do ($W = Win) ->
 			autoDestroy : true,
 			drag        : false,
 			resize      : false
-		);
+		});
 
 
 	$W.CtxMenu = (obj) ->

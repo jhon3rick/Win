@@ -98,5 +98,5 @@ do ($W = Win) ->
 		tagsScript = obj.getElementsByTagName('script')
 		for i in tagsScript
 			tagScript = document.createElement('script')
-			i.parentNode.replaceChild(tagScript,i)
 			tagScript.innerHTML = i.innerHTML
+			i.parentNode.replaceChild(tagScript,i)
