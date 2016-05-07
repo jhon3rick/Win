@@ -145,6 +145,8 @@ do ($W = Win) ->
 		parent.setAttribute("data-role","win-tbar")
 
 		_router(obj.items, obj.idApply)
+		setTimeout () ->
+			_resizeBody(document.getElementById(obj.idApply).parentNode.id)
 
 	$W.Element = (id) ->
 
@@ -181,7 +183,7 @@ do ($W = Win) ->
 		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
-			id="win-tab-#{CONTWIDGET}"
+			id="win-loading-#{CONTWIDGET}"
 
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
@@ -243,7 +245,7 @@ do ($W = Win) ->
 						<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\">
 					</div>"
 
-		new $W.Window({
+		new $W.Window(
 			width       : width,
 			height      : height,
 			id          : 'Win_ventana_alert',
@@ -256,7 +258,7 @@ do ($W = Win) ->
 			autoDestroy : true,
 			drag        : false,
 			resize      : false
-		});
+		);
 
 	$W.Confirm = (obj) ->
 
@@ -479,6 +481,9 @@ do ($W = Win) ->
 		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\" data-role=\"win-tbar\"></div>"
 		if obj.items then _router(obj.items, "#{id}")
 
+		setTimeout () ->
+			_resizeBody(document.getElementById(id).parentNode.id)
+
 
 	_buttonGroup = (obj, idParent) ->
 		hidden = obj.hidden or ''
@@ -581,7 +586,6 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_body = (obj, idParent) ->
-		console.log obj
 		items = obj.items or ''
 		html  = obj.html or ''
 		style = 'overflow:hidden;'
@@ -628,9 +632,12 @@ do ($W = Win) ->
 			else if role3 is "win-body" or role3 is "win-section" then body = div3
 
 			if body != ''
-				_resizeBody(body.id)
+				setTimeout () ->
+					_resizeBody(body.id)
 
 	_resizeBody = (idParent) ->
+
+		if(!document.getElementById(idParent)) then return
 
 		alto = 0
 		body = ''
@@ -638,6 +645,7 @@ do ($W = Win) ->
 
 		[].forEach.call(arrayDiv,(element)->
 			role = element.getAttribute "data-role"
+
 
 			if body != '' then return
 			else if role is "win-body"
@@ -647,7 +655,7 @@ do ($W = Win) ->
 			alto += element.offsetHeight
 		)
 
-		height = if alto == 0 then '100%' else 'calc(100% - '+alto+'px)'
+		height = if alto == 0 then '100%' else 'calc(100% - '+(alto+1)+'px)'
 
 		if body != ''
 			setTimeout () ->

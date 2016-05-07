@@ -233,12 +233,12 @@ do ($W = Win) ->
 					input.onchange = (event)->
 						_validateDouble({ event:event, eventType:'change', input:this })
 
-				when 'upercase'
+				when 'uppercase'
 					input.onkeyup = (event)->
-						_validateUperCase({ event:event, eventType:'keyup', input:this })
+						_validateUpperCase({ event:event, eventType:'keyup', input:this })
 
 					input.onchange = (event)->
-						_validateUperCase({ event:event, eventType:'change', input:this })
+						_validateUpperCase({ event:event, eventType:'change', input:this })
 
 				when 'lowercase'
 					input.onkeyup = (event)->
@@ -295,7 +295,7 @@ do ($W = Win) ->
 		# else if obj.eventType == 'keypress' then return (/[^\#\-\"\']/).test(String.fromCharCode(key))
 		else if obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
-	_validateUperCase = (obj) ->
+	_validateUpperCase = (obj) ->
 		key = if document.all then obj.event.keyCode else obj.event.which
 
 		if _keyEnable(key) then return true

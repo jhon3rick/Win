@@ -62,8 +62,7 @@ do ($W = Win) ->
 		if htmlAside != "" then widthGrilla = "calc(100% - 205px)"
 
 		if opcionClass == ''
-			htmlGrilla = "<div id=\"grilla_ventana_#{name}\" class=\"grilla_ventana\" style=\"#{grillaHeight};\">
-								#{htmlAside}
+			htmlGrilla = "<div id=\"grilla_ventana_#{name}\" class=\"grilla_ventana\" style=\"#{grillaHeight};\" data-role=\"win-body\">
 								<div id=\"grilla_#{name}\" class=\"grilla_load\" style=\"width:#{widthGrilla};\">
 									#{htmlToolbar}
 									#{htmlContent}
