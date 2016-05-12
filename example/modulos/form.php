@@ -45,14 +45,14 @@ $c ='
 
 <div class="subtitle">Validacion Field Parent</div>
 <div class="parrafo" id="form-validate">
-	<input type="text" placeholder="inputInteger" data-icon="add" data-validate="upercase"/>
+	<input type="text" placeholder="inputInteger" data-icon="add" data-validate="uppercase"/>
 	<input type="text" placeholder="inputInteger" data-icon="add" data-validate="integer"/>
 	<div>
 		<pre><code class="html" id="fieldParent">
 			<?php
 $c ='
 <div id="form-validate">
-    <input type="text" data-validate="upercase"/>
+    <input type="text" data-validate="uppercase"/>
     <input type="text" data-validate="integer"/>
 </div>
 <script>
@@ -67,10 +67,10 @@ $c ='
 <script>
 	$W.Form.validate("form-validate");
 
-	$W.Form.field({
-		idApply : "inputInteger",
-		type    : "integer"		// integer, double, email, text, upercase, lowercase
-	});
+	// $W.Form.field({
+	// 	idApply : "inputInteger",
+	// 	type    : "integer"		// integer, double, email, text, upercase, lowercase
+	// });
 
 	$W.Form.field({
 		idApply   : "inputDate",
