@@ -32,6 +32,7 @@ do ($W = Win) ->
 		html        = obj.html or ''
 		drag        = obj.drag or ''
 		theme       = obj.theme or ''
+		style   = obj.style or ''
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
 		body        = $W('body')[0]
@@ -54,7 +55,7 @@ do ($W = Win) ->
 			id==CONTWIDGET
 
 		winModal.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
-									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{bodyStyle}\" class=\"win-marco\">
+									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{style}\" class=\"win-marco\">
 										<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 										<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -144,6 +145,8 @@ do ($W = Win) ->
 		parent.setAttribute("data-role","win-tbar")
 
 		_router(obj.items, obj.idApply)
+		setTimeout () ->
+			_resizeBody(document.getElementById(obj.idApply).parentNode.id)
 
 	$W.Element = (id) ->
 
@@ -175,7 +178,12 @@ do ($W = Win) ->
 			if document.getElementById(id) then $W.Element(id).enable()
 		, 1500)
 
-	$W.loading = (obj) ->
+	$W.Loading = (obj) ->
+
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id="win-loading-#{CONTWIDGET}"
 
 		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
 			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
@@ -206,7 +214,7 @@ do ($W = Win) ->
 			if obj
 				icono        = iconos[obj.icono] or iconos['sucess']
 				evento_icono = obj.evento_icono or ''
-				texto        = obj.texto or 'Informacion Almacenada'
+				texto        = obj.texto or 'OK...'
 				duracion     = obj.duracion or '2000'
 				estilo_texto = obj.estilo_texto or 'padding-top: 10px;font-size: 12px;color:#FFF;'
 			else
@@ -216,16 +224,13 @@ do ($W = Win) ->
 				duracion     = '2000'
 				estilo_texto = 'padding-top:10px; font-size:12px; color:#FFF;'
 
-			if duracion=='infinito'
-				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\">
-																			<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
-																			<div class=\"win-modal-label label-finish\">#{texto}</div>
-																		</div>";
-			else
-				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\">
-																			<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
-																			<div class=\"win-modal-label label-finish\">#{texto}</div>
-																		</div>";
+				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\">
+																			<div class=\"win-modal-img-finish\">
+																				<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
+																			</div>
+																				<div class=\"win-modal-label label-finish\">#{texto}</div>
+																		<div>";
+
 				setTimeout ( ->
 					mask.style.visibility = 'hidden'
 				), duracion
@@ -240,7 +245,7 @@ do ($W = Win) ->
 						<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\">
 					</div>"
 
-		new $W.Window({
+		new $W.Window(
 			width       : width,
 			height      : height,
 			id          : 'Win_ventana_alert',
@@ -253,7 +258,7 @@ do ($W = Win) ->
 			autoDestroy : true,
 			drag        : false,
 			resize      : false
-		});
+		);
 
 	$W.Confirm = (obj) ->
 
@@ -266,7 +271,7 @@ do ($W = Win) ->
 						<input type=\"button\" value=\"Cancelar\" onclick=\"$W('#Win_ventana_confirm')[0].parentNode.parentNode.removeChild($W('#Win_ventana_confirm')[0].parentNode); return false;\">
 					</div>"
 
-		new $W.Window(
+		new $W.Window({
 			width       : width,
 			height      : height,
 			id          : 'Win_ventana_confirm',
@@ -279,7 +284,7 @@ do ($W = Win) ->
 			autoDestroy : true,
 			drag        : false,
 			resize      : false
-		);
+		});
 
 
 	$W.CtxMenu = (obj) ->
@@ -476,6 +481,9 @@ do ($W = Win) ->
 		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\" data-role=\"win-tbar\"></div>"
 		if obj.items then _router(obj.items, "#{id}")
 
+		setTimeout () ->
+			_resizeBody(document.getElementById(id).parentNode.id)
+
 
 	_buttonGroup = (obj, idParent) ->
 		hidden = obj.hidden or ''
@@ -548,8 +556,10 @@ do ($W = Win) ->
 	###
 	_tbText = (obj, idParent) ->
 		text  = obj.text or ''
-		width = obj.width or '120'
+		width = obj.width or 120
 		style = obj.style or 'left'
+
+		if width > 0 then width = width+'px'
 
 		if obj.id
 			id=obj.id
@@ -576,10 +586,11 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_body = (obj, idParent) ->
-		items   = obj.items or ''
-		html    = obj.html or ''
-		clsBody = obj.clsBody or ''
-		style   = 'overflow:hidden;'
+		items = obj.items or ''
+		html  = obj.html or ''
+		style = 'overflow:hidden;'
+		clsBody   = obj.clsBody or ''
+		bodyStyle = obj.bodyStyle or ''
 
 		if obj.scrollY is true then style += 'overflow-y:auto;'
 		else if obj.scrollX is true then style += 'overflow-x:auto;'
@@ -592,11 +603,13 @@ do ($W = Win) ->
 			id="win-body-#{CONTWIDGET}"
 
 		parent = document.getElementById(idParent)
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style}\" data-role=\"win-body\">#{html}</div>"
-		_resizeBody = (idParent)
+		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style} #{bodyStyle}\" data-role=\"win-body\">#{html}</div>"
 
-		if typeof(obj.autoLoad)
-			setTimeout () ->
+
+		setTimeout () ->
+			_resizeBody(idParent)
+
+			if typeof(obj.autoLoad)
 				obj.autoLoad.idApply = id
 				$W.Load(obj.autoLoad)
 
@@ -619,16 +632,20 @@ do ($W = Win) ->
 			else if role3 is "win-body" or role3 is "win-section" then body = div3
 
 			if body != ''
-				_resizeBody(body.id)
+				setTimeout () ->
+					_resizeBody(body.id)
 
 	_resizeBody = (idParent) ->
 
+		if(!document.getElementById(idParent)) then return
+
 		alto = 0
 		body = ''
-		arrayDiv = document.querySelectorAll('#'+idParent+' > div, #'+idParent+' > form')
+		arrayDiv = document.querySelectorAll('#'+idParent+' > [data-role]')
 
 		[].forEach.call(arrayDiv,(element)->
 			role = element.getAttribute "data-role"
+
 
 			if body != '' then return
 			else if role is "win-body"
@@ -638,7 +655,7 @@ do ($W = Win) ->
 			alto += element.offsetHeight
 		)
 
-		height = if alto == 0 then '100%' else 'calc(100% - '+alto+'px)'
+		height = if alto == 0 then '100%' else 'calc(100% - '+(alto+1)+'px)'
 
 		if body != ''
 			setTimeout () ->

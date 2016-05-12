@@ -126,7 +126,7 @@ input[type=button]
 		overflow hidden
 		margin-left -27px
 		background-image url(../img/close.png)
-		background-size 15px
+		background-size 18px
 		background-repeat no-repeat
 		background-position center
 
@@ -176,28 +176,25 @@ input[type=button]
 .win-tbar
 	overflow hidden
 	display table
-	padding 2px 0
+	margin 2px 0
 
 	> div
 		display table-cell
-		vertical-align top
 
 	/.win-btn
 		padding 2px
+		vertical-align top
 		background-color rgba(0,0,0,0)
-		// min-height 50px
-		// min-width 50px
-		// width 65px
+		min-height 50px
+		min-width 50px
 		cursor pointer
 
 		&[data-state="disable"]
 			background-color #A9A9A9
 			opacity 0.5
 
-			// > button
-			// 	color #666
-
 		> button
+			width 100%
 			background-color rgba(0,0,0,0)
 			background-size 24px
 			background-repeat no-repeat
@@ -213,7 +210,7 @@ input[type=button]
 
 	/.win-separator
 		width 1px
-		vertical-align middle !important
+		vertical-align middle
 		letter-spacing -1px
 		transform scale(1 ,2)
 
@@ -222,10 +219,10 @@ input[type=button]
 		border-right 1px solid
 
 	/.win-tbtext
-		padding 5px
-		height 60px
+		vertical-align middle
 
 	/.win-panel
+		vertical-align top
 		// padding 5px
 
 		> div
@@ -238,7 +235,7 @@ input[type=button]
 		// 		display table-cell
 
 	/.win-buttongroup
-		// padding 5px
+		vertical-align top
 
 		/.win-buttongroup-body
 			display table
@@ -246,9 +243,10 @@ input[type=button]
 			> div
 				display table-cell
 
-	/.win-buttongroup-title, /.win-panel-title
-		text-align center
-		padding-top 5px
+		/.win-buttongroup-title,
+		/.win-panel-title
+			text-align center
+			padding 3px 0
 
 	/.win-tabpanel
 		width 100%

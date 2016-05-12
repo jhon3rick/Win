@@ -160,6 +160,14 @@ do ($W = Win) ->
 				i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) +
 				(if c then d + Math.abs(n - i).toFixed(c).slice(2) else "")
 
+	$W.Script.isJSON = (text) ->
+		try
+			JSON.parse(text)
+			return true
+
+		catch error
+			return false
+
 
 	# ---------------------------------------------------------------------------
 	# Static Methods

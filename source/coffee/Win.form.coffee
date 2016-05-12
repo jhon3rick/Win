@@ -45,34 +45,32 @@ do ($W = Win) ->
 
 	_createBtnTbar = (name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost) ->
 		arrayBtn = []
+		console.log url
 
 		if opcionClass=='vInsert' and fPermisoInsert isnt false  and fPermisoInsert isnt "false"
-			arrayBtn.push {
+			arrayBtn.push
 				xtype   : "button",
 				id      : "fInsert_#{name}",
-				cls     : "grilla_save_24",
+				cls     : "grilla_save",
 				text    : "Guardar",
 				handler : () -> $W.Form.fSave name,url,indexClass,varPost
-			}
 
 		else if opcionClass=='vUpdate' and fPermisoUpdate isnt false  and fPermisoUpdate isnt "false"
-			arrayBtn.push {
+			arrayBtn.push
 				xtype   : "button",
 				id      : "fUpdate_#{name}",
-				cls     : "grilla_save_24",
+				cls     : "grilla_save",
 				text    : "Actualizar",
 				handler : () -> $W.Form.fSave name,url,indexClass,varPost
-			}
-
 
 		if opcionClass=='vUpdate' and fPermisoDelete isnt false  and fPermisoDelete isnt "false"
-			arrayBtn.push {
+			arrayBtn.push
 				xtype   : "button",
 				id      : "fDelete_#{name}",
-				cls     : "grilla_delete_24",
+				cls     : "grilla_delete",
 				text    : "Eliminar",
 				handler : () -> $W.Form.fDelete name,url,indexClass,varPost
-			}
+
 
 		$W.Tbar {
 			idApply : "form_tbar_#{name}",
@@ -235,12 +233,12 @@ do ($W = Win) ->
 					input.onchange = (event)->
 						_validateDouble({ event:event, eventType:'change', input:this })
 
-				when 'upercase'
+				when 'uppercase'
 					input.onkeyup = (event)->
-						_validateUperCase({ event:event, eventType:'keyup', input:this })
+						_validateUpperCase({ event:event, eventType:'keyup', input:this })
 
 					input.onchange = (event)->
-						_validateUperCase({ event:event, eventType:'change', input:this })
+						_validateUpperCase({ event:event, eventType:'change', input:this })
 
 				when 'lowercase'
 					input.onkeyup = (event)->
@@ -297,7 +295,7 @@ do ($W = Win) ->
 		# else if obj.eventType == 'keypress' then return (/[^\#\-\"\']/).test(String.fromCharCode(key))
 		else if obj.eventType == 'change' then obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
 
-	_validateUperCase = (obj) ->
+	_validateUpperCase = (obj) ->
 		key = if document.all then obj.event.keyCode else obj.event.which
 
 		if _keyEnable(key) then return true
@@ -529,8 +527,8 @@ do ($W = Win) ->
 					</tr>"
 			for i in [0...6]
 				html += "<tr>
-							<td>#{year1++}</td>
-							<td>#{year2++}</td>
+							<td data-year=\"false\">#{year1++}</td>
+							<td data-year=\"false\">#{year2++}</td>
 						</tr>"
 
 			html += "<tr style=\"border-top:1px solid #fff;\">
@@ -545,6 +543,8 @@ do ($W = Win) ->
 
 			$W('#win-calendar-'+id).hide()
 			$W('#win-calendar-year-'+id).show().html(html)
+			$W('#win-calendar-year-'+id+' td').onclick = () ->
+				console.log(this);
 
 			$W("#change-year-top-#{id}")[0].onclick = () ->
 				_changeYear(year2)
@@ -559,7 +559,7 @@ do ($W = Win) ->
 		_removeCalendar
 		###
 		_changeToCalendarDay = () ->
-			$W('#win-calendar-year-'+id).hide().html('')
+			$W('#win-calendar-year-'+id).hide()
 			$W('#win-calendar-'+id).show()
 
 		###
