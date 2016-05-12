@@ -341,6 +341,7 @@ input[type=button]
 	.win-calendar
 		background-color #FFF
 		color #000
+		// border 1px solid #CCC
 
 	.calendar-controls
 		color          #fff
@@ -459,9 +460,18 @@ input[type=button]
 		background-color #575757
 		// color      #333
 
+	.calendar-controls
+		border 1px solid #000
+
 	.content-year div:hover
 		background-color  #ADADAD
 
+	.win-calendar-year:first-child
+		border-top 1px solid #CCC
+
+	.weekDaysRow, .weekDaysTitleRow, .win-calendar-year
+		border-right 1px solid #CCC
+		border-left 1px solid #CCC
 
 	.weekDaysRow td:hover
 		background-color #BDBDBD

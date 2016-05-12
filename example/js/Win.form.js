@@ -264,73 +264,54 @@
                 input: this
               });
             };
-            return input.onchange = function(event) {
+            return input.addEventListener("change", function(event) {
               return _validateInteger({
                 event: event,
                 eventType: 'change',
                 input: this
               });
-            };
+            });
           case 'double':
             input.className += " win-input-number";
-            input.onkeypress = function(event) {
-              return _validateDouble({
-                event: event,
-                eventType: 'keypress',
-                input: this
-              });
-            };
-            return input.onchange = function(event) {
+            return input.addEventListener("change", function(event) {
               return _validateDouble({
                 event: event,
                 eventType: 'change',
                 input: this
               });
-            };
+            });
           case 'uppercase':
-            input.onkeyup = function(event) {
-              return _validateUpperCase({
-                event: event,
-                eventType: 'keyup',
-                input: this
-              });
-            };
-            return input.onchange = function(event) {
+            input.className += " win-input-uppercase";
+            return input.addEventListener("change", function(event) {
               return _validateUpperCase({
                 event: event,
                 eventType: 'change',
                 input: this
               });
-            };
+            });
           case 'lowercase':
-            input.onkeyup = function(event) {
-              return _validateLowerCase({
-                event: event,
-                eventType: 'keyup',
-                input: this
-              });
-            };
-            return input.onchange = function(event) {
+            input.className += " win-input-lowercase";
+            return input.addEventListener("change", function(event) {
               return _validateLowerCase({
                 event: event,
                 eventType: 'change',
                 input: this
               });
-            };
+            });
           case 'email':
-            return input.onchange = function(event) {
+            return input.addEventListener("change", function(event) {
               return _validateEmail({
                 event: event,
                 input: this
               });
-            };
+            });
           case 'percent':
-            return input.onchange = function(event) {
+            return input.addEventListener("change", function(event) {
               return _validatePercent({
                 event: event,
                 input: this
               });
-            };
+            });
           case 'date':
             return _validateDate(input);
           default:
@@ -396,25 +377,20 @@
       key = document.all ? obj.event.keyCode : obj.event.which;
       if (_keyEnable(key)) {
         return true;
-      } else if (obj.eventType === 'keyup') {
-        obj.input.value = obj.input.value.toUpperCase();
-        return obj.input.value = obj.input.value.replace(/[\#\-\"\']/g, '');
-      } else if (obj.eventType === 'change') {
-        return obj.input.value = obj.input.value.replace(/[\#\-\"\']/g, '');
+      } else {
+        obj.input.value = (obj.input.value.replace(/[\#\-\"\']/g, '')).toUpperCase();
       }
+      return true;
     };
     _validateLowerCase = function(obj) {
       var key;
       key = document.all ? obj.event.keyCode : obj.event.which;
       if (_keyEnable(key)) {
         return true;
-      } else if (obj.eventType === 'keyup') {
-        if (obj.option === 'uppercase') {
-          return obj.input.value = obj.input.value.toLowerCase();
-        }
-      } else if (obj.eventType === 'change') {
-        return obj.input.value = obj.input.value.replace(/[\#\-\"\']/g, '');
+      } else {
+        obj.input.value = (obj.input.value.replace(/[\#\-\"\']/g, '')).toUpperCase();
       }
+      return true;
     };
     _validateEmail = function(obj) {
       var validate;
