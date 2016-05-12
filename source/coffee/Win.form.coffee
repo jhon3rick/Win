@@ -94,7 +94,7 @@ do ($W = Win) ->
 	###
 	_createTextField = (name,field,obj,size) ->
 		type    = 'text'
-		display = 'block'
+		display = 'table'
 		validate = obj.validate or ''
 
 		if validate != '' then validate = "data-validate=\"#{validate}\""
@@ -416,12 +416,12 @@ do ($W = Win) ->
 		###
 		_drawCalendar = (inputObj) ->
 
-			html = "<table id=\"win-calendar-year-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:block;\"></table>
+			html = "<table id=\"win-calendar-year-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar-year\" style=\"display:table;\"></table>
 					<table id=\"win-calendar-#{id}\" cellpadding=\"0\" cellspacing=\"0\" class=\"win-calendar\">
-						<tr>
-							<td id=\"prev-month-#{id}\" class=\"calendar-change\"> < </td>
+						<tr class=\"calendar-controls\">
+							<td id=\"prev-month-#{id}\" class=\"calendar-change previous\">  </td>
 							<td id=\"title-date-#{id}\" colspan=\"5\" class=\"calendar-header\">"+_getMonthName(selectedMonth)+" "+selectedYear+"</td>
-							<td id=\"next-month-#{id}\" class=\"calendar-change\"> > </td>
+							<td id=\"next-month-#{id}\" class=\"calendar-change next\">  </td>
 						</tr>
 						<tr class=\"weekDaysTitleRow\">"
 
@@ -478,7 +478,7 @@ do ($W = Win) ->
 
 			$W('#title-date-'+id)[0].onclick = () ->
 				year = (this.innerHTML).split(' ')[1] * 1
-				_changeYear(year-5)
+				_changeYear(year-5,inputObj)
 
 			# NEXT AND PREVIOUS MONTH
 			$W('#prev-month-'+id)[0].onclick = () ->
@@ -505,7 +505,7 @@ do ($W = Win) ->
 		_changeYear
 		@param str year
 		###
-		_changeYear = (year) ->
+		_changeYear = (year,inputObj) ->
 			year1  = year
 			year2  = year + 6
 			option = ""
@@ -514,8 +514,8 @@ do ($W = Win) ->
 				j = i+6
 
 				option += "<div>
-								<div class=\"date-change-month\">#{monthNames[i].substr(0,3)}</div>
-								<div class=\"date-change-month\">#{monthNames[j].substr(0,3)}</div>
+								<div class=\"date-change-month\" data-value=\"#{i}\">#{monthNames[i].substr(0,3)}</div>
+								<div class=\"date-change-month\" data-value=\"#{j}\">#{monthNames[j].substr(0,3)}</div>
 							</div>"
 
 			html  = "<tr>
@@ -533,7 +533,7 @@ do ($W = Win) ->
 
 			html += "<tr style=\"border-top:1px solid #fff;\">
 						<td colspan=2 style=\"padding:0px; border-right:1px solid #fff;\">
-							<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Aceptar\">
+							<input type=\"button\" style=\"width:100%; padding:3px;\" id=\"boton-done-calendar-#{id}\" value=\"Aceptar\">
 						</td>
 						<td colspan=2 style=\"padding:0px;\">
 							<input type=\"button\" style=\"width:100%; padding:3px;\" value=\"Volver\" id=\"boton-back-calendar-#{id}\">
@@ -541,26 +541,54 @@ do ($W = Win) ->
 					</tr>"
 
 
-			$W('#win-calendar-'+id).hide()
-			$W('#win-calendar-year-'+id).show().html(html)
+			$W('#win-calendar-year-'+id).style('display','table')
+			$W('#win-calendar-'+id).style('display','none')
+
+			# $W('#win-calendar-'+id).hide()
+			$W('#win-calendar-year-'+id).html(html)
 			$W('#win-calendar-year-'+id+' td').onclick = () ->
 				console.log(this);
 
 			$W("#change-year-top-#{id}")[0].onclick = () ->
-				_changeYear(year2)
+				_changeYear(year2,inputObj)
 
 			$W("#change-year-down-#{id}")[0].onclick = () ->
-				_changeYear(year-12)
+				_changeYear(year-12,inputObj)
 
 			$W("#boton-back-calendar-#{id}")[0].onclick = () ->
 				_changeToCalendarDay()
+
+			$W(".date-change-month").on('click',
+				(element) ->
+					_setMonth(element,id)
+			)
+
+			$W("#win-calendar-year-#{id} [data-year] ").on('click',
+				(element) ->
+					_setYear(element,id)
+			)
+
+			$W("#boton-done-calendar-#{id}")[0].onclick = () ->
+				new_month = document.getElementById(id).getAttribute('data-month')
+				new_year = selectedYear - document.getElementById(id).getAttribute('data-year')
+				# console.log('selectedYear: '+selectedYear+' new_month: '+new_month+' new_year: '+new_year+' abs new_year: '+Math.abs(new_year)+' input-data: '+(selectedYear-document.getElementById(id).getAttribute('data-year')) )
+
+				selectedMonth = new_month
+				selectedYear  = if new_year<0 then selectedYear+Math.abs(new_year) else selectedYear-new_year
+
+				if selectedMonth != null && selectedYear !=0
+					_drawCalendar(inputObj)
+					_setupDays(inputObj)
 
 		###
 		_removeCalendar
 		###
 		_changeToCalendarDay = () ->
-			$W('#win-calendar-year-'+id).hide()
-			$W('#win-calendar-'+id).show()
+			$W('#win-calendar-year-'+id).style('display','none')
+			$W('#win-calendar-'+id).style('display','table')
+
+			# $W('#win-calendar-year-'+id).hide()
+			# $W('#win-calendar-'+id).show()
 
 		###
 		_removeCalendar
@@ -658,3 +686,25 @@ do ($W = Win) ->
 					curtop  += obj.offsetTop
 
 			return [curleft, curtop]
+
+		###
+		_setYear
+		@param obj dom input
+		@param id id input
+		###
+		_setYear = (obj,id) ->
+			$W("#win-calendar-year-#{id} [data-year] ").style('background-color','');
+			$W("#win-calendar-year-#{id} [data-year] ").style('color','');
+			obj.toElement.setAttribute('style','background-color:#ADADAD;color:#000;');
+			document.getElementById(id).dataset.year = obj.toElement.innerHTML
+
+		###
+		_setMonth
+		@param obj dom input
+		@param id id input
+		###
+		_setMonth = (obj,id) ->
+			$W(".date-change-month").style('background-color','');
+			$W(".date-change-month").style('color','');
+			obj.toElement.setAttribute('style','background-color:#ADADAD;color:#000;');
+			document.getElementById(id).dataset.month = obj.toElement.getAttribute('data-value')
