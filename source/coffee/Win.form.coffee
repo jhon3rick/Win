@@ -221,38 +221,37 @@ do ($W = Win) ->
 					input.onkeypress = (event)->
 						_validateInteger({ event:event, eventType:'keypress', input:this })
 
-					input.onchange = (event)->
+					input.addEventListener "change", (event) ->
 						_validateInteger({ event:event, eventType:'change', input:this })
 
 				when 'double'
 					input.className += " win-input-number"
 
-					input.onkeypress = (event)->
-						_validateDouble({ event:event, eventType:'keypress', input:this })
+					# input.onkeypress = (event)->
+					# 	_validateDouble({ event:event, eventType:'keypress', input:this })
 
-					input.onchange = (event)->
+					input.addEventListener "change", (event) ->
 						_validateDouble({ event:event, eventType:'change', input:this })
 
 				when 'uppercase'
-					input.onkeyup = (event)->
-						_validateUpperCase({ event:event, eventType:'keyup', input:this })
+					input.className += " win-input-uppercase"
 
-					input.onchange = (event)->
+					input.addEventListener "change", (event) ->
 						_validateUpperCase({ event:event, eventType:'change', input:this })
 
-				when 'lowercase'
-					input.onkeyup = (event)->
-						_validateLowerCase({ event:event, eventType:'keyup', input:this })
 
-					input.onchange = (event)->
+				when 'lowercase'
+					input.className += " win-input-lowercase"
+
+					input.addEventListener "change", (event) ->
 						_validateLowerCase({ event:event, eventType:'change', input:this })
 
 				when 'email'
-					input.onchange = (event)->
+					input.addEventListener "change", (event) ->
 						_validateEmail({ event:event, input:this })
 
 				when 'percent'
-					input.onchange = (event)->
+					input.addEventListener "change", (event) ->
 						_validatePercent({ event:event, input:this })
 
 				when 'date'
@@ -297,24 +296,15 @@ do ($W = Win) ->
 
 	_validateUpperCase = (obj) ->
 		key = if document.all then obj.event.keyCode else obj.event.which
-
 		if _keyEnable(key) then return true
-		else if obj.eventType == 'keyup'
-			obj.input.value = obj.input.value.toUpperCase()
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
-		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
+		else obj.input.value = ((obj.input.value).replace(/[\#\-\"\']/g,'')).toUpperCase()
+		true
 
 	_validateLowerCase = (obj) ->
 		key = if document.all then obj.event.keyCode else obj.event.which
 		if _keyEnable(key) then return true
-
-		else if obj.eventType == 'keyup'
-			if obj.option=='uppercase'
-				obj.input.value = obj.input.value.toLowerCase()
-		else if obj.eventType == 'change'
-			obj.input.value = (obj.input.value).replace(/[\#\-\"\']/g,'')
-
+		else obj.input.value = ((obj.input.value).replace(/[\#\-\"\']/g,'')).toUpperCase()
+		true
 
 	_validateEmail = (obj) ->
 		validate = !!(obj.input.value).toString().match(/(^[a-z0-9]([0-9a-z\-_\.]*)@([0-9a-z_\-\.]*)([.][a-z]{3})$)|(^[a-z]([0-9a-z_\.\-]*)@([0-9a-z_\-\.]*)(\.[a-z]{2,4})$)/i)
