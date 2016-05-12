@@ -5,17 +5,24 @@
  * @author  Jhon Marroquin (Twitter @jhon3rick || email jhon3rick@gmail.com)
  * @license (MIT)
  */
-body {
+body,
+html {
   margin: 0;
   padding: 0;
   overflow: visible;
   height: 100%;
 }
 input,
+textarea {
+  padding: 2px 5px;
+}
+select {
+  padding: 2px;
+}
+input,
 select,
 textarea {
-  padding: 5px;
-  font-size: 14px;
+  font-size: 12px;
   box-shadow: none;
   border: 1px solid #ccc;
   transition: box-shadow 0.3s, border 0.3s;
@@ -33,9 +40,8 @@ select:focus {
   background-color: #f0f8ff;
 }
 * {
-  font-size: 12px;
   box-sizing: border-box;
-  font-family: arial, sans-serif;
+  font: normal 11px tahoma, arial, helvetica, sans-serif;
 }
 nav {
   overflow: hidden;
@@ -57,8 +63,11 @@ input[type=button] {
   background: rgba(56,56,56,0.5);
   overflow: hidden;
 }
-.win-modal > div {
-  position: relative;
+.win-modal > div,
+.win-modal section {
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
   -webkit-user-select: none;
   -moz-user-select: none;
   -o-user-select: none;
@@ -66,7 +75,8 @@ input[type=button] {
   -khtml-user-select: none;
   user-select: none;
 }
-.win-modal > div:hover .win-div-resize {
+.win-modal > div:hover .win-div-resize,
+.win-modal section:hover .win-div-resize {
   visibility: visible;
 }
 .win-modal .win-file-resize {
@@ -115,18 +125,17 @@ input[type=button] {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font: 14px arial, verdana;
 }
 .win-title-btn {
-  font-family: sans-serif;
-  font-size: 20px;
-  text-align: center;
   height: 100%;
   width: 25px;
   float: right;
   cursor: pointer;
   overflow: hidden;
-  line-height: 17px;
   margin-left: -27px;
+  background-image: url("../img/close.png");
+  background-size: 18px;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -136,13 +145,12 @@ input[type=button] {
 .win-title-btn:active {
   background-color: #900000;
 }
-.win-window-body {
+.win-body {
   float: left;
   width: 100%;
-  padding: 5px;
-  height: calc(100% - 3px - 106px);
+  height: 100%;
   overflow: auto;
-  font-size: 13px;
+  font-size: 11px;
 }
 .alert {
   height: calc(100% - 60px);
@@ -163,33 +171,47 @@ input[type=button] {
   cursor: se-resize;
   visibility: hidden;
 }
+.win-menu {
+  overflow: visible;
+  position: fixed;
+  z-index: 1000;
+  min-width: 150px;
+  min-height: 20px;
+}
+.win-menu > div {
+  padding: 4px 8px;
+  cursor: pointer;
+}
 .win-tbar {
   overflow: hidden;
   display: table;
-  width: 100%;
-  padding: 0;
+  margin: 2px 0;
 }
 .win-tbar > div {
   display: table-cell;
-  vertical-align: middle;
 }
 .win-btn {
-  padding: 1px 5px;
+  padding: 2px;
+  vertical-align: top;
   background-color: rgba(0,0,0,0);
-  min-height: 56px;
-  min-width: 65px;
-  width: 65px;
+  min-height: 50px;
+  min-width: 50px;
   cursor: pointer;
 }
+.win-btn[data-state="disable"] {
+  background-color: #a9a9a9;
+  opacity: 0.5;
+}
 .win-btn > button {
+  width: 100%;
   background-color: rgba(0,0,0,0);
-  background-size: 30px;
+  background-size: 24px;
   background-repeat: no-repeat;
   background-position: center top;
-  min-height: 56px;
-  min-width: 50;
+  min-height: 40px;
+  min-width: 40px;
   cursor: pointer;
-  padding-top: 35px;
+  padding-top: 26px;
   font-size: 11px;
   border: 1px solid transparent;
   text-decoration: none;
@@ -197,6 +219,7 @@ input[type=button] {
 }
 .win-separator {
   width: 1px;
+  vertical-align: middle;
   letter-spacing: -1px;
   transform: scale(1, 2);
 }
@@ -205,11 +228,46 @@ input[type=button] {
   border-right: 1px solid;
 }
 .win-tbtext {
-  padding: 5px;
-  height: 60px;
+  vertical-align: middle;
 }
 .win-panel {
+  vertical-align: top;
+}
+.win-panel > div {
+  overflow: auto;
+}
+.win-buttongroup {
+  vertical-align: top;
+}
+.win-buttongroup-body {
+  display: table;
+}
+.win-buttongroup-body > div {
+  display: table-cell;
+}
+.win-buttongroup-title,
+.win-panel-title {
+  text-align: center;
+  padding: 3px 0;
+}
+.win-tabpanel {
+  width: 100%;
+  overflow: hidden;
+  padding-left: 3px;
+}
+.win-tab {
+  float: left;
+  height: 100%;
   padding: 5px 10px;
+  margin-top: 5px;
+  min-width: 50px;
+  cursor: pointer;
+}
+.win-tab-body[data-activo=false] {
+  display: none;
+}
+.win-tab-body[data-activo=true] {
+  display: block;
 }
 .win-input-number {
   text-align: right;
@@ -224,10 +282,10 @@ input[type=button] {
   visibility: hidden;
 }
 .win-modal-content {
-  display: table-cell;
-  vertical-align: middle;
   width: 100%;
   height: 100%;
+  display: table-cell;
+  vertical-align: middle;
 }
 .win-modal-label {
   position: relative;
@@ -236,7 +294,6 @@ input[type=button] {
   font-size: 20px;
   color: #fff;
   font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
 }
 .win-modal-img-finish {
   width: 100%;
@@ -261,18 +318,40 @@ input[type=button] {
   clear: both;
   float: left;
   border: 4px rgba(0,0,0,0.25) solid;
+  animation: win-min-load-ajax 0.6s infinite linear;
   border-top: 4px #000 solid;
   border-radius: 50%;
-  animation: win-min-load-ajax 0.6s infinite linear;
 }
 .win-calendar-parent {
   max-width: 200px;
   overflow: hidden;
+  z-index: 8000;
+  position: absolute;
+}
+.win-calendar-parent .win-calendar {
+  background-color: #fff;
+  color: #000;
+}
+.win-calendar-parent .calendar-controls {
+  color: #fff;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  padding: 2em 0 0 0;
+  text-align: center;
+  background: #000;
+  height: 30px;
 }
 .win-calendar-parent .calendar-change {
-  font-weight: bold;
   font-size: 15px;
-  cursor: hand;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.win-calendar-parent .previous {
+  background-image: url("../img/icons/previous_arrow_calendar.png");
+}
+.win-calendar-parent .next {
+  background-image: url("../img/icons/next_arrow_calendar.png");
 }
 .win-calendar {
   clear: both;
@@ -280,22 +359,33 @@ input[type=button] {
   text-align: center;
 }
 .win-calendar .calendar-header {
-  font-weight: bold;
   font-size: 13px;
 }
-.win-calendar td {
+.win-calendar td > a {
+  width: 24px;
+  height: 24px;
   padding: 5px;
+  display: table-cell;
 }
 .win-calendar .weekDaysCell,
 .win-calendar .calendar-month,
 .win-calendar .calendar-header {
-  cursor: hand;
+  cursor: pointer;
 }
 .win-calendar-year {
   clear: both;
   width: 180px;
   max-width: 200px;
   text-align: center;
+  background-color: #fff;
+}
+.win-calendar-year input[type=button] {
+  background-color: #000;
+  color: #fff;
+}
+.win-calendar-year input[type=button]:hover {
+  background-color: #575757;
+  color: #fff;
 }
 .win-calendar-year .content-month {
   width: 50%;
@@ -311,11 +401,15 @@ input[type=button] {
   text-align: left;
 }
 .win-calendar-year .content-month > div > div {
-  text-align: left;
+  text-align: center;
   height: 25px;
   display: table-cell;
   vertical-align: middle;
   width: 50%;
+}
+.win-calendar-year .content-month > div >div:hover {
+  background-color: #adadad;
+  color: #000;
 }
 .win-calendar-year .content-year {
   padding: 0;
@@ -327,6 +421,11 @@ input[type=button] {
 }
 .win-calendar-year td {
   padding: 3px 5px;
+  cursor: pointer;
+}
+.win-calendar-year td[data-year="false"]:hover {
+  background-color: #adadad;
+  color: #000;
 }
 .win-calendar-year select {
   box-shadow: none;
@@ -343,191 +442,264 @@ input[type=button] {
 .win-calendar-year input {
   height: 25px;
 }
+.win-calendar-parent .calendar-controls td:hover {
+  background-color: #575757;
+}
+.win-calendar-parent .content-year div:hover {
+  background-color: #adadad;
+}
+.win-calendar-parent .weekDaysRow td:hover {
+  background-color: #bdbdbd;
+}
 input[data-icon="email"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/email.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/email.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="money"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/ic_help_black_18dp.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/money_dollar.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="date"] {
   background-position: right center;
   padding-right: 20px;
-  background-image: url("../img/icons/18dp/calendar.png");
+  background-image: url("../img/icons/18px/calendar.png");
   background-repeat: no-repeat;
 }
 input[data-icon="time"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/ic_help_black_18dp.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/clock.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="home"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/ic_help_black_18dp.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/house.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="user"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/ic_help_black_18dp.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/user16.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="telephone"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/call.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/telephone.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="note"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/note.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/report.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="find"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/find.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/find.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="help"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/help.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/help.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="clock"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/clock.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/clock.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="grocery"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/grocery.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/grocery.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="truck"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/truck.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/truck.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="update"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/update.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/update.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="edit"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/edit.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/page_white_edit.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="person"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/person.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/person.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="cellphone"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/cellphone.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/phone.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="url"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/url.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/world.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="share"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/share.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/share.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="download"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/download.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/download.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="remove"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/remove.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/remove.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="add"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/add.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/add.png");
   background-repeat: no-repeat;
+  background-size: 12px;
+}
+input[data-icon="delete"] {
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/delete.png");
+  background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="lock"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/lock.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/lock.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="key"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/key.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/key.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="info"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/info.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/information.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="settings"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/settings.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/config16.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="print"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/print.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/printer.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="done"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/done.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/accept.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="check"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/check.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/accept.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="error"] {
-  background-position: right center;
-  padding-right: 20px;
-  background-image: url("../img/icons/18dp/error.png");
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/delete.png");
   background-repeat: no-repeat;
+  background-size: 12px;
 }
 input[data-icon="warning"] {
+  background-position: left center;
+  padding-left: 20px;
+  background-image: url("../img/icons/16dp/error.png");
+  background-repeat: no-repeat;
+  background-size: 12px;
+}
+input[data-icon="percent"] {
   background-position: right center;
   padding-right: 20px;
-  background-image: url("../img/icons/18dp/warning.png");
+  background-image: url("../img/icons/16dp/percent.png");
   background-repeat: no-repeat;
+  background-size: 10px;
+}
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]:after {
+  content: attr(data-tooltip);
+  color: #fff;
+  background: #333;
+  background: #2a80b9;
+  padding: 5px;
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  bottom: 100%;
+  white-space: nowrap;
+  -webkit-transition: 0.25s linear opacity;
+}
+[data-tooltip]:hover:after {
+  left: 5px;
+  opacity: 1;
 }
 @-moz-keyframes win-min-load-ajax {
   from {

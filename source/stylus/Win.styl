@@ -338,10 +338,30 @@ input[type=button]
 	z-index 8000
 	position absolute
 
+	.win-calendar
+		background-color #FFF
+		color #000
+
+	.calendar-controls
+		color          #fff
+		font-size      1.2em
+		text-transform uppercase
+		padding        2em 0 0 0
+		text-align     center
+		background     #000
+		height         30px
+
 	.calendar-change
-		font-weight bold
+		// font-weight bold
 		font-size 15px
 		cursor pointer
+		background-repeat no-repeat
+		background-position center
+
+	.previous
+		background-image url(../img/icons/previous_arrow_calendar.png)
+	.next
+		background-image url(../img/icons/next_arrow_calendar.png)
 
 	// SELECT FECHA
 	/.win-calendar
@@ -350,7 +370,7 @@ input[type=button]
 		text-align center
 
 		.calendar-header
-			font-weight bold
+			// font-weight bold
 			font-size 13px
 
 		td > a
@@ -368,6 +388,16 @@ input[type=button]
 		width 180px
 		max-width 200px
 		text-align center
+		background-color #FFF
+
+		input[type=button]
+			background-color #000
+			color #FFF
+
+		input[type=button]:hover
+			background-color #575757
+			color #FFF
+
 
 		.content-month
 			width 50%
@@ -383,11 +413,15 @@ input[type=button]
 				text-align left
 
 				> div
-					text-align left
+					text-align center
 					height 25px
 					display table-cell
 					vertical-align middle
 					width 50%
+
+				>div:hover
+					background-color  #ADADAD
+					color #000
 
 		.content-year
 			padding 0
@@ -399,6 +433,11 @@ input[type=button]
 
 		td
 			padding 3px 5px
+			cursor  pointer
+
+		td[data-year="false"]:hover
+			background-color  #ADADAD
+			color #000
 
 		select
 			box-shadow none
@@ -415,6 +454,19 @@ input[type=button]
 
 		input
 			height 25px
+
+	.calendar-controls td:hover /*.calendar-header:hover, .win-calendar-year .calendar-header:hover*/
+		background-color #575757
+		// color      #333
+
+	.content-year div:hover
+		background-color  #ADADAD
+
+
+	.weekDaysRow td:hover
+		background-color #BDBDBD
+
+
 
 // ATRIBUTOS
 input[data-icon="email"]
@@ -434,7 +486,7 @@ input[data-icon="money"]
 input[data-icon="date"]
 	background-position right center
 	padding-right 20px
-	background-image url(../img/icons/16dp/date.png)
+	background-image url(../img/icons/18px/calendar.png)
 	background-repeat no-repeat
 
 input[data-icon="time"]

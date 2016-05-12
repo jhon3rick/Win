@@ -18,59 +18,70 @@
 
 (function() {
   "use strict";
+  var hasProp = {}.hasOwnProperty;
+
   (function($W) {
-    var CONTWIDGET, _body, _button, _buttongroup, _draggMove, _draggStart, _draggStop, _panel, _resize, _router, _separator, _separatorHeight, _tab, _tabPanel, _tbar, _tbtext;
+    var CONTWIDGET, CTXMENU, ELEMENT_ARRAY, _body, _button, _buttonGroup, _deleteCtxMenu, _draggMove, _draggStart, _draggStop, _findResizeBody, _menuOption, _panel, _resize, _resizeBody, _router, _separator, _separatorHeight, _tab, _tabPanel, _tbText, _tbar;
     CONTWIDGET = 0;
+    ELEMENT_ARRAY = {};
+    CTXMENU = false;
     $W.Window = function(obj) {
-      var autoDestroy, autoLoad, autoScroll, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, height, html, id, left, modal, theme, title, titleStyle, top, width, win, winModal;
+      var autoDestroy, autoLoad, bgBody, bgTitle, body, bodyColor, bodyStyle, clsBody, divClose, drag, height, heightVentana, html, id, left, modal, parent, style, theme, title, titleStyle, top, width, widthVentana, winModal;
       width = obj.width || 300;
       height = obj.height || 300;
       id = obj.id || '';
       title = obj.title || '';
       titleStyle = obj.titleStyle || '';
       modal = obj.modal || '';
-      autoScroll = obj.autoScroll || '';
       autoDestroy = obj.autoDestroy || '';
       autoLoad = obj.autoLoad || '';
       html = obj.html || '';
       drag = obj.drag || '';
       theme = obj.theme || '';
+      style = obj.style || '';
       bodyStyle = obj.bodyStyle || '';
       bodyColor = obj.bodyColor || '#FFF';
       body = $W('body')[0];
-      win = this;
+      parent = this;
       clsBody = typeof obj.type !== 'undefined' && obj.type !== '' ? 'alert' : '';
       winModal = document.createElement('div');
       bgBody = obj.bgBody ? 'background-color:' + obj.bgBody + ';' : '';
       bgTitle = obj.bgTitle ? 'background-color:' + obj.bgTitle + ';' : '';
       divClose = obj.closable !== false ? "<div class=\"win-title-btn\" id=\"btn_close_ventana_" + id + "\" onclick=\"" + id + ".close()\"></div>" : "";
-      left = body.offsetWidth < (width / 2) ? 0 : (body.offsetWidth - width) / 2;
-      top = body.offsetHeight < (height / 2) ? 0 : (body.offsetHeight - height) / 2;
       if (!isNaN(width)) {
         width = width + 'px';
+      } else if (width === 'auto') {
+        width = 'calc(100% - 20px)';
       }
       if (!isNaN(height)) {
         height = height + 'px';
+      } else if (height === 'auto') {
+        height = 'calc(100% - 20px)';
       }
       if (id === '') {
         CONTWIDGET++;
         id === CONTWIDGET;
       }
-      left = left + 'px';
-      top = top + 'px';
-      winModal.innerHTML += "<div id=\"win-modal-" + id + "\" class=\"win-modal\"> <div id=\"" + id + "\" style=\"width:" + width + "; height:" + height + "; top:" + top + "; left:" + left + "; " + bgBody + " " + bodyStyle + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header id=\"win-header-" + id + "\"> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <section id=\"win-section-" + id + "\" style=\"height:calc(100% - 27px);\"></section> </div> </div>";
+      winModal.innerHTML += "<div id=\"win-modal-" + id + "\" class=\"win-modal\"> <div id=\"" + id + "\" style=\"width:" + width + "; height:" + height + "; " + bgBody + " " + style + "\" class=\"win-marco\"> <div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-" + id + "\"></div> <div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-" + id + "\"></div> <div class=\"win-modal-parent\" id=\"win-modal-window_" + id + "\"> <div class=\"win-modal-content\"> <div class=\"win-loader-default\" id=\"win-loader-" + id + "\"></div> <div class=\"win-modal-label\" id=\"label-load-" + id + "\"></div> </div> </div> <header id=\"win-header-" + id + "\"> <div class=\"win-title\" id=\"win-title-" + id + "\" style=\"" + bgTitle + " " + titleStyle + "\"> <div class=\"win-title-txt\">" + title + "</div> " + divClose + " </div> </header> <section id=\"win-section-" + id + "\" style=\"height:calc(100% - 27px);\" data-role=\"win-section\"></section> </div> </div>";
       body.appendChild(winModal);
-      $W("#win-title-" + id)[0].onmousedown = function() {
-        return _draggStart(id, document.getElementById("win-modal-" + id), event);
-      };
-      $W("#win-title-" + id)[0].onmouseup = function() {
-        return _draggStop(document.getElementById("win-modal-" + id));
-      };
+      widthVentana = document.getElementById(id).offsetWidth;
+      heightVentana = document.getElementById(id).offsetHeight;
+      left = body.offsetWidth < (widthVentana / 2) ? 0 : (body.offsetWidth - widthVentana) / 2;
+      top = body.offsetHeight < (heightVentana / 2) ? 0 : (body.offsetHeight - heightVentana) / 2;
+      $W("#" + id).css("left", left + "px").css("top", top + "px");
       if (obj.resize) {
         _resize($W("#win-resize-top-" + id)[0]);
         _resize($W("#win-resize-bottom-" + id)[0]);
         _resize($W("#win-resize-left-" + id)[0]);
         _resize($W("#win-resize-right-" + id)[0]);
+      }
+      if (obj.tbar) {
+        console.log(obj.tbar);
+      }
+      if (obj.tbar) {
+        _tbar({
+          items: obj.tbar
+        }, "win-section-" + id);
       }
       if (obj.items) {
         _router(obj.items, "win-section-" + id);
@@ -84,9 +95,32 @@
         }
       };
     };
+    $W.TabPanel = function(obj) {
+      var html, id;
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = "win-tab-" + CONTWIDGET;
+      }
+      html = "";
+      obj.items.forEach(json, index, element)(function() {
+        return html += "<div id=\"" + id + "\">" + json.title + "</div>";
+      });
+      return "<div id=\"" + obj.id + "\">" + html + "</div>";
+    };
     $W.Add = function(obj) {
-      var parent;
-      parent = document.getElementById("" + obj.idApply);
+      var lastDiv, type, typeParent;
+      typeParent = document.getElementById(obj.idApply).getAttribute("data-role");
+      if (typeParent === "win-tbar") {
+        lastDiv = document.getElementById(obj.idApply).lastChild;
+        if (lastDiv !== null) {
+          type = lastDiv.getAttribute("data-role");
+          if (type === "div-empty") {
+            lastDiv.parentNode.removeChild(lastDiv);
+          }
+        }
+      }
       if (obj.items) {
         _router(obj.items, obj.idApply);
       }
@@ -94,29 +128,56 @@
         return _body(obj, obj.idApply);
       }
     };
-    $W.tbar = function(obj) {
+    $W.Tbar = function(obj) {
       var parent;
       parent = document.getElementById("" + obj.idApply);
       parent.className = "win-tbar";
-      return _router(obj.items, obj.idApply);
+      parent.setAttribute("data-role", "win-tbar");
+      _router(obj.items, obj.idApply);
+      return setTimeout(function() {
+        return _resizeBody(document.getElementById(obj.idApply).parentNode.id);
+      });
     };
     $W.Element = function(id) {
-      this.hiden = function() {
-        return $W('#' + id).style('display', 'none');
+      this.hidden = function() {
+        $W('#' + id).style('display', 'none');
+        _findResizeBody(id);
+        return ELEMENT_ARRAY[id].hidden = true;
       };
       this.show = function() {
-        return $W('#' + id).style('display', 'block');
+        $W('#' + id).style('display', 'block');
+        _findResizeBody(id);
+        return ELEMENT_ARRAY[id].hidden = false;
       };
       this.enable = function() {
-        return $W('#' + id).style('display', 'none');
+        document.getElementById(id).setAttribute('data-state', 'enable');
+        return ELEMENT_ARRAY[id].state = "enable";
       };
       this.disable = function() {
-        return $W('#' + id).style('display', 'block');
+        document.getElementById(id).setAttribute('data-state', 'disable');
+        return ELEMENT_ARRAY[id].state = "disable";
       };
       return this;
     };
-    $W.loading = function(obj) {
-      var duracion, estilo_texto, evento_icono, icono, iconos, loader, mask, text, texto;
+    $W.BlockBtn = function(id) {
+      if (ELEMENT_ARRAY[id].state === "disable") {
+        return;
+      }
+      $W.Element(id).disable();
+      return setTimeout(function() {
+        if (document.getElementById(id)) {
+          return $W.Element(id).enable();
+        }
+      }, 1500);
+    };
+    $W.Loading = function(obj) {
+      var duracion, estilo_texto, evento_icono, icono, iconos, id, loader, mask, text, texto;
+      if (obj.id) {
+        id = obj.id;
+      } else {
+        CONTWIDGET++;
+        id = "win-loading-" + CONTWIDGET;
+      }
       if (typeof obj.id_ventana === 'undefined' || typeof obj.estado === 'undefined') {
         console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado');
         return;
@@ -142,20 +203,16 @@
         if (obj) {
           icono = iconos[obj.icono] || iconos['sucess'];
           evento_icono = obj.evento_icono || '';
-          texto = obj.texto || 'Informacion Almacenada';
+          texto = obj.texto || 'OK...';
           duracion = obj.duracion || '2000';
-          estilo_texto = obj.estilo_texto || 'padding-top: 10px;font-size: 12px;color:#FFF;';
+          return estilo_texto = obj.estilo_texto || 'padding-top: 10px;font-size: 12px;color:#FFF;';
         } else {
           icono = iconos.sucess;
           evento_icono = '';
           texto = 'Informacion Almacenada';
           duracion = '2000';
           estilo_texto = 'padding-top:10px; font-size:12px; color:#FFF;';
-        }
-        if (duracion === 'infinito') {
-          return $W("#win-modal-window_" + obj.id_ventana)[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\"> <img src=\"" + icono + "\" onclick=\"" + evento_icono + "\"><br> <div class=\"win-modal-label label-finish\">" + texto + "</div> </div>";
-        } else {
-          $W("#win-modal-window_" + obj.id_ventana)[0].innerHTML = "<div class=\"win-modal-content\"><div class=\"win-modal-img-finish\"> <img src=\"" + icono + "\" onclick=\"" + evento_icono + "\"><br> <div class=\"win-modal-label label-finish\">" + texto + "</div> </div>";
+          $W("#win-modal-window_" + obj.id_ventana)[0].innerHTML = "<div class=\"win-modal-content\"> <div class=\"win-modal-img-finish\"> <img src=\"" + icono + "\" onclick=\"" + evento_icono + "\"><br> </div> <div class=\"win-modal-label label-finish\">" + texto + "</div> <div>";
           return setTimeout((function() {
             return mask.style.visibility = 'hidden';
           }), duracion);
@@ -206,6 +263,64 @@
         resize: false
       });
     };
+    $W.CtxMenu = function(obj) {
+      return document.getElementById(obj.idApply).oncontextmenu = function(e) {
+        obj.objApply = e.srcElement;
+        obj.clientX = event.clientX;
+        obj.clientY = event.clientY;
+        $W.Menu(obj);
+        return false;
+      };
+    };
+    $W.Menu = function(obj) {
+      var arr, divHtml, html, key, ref;
+      html = "";
+      _deleteCtxMenu();
+      CTXMENU = true;
+      if (obj.items) {
+        ref = obj.items;
+        for (key in ref) {
+          if (!hasProp.call(ref, key)) continue;
+          arr = ref[key];
+          html += "<div data-option=\"top-" + key + "\"> <div>" + arr.text + "</div> </div>";
+        }
+      }
+      divHtml = obj.objApply ? obj.objApply : document.getElementById(obj.idElement);
+      divHtml.innerHTML += "<div class=\"win-menu\" data-role=\"win-menu\" style=\"top:" + event.clientY + "px; left:" + event.clientX + "px;\">" + html + "</div>";
+      if (obj.items) {
+        return setTimeout(function() {
+          var ref1, results;
+          ref1 = obj.items;
+          results = [];
+          for (key in ref1) {
+            if (!hasProp.call(ref1, key)) continue;
+            arr = ref1[key];
+            results.push(_menuOption(obj.idApply, key, arr.handler));
+          }
+          return results;
+        });
+      }
+    };
+    _menuOption = function(idApply, key, handler) {
+      return document.getElementById(idApply).querySelector("[data-option=top-" + key + "]").onclick = function() {
+        _deleteCtxMenu();
+        return handler(this);
+      };
+    };
+
+    /*
+    	@method _deleteCtxMenu
+     */
+    _deleteCtxMenu = function() {
+      var array;
+      if (CTXMENU === true) {
+        array = document.querySelectorAll("[data-role=win-menu]");
+        [].forEach.call(array, function(menu) {
+          return menu.parentNode.removeChild(menu);
+        });
+      }
+      return CTXMENU = false;
+    };
 
     /*
     	@method _router
@@ -221,17 +336,17 @@
             case 'button':
               return _button(json, idParent);
             case 'buttongroup':
-              return _buttongroup(json, idParent);
+              return _buttonGroup(json, idParent);
             case 'tbar':
               return _tbar(json, idParent);
             case 'panel':
               return _panel(json, idParent);
-            case 'tabPanel':
+            case 'tabpanel':
               return _tabPanel(json, idParent);
             case 'tab':
               return _tab(json, idParent);
             case 'tbtext':
-              return _tbtext(json, idParent);
+              return _tbText(json, idParent);
             default:
               if (json === '-') {
                 return _separator(idParent);
@@ -239,12 +354,12 @@
                 return _separatorHeight(idParent);
               } else if (json === '->') {
                 float = 'right';
-                return document.getElementById(idParent).innerHTML += '<div></div>';
+                return document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>';
               }
           }
         });
         if (float === 'left') {
-          return document.getElementById(idParent).innerHTML += '<div></div>';
+          return document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>';
         }
       }
     };
@@ -254,45 +369,59 @@
     	@param  obj objectDom parent and config
      */
     _tabPanel = function(obj, idParent) {
-      var bodyHeight, height, html, id, style, width;
+      var bodyHeight, height, heightTabPanel, html, id, style, width;
       style = obj.style || '';
-      height = obj.height || '30';
+      height = obj.height || '';
+      bodyHeight = '';
       if (!isNaN(width)) {
         width = width + 'px';
       }
       if (!isNaN(height)) {
         height = height + 'px';
       }
-      bodyHeight = "calc:(100% - " + height + ")";
+      if (height !== '') {
+        bodyHeight = "calc(100% - " + height + ")";
+      }
       if (obj.id) {
         id = obj.id;
       } else {
         CONTWIDGET++;
-        id = CONTWIDGET;
+        id = "win-tabpanel-" + CONTWIDGET;
       }
-      html = "<div id=\"win-tabpanel-" + id + "\" class=\"win-tabpanel\" style=\"width:100%; height:100%; " + style + "\"> <div id=\"win-tabpanel-head-" + id + "\" class=\"win-tabpanel-head\" style=\"width:100%; height:" + height + "; " + style + "\"></div> <div id=\"win-tabpanel-body-" + id + "\" class=\"win-tabpanel-body\" style=\"height:" + bodyHeight + ";\"></div> </div>";
+      html = "<div id=\"" + id + "\" class=\"win-tabpanel\" style=\"height:" + height + "; " + style + "\" data-role=\"win-tabpanel\"></div> <div id=\"win-tabpanel-body-" + id + "\" class=\"win-tabpanel-body\" style=\"height:" + bodyHeight + ";\"></div>";
       document.getElementById(idParent).innerHTML += html;
       if (obj.items) {
-        return _router(obj.items, "win-tabpanel-head-" + id);
+        _router(obj.items, id);
       }
+      heightTabPanel = document.getElementById(id).offsetHeight;
+      return document.getElementById("win-tabpanel-body-" + id).style.height = "calc(100% - " + heightTabPanel + "px)";
     };
     _tab = function(obj, idParent) {
-      var div, icon, id, title;
+      var iconCls, id, title;
       title = obj.title || '';
-      icon = obj.icon || '';
+      iconCls = obj.iconCls || '';
       if (obj.id) {
         id = obj.id;
       } else {
         CONTWIDGET++;
         id = "win-tab-" + CONTWIDGET;
       }
-      console.log(idParent);
-      div = document.createElement("div");
-      div.id = id;
-      document.getElementById(idParent).appendChild(div);
-      document.querySelectorAll('#' + id).__proto__.estate = 'enable';
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\"class=\"win-tab\" data-activo=\"false\" data-load=\"false\"><span class=\"icon-tab form\"></span><span>" + title + "</span></div>";
+      document.getElementById("win-tabpanel-body-" + idParent).innerHTML += "<div id=\"win-tab-body-" + id + "\" class=\"win-tab-body\" style=\"height:100%; overflow:hidden;\" data-activo=\"false\">" + id + "</div>";
       return setTimeout(function() {
-        return console.log(document.querySelectorAll('#' + id).estate);
+        return document.getElementById(id).onclick = function() {
+          var load;
+          $W("#" + idParent + " > [data-activo=true]").attr("data-activo", "false");
+          this.setAttribute("data-activo", "true");
+          $W("#win-tabpanel-body-" + idParent + " > [data-activo=true]").attr("data-activo", "false");
+          $W("#win-tab-body-" + id).attr("data-activo", "true");
+          load = this.getAttribute("data-load");
+          if (load === "false") {
+            this.setAttribute("data-load", "true");
+            obj.autoLoad.idApply = "win-tab-body-" + id;
+            return $W.Load(obj.autoLoad);
+          }
+        };
       });
     };
 
@@ -324,7 +453,7 @@
       if (!isNaN(height)) {
         height = height + 'px';
       }
-      html = "<div id=\"win-panel-" + id + "\" class=\"win-panel\" style=\"width:" + width + "; height:" + height + "; " + style + "\"> " + title + " <div id=\"win-panel-load-" + id + "\" class=\"win-panel-load\" style=\"width:" + width + "; height:" + height + "; " + style + "\"> " + html + " </div> </div>";
+      html = "<div id=\"win-panel-" + id + "\" class=\"win-panel\" style=\"width:" + width + "; height:" + height + "; " + style + "\" data-role=\"win-panel\"> " + title + " <div id=\"win-panel-load-" + id + "\" class=\"win-panel-load\" style=\"width:" + width + "; height:" + height + "; " + style + "\"> " + html + " </div> </div>";
       document.getElementById(idParent).innerHTML += html;
       if (obj.autoLoad) {
         return setTimeout(function() {
@@ -348,12 +477,15 @@
         CONTWIDGET++;
         id = "win-tbar-" + CONTWIDGET;
       }
-      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-tbar\"></div>";
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-tbar\" data-role=\"win-tbar\"></div>";
       if (obj.items) {
-        return _router(obj.items, "" + id);
+        _router(obj.items, "" + id);
       }
+      return setTimeout(function() {
+        return _resizeBody(document.getElementById(id).parentNode.id);
+      });
     };
-    _buttongroup = function(obj, idParent) {
+    _buttonGroup = function(obj, idParent) {
       var hidden, i, id, item, len, ref, style, title, width;
       hidden = obj.hidden || '';
       width = obj.width || 0;
@@ -380,10 +512,14 @@
         CONTWIDGET++;
         id = CONTWIDGET;
       }
+      ELEMENT_ARRAY[id] = {
+        state: "enable",
+        hidden: hidden
+      };
       if (title !== '') {
         title = "<div id=\"win-buttongroup-title-" + id + "\" style=\"height:20px;\" class=\"win-buttongroup-title\">" + title + "</div>";
       }
-      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-buttongroup\" style=\"width:" + width + "; " + hidden + " " + style + "\"> " + title + " <div id=\"win-buttongroup-body-" + id + "\" class=\"win-buttongroup-body\" style=\"" + style + "\"></div> </div>";
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-buttongroup\" style=\"width:" + width + "; " + hidden + " " + style + "\" data-role=\"win-buttongroup\"> " + title + " <div id=\"win-buttongroup-body-" + id + "\" class=\"win-buttongroup-body\" style=\"" + style + "\"></div> </div>";
       if (obj.items) {
         return _router(obj.items, "win-buttongroup-body-" + id);
       }
@@ -394,43 +530,59 @@
     	@param  obj objectDom parent and config
      */
     _button = function(obj, idParent) {
-      var cls, id, text, width;
+      var align, cls, hidden, id, text, width;
       text = obj.text || '';
-      cls = obj.cls || '';
+      cls = obj.cls || 'save';
+      align = obj.align || 'top';
       width = obj.width || 50;
+      hidden = obj.hidden || false;
       if (obj.id) {
         id = obj.id;
       } else {
         CONTWIDGET++;
         id = "win-btn-" + CONTWIDGET;
       }
+      ELEMENT_ARRAY[id] = {
+        state: "enable",
+        hidden: hidden
+      };
       if (!isNaN(width)) {
         width = width + 'px';
       }
-      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-btn\" style=\"width:" + width + ";\"> <button class=\"" + cls + "\">" + text + "</button> </div>";
+      document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-btn\" style=\"width:" + width + ";\" data-role=\"win-btn\"> <button class=\"" + cls + "\">" + text + "</button> </div>";
+      _findResizeBody(id);
       if (obj.handler) {
         return setTimeout(function() {
-          return document.querySelector("\#" + idParent + " > \#" + id).onclick = obj.handler;
+          return document.querySelector("\#" + idParent + " > \#" + id).onclick = function() {
+            if (ELEMENT_ARRAY[id].state === "disable") {
+              return;
+            }
+            $W.BlockBtn(id);
+            return obj.handler(this);
+          };
         });
       }
     };
 
     /*
-    	@method _tbtext
+    	@method _tbText
     	@param  obj objectDom parent and config
      */
-    _tbtext = function(obj, idParent) {
+    _tbText = function(obj, idParent) {
       var id, style, text, width;
       text = obj.text || '';
-      width = obj.width || '120';
+      width = obj.width || 120;
       style = obj.style || 'left';
+      if (width > 0) {
+        width = width + 'px';
+      }
       if (obj.id) {
         id = obj.id;
       } else {
         CONTWIDGET++;
         id = "win-tbtext-" + CONTWIDGET;
       }
-      return document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-tbtext\" style=\"width:" + width + "; " + style + "\">" + text + "</div>";
+      return document.getElementById(idParent).innerHTML += "<div id=\"" + id + "\" class=\"win-tbtext\" style=\"width:" + width + "; " + style + "\" data-role=\"win-tbtext\">" + text + "</div>";
     };
 
     /*
@@ -438,7 +590,7 @@
     	@param  obj objectDom parent
      */
     _separator = function(idParent) {
-      return document.getElementById(idParent).innerHTML += "<div class=\"win-separator\">|</div>";
+      return document.getElementById(idParent).innerHTML += "<div class=\"win-separator\" data-role=\"win-separator\">|</div>";
     };
 
     /*
@@ -446,7 +598,7 @@
     	@param  obj objectDom parent
      */
     _separatorHeight = function(idParent) {
-      return document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\"></div>";
+      return document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\" data-role=\"win-separatorHeight\"></div>";
     };
 
     /*
@@ -454,17 +606,19 @@
     	@param  obj objectDom parent and config
      */
     _body = function(obj, idParent) {
-      var alto, arrayDiv, clsBody, cont, height, heightParent, html, id, items, parent, style;
+      var bodyStyle, clsBody, html, id, items, parent, style;
       items = obj.items || '';
       html = obj.html || '';
+      style = 'overflow:hidden;';
       clsBody = obj.clsBody || '';
-      style = 'overflow:auto;';
-      if (obj.scroll === false) {
-        style = 'overflow:hidden;';
-      } else if (obj.scrollX === false) {
-        style += 'overflow-x:hidden;';
-      } else if (obj.scrollY === false) {
-        style += 'overflow-y:hidden;';
+      bodyStyle = obj.bodyStyle || '';
+      if (obj.scrollY === true) {
+        style += 'overflow-y:auto;';
+      } else if (obj.scrollX === true) {
+        style += 'overflow-x:auto;';
+      }
+      if (obj.scroll === true) {
+        style = 'overflow:auto;';
       }
       if (obj.idApply) {
         id = obj.idApply;
@@ -473,26 +627,66 @@
         id = "win-body-" + CONTWIDGET;
       }
       parent = document.getElementById(idParent);
-      heightParent = parent.offsetHeight;
-      parent.innerHTML += "<div id=\"" + id + "\" class=\"win-body " + clsBody + "\" style=\"" + style + "\">" + html + "</div>";
+      parent.innerHTML += "<div id=\"" + id + "\" class=\"win-body " + clsBody + "\" style=\"" + style + " " + bodyStyle + "\" data-role=\"win-body\">" + html + "</div>";
+      return setTimeout(function() {
+        _resizeBody(idParent);
+        if (typeof obj.autoLoad) {
+          obj.autoLoad.idApply = id;
+          return $W.Load(obj.autoLoad);
+        }
+      });
+    };
+    _findResizeBody = function(id) {
+      var body, div1, div2, div3, role, role1, role2, role3;
+      if (!document.getElementById(id)) {
+        return;
+      }
+      role = document.getElementById(id).getAttribute("data-role");
+      if (role = "win-btn" || (role = "win-buttongroup")) {
+        div1 = document.getElementById(id).parentNode;
+        div2 = document.getElementById(id).parentNode.parentNode;
+        div3 = document.getElementById(id).parentNode.parentNode.parentNode;
+        body = '';
+        role1 = div1.getAttribute("data-role");
+        role2 = div2.getAttribute("data-role");
+        role3 = div3.getAttribute("data-role");
+        if (role1 === "win-body" || role1 === "win-section") {
+          body = div1;
+        } else if (role2 === "win-body" || role2 === "win-section") {
+          body = div2;
+        } else if (role3 === "win-body" || role3 === "win-section") {
+          body = div3;
+        }
+        if (body !== '') {
+          return setTimeout(function() {
+            return _resizeBody(body.id);
+          });
+        }
+      }
+    };
+    _resizeBody = function(idParent) {
+      var alto, arrayDiv, body, height;
+      if (!document.getElementById(idParent)) {
+        return;
+      }
       alto = 0;
-      cont = 0;
-      arrayDiv = document.querySelectorAll('#' + idParent + ' > div');
+      body = '';
+      arrayDiv = document.querySelectorAll('#' + idParent + ' > [data-role]');
       [].forEach.call(arrayDiv, function(element) {
-        if (cont === 1) {
+        var role;
+        role = element.getAttribute("data-role");
+        if (body !== '') {
           return;
-        } else if (element.id === id) {
-          cont++;
+        } else if (role === "win-body") {
+          body = element;
           return;
         }
         return alto += element.offsetHeight;
       });
-      height = alto === 0 ? '100%' : 'calc(100% - ' + alto + 'px)';
-      if (typeof obj.autoLoad) {
+      height = alto === 0 ? '100%' : 'calc(100% - ' + (alto + 1) + 'px)';
+      if (body !== '') {
         return setTimeout(function() {
-          document.getElementById(id).style.height = height;
-          obj.autoLoad.idApply = id;
-          return $W.Load(obj.autoLoad);
+          return body.style.height = height;
         });
       }
     };

@@ -91,8 +91,8 @@
       for (j = 0, len = tagsScript.length; j < len; j++) {
         i = tagsScript[j];
         tagScript = document.createElement('script');
-        i.parentNode.replaceChild(tagScript, i);
-        results.push(tagScript.innerHTML = i.innerHTML);
+        tagScript.innerHTML = i.innerHTML;
+        results.push(i.parentNode.replaceChild(tagScript, i));
       }
       return results;
     };
