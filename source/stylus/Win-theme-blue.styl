@@ -4,7 +4,7 @@ $bgColorTitle = #2A80B9
 
 // TBAR
 $colorTbar   = #333
-$bgColorTbar = #FFF
+$bgColorTbar = #2A80B9
 
 	// BOTON
 	$BgBtnHover    = #008FEF
@@ -42,15 +42,16 @@ $colorInputButton = $colorCalendar
 
 	/.win-tbar
 		background-color $bgColorTbar
-		border-bottom 1px solid #888
-		width calc(100% - 20px)
-		margin 0 10px
+		/*border-bottom 1px solid #888*/
+		width 100% /*calc(100% - 20px)*/
+		margin 0  /*5px 0 -5px 5px*/
 
 		*
-			color $colorTbar
+			color #FFF
 
 		/.win-btn
-			background #FFF
+			/*background #FFF*/
+			color #FFF
 
 			&:hover
 				background-color #BAD8EC
