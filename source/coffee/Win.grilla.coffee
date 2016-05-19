@@ -410,7 +410,7 @@ do ($W = Win) ->
 		"<div id=\"grilla_toolbar_#{name}\" class=\"grilla_toolbar\">
 			<div>
 				<div class=\"grilla_toolbar_input\">
-					<input type=\"text\" id=\"field_buscar_#{name}\" onKeyUp=\"$W.Grilla.inputBuscar(event,\'#{name}\')\"/>
+					<input type=\"text\" id=\"field_buscar_#{name}\" onKeyUp=\"$W.Grilla.inputBuscar(event,\'#{name}\')\" placeholder=\"Buscar...\"/>
 				</div>
 				<div data-search=\"#{advancedToolbar}\" title=\"Busquedas avanzada\" id=\"grilla_type_search_#{name}\" class=\"grilla_type_search\" onclick=\"$W.Grilla.typeSearch(this)\"></div>
 				<div id=\"grilla_toolbar_reload_#{name}\" class=\"grilla_toolbar_reload\"></div>
