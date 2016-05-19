@@ -18,6 +18,16 @@ do ($W = Win) ->
 		opcionClass = obj.opcionClass or ''
 		idApply = "parent_form_#{name}"
 
+		# SIZE BODY #
+		fBodyAncho = size.fBodyAncho || ''
+		if fBodyAncho > 0 then fBodyAncho += 'px'
+		else if fBodyAncho == 'auto' or fBodyAncho==0 then fBodyAncho='auto'
+
+		if !isNaN(size.fDivAncho) then size.fDivAncho = size.fDivAncho+'px'		# DIV ANCHO #
+		if !isNaN(size.fDivAlto) then size.fDivAlto = size.fDivAlto+'px'		# DIV ALTO #
+		if !isNaN(size.fLabelAncho) then size.fLabelAncho = size.fLabelAncho+'px'		# LABEL ANCHO #
+		if !isNaN(size.fFieldAncho) then size.fFieldAncho = size.fFieldAncho+'px'		# FIELD ALTO #
+
 		fTbar = obj.fTbar or false
 		fPermisoInsert = obj.fPermisoInsert or false
 		fPermisoUpdate = obj.fPermisoUpdate or false
@@ -32,7 +42,7 @@ do ($W = Win) ->
 
 		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\"></div>
 														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"float:left; width:100%; height:100%; overflow:auto;\">
-															<div style=\"float:left; padding:10px; width:#{size.fBodyAncho}px;\">#{htmlForm}<div>
+															<div style=\"float:left; padding:10px; width:#{fBodyAncho};\">#{htmlForm}<div>
 														</form>"
 		# CREATE TBAR
 		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost
@@ -93,7 +103,7 @@ do ($W = Win) ->
 	###
 	_createTextField = (name,field,obj,size) ->
 		type    = 'text'
-		display = 'table'
+		display = 'block'
 		validate = obj.validate or ''
 
 		if validate != '' then validate = "data-validate=\"#{validate}\""
@@ -104,9 +114,9 @@ do ($W = Win) ->
 
 		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
 
-		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px; position:relative; display:#{display}\">
-			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px; position:relative;\">#{obj.label}</div>
-			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}px; position:relative;\">
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}; min-height:#{size.fDivAlto}; display:#{display}\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho};\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"width:#{size.fFieldAncho};\">
 				<input type=\"#{type}\" id=\"form_#{name}_#{field}\" value=\"#{obj.value}\" style=\"width:#{obj.width}px;\" data-value=\"#{obj.value}\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\" #{validate}/>
 			</div>
 		</div>"
@@ -120,9 +130,9 @@ do ($W = Win) ->
 		option = obj.option or {}
 		htmlOption = _createOptionCombo obj.value,option
 
-		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
-			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
-			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}; min-height:#{size.fDivAlto};\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho};\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"width:#{size.fFieldAncho};\">
 				<select id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px;\" data-value=\"#{obj.value}\" data-textdb=\"#{obj.textdb}\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{htmlOption}</select>
 			</div>
 		</div>"
@@ -141,9 +151,9 @@ do ($W = Win) ->
 	_createTextArea = (name,field,obj,size) ->
 		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
 
-		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}px; min-height:#{size.fDivAlto}px;\">
-			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho}px;\">#{obj.label}</div>
-			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"#{size.fFieldAncho}\">
+		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}; min-height:#{size.fDivAlto};\">
+			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho};\">#{obj.label}</div>
+			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"width:#{size.fFieldAncho};\">
 				<textarea id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px; height:#{obj.height}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{obj.value}</textarea>
 			</div>
 		</div>"

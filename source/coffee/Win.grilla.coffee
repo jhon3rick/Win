@@ -219,7 +219,16 @@ do ($W = Win) ->
 			failure : (xhr) -> console.log "fail"
 		})
 
-
+	###
+	@method _loadScript
+	@param  obj objectDom load script
+	###
+	_loadScript = (obj) ->
+		tagsScript = obj.getElementsByTagName('script')
+		for i in tagsScript
+			tagScript = document.createElement('script')
+			tagScript.innerHTML = i.innerHTML
+			i.parentNode.replaceChild(tagScript,i)
 
 	_insertUpdateRow = (name,url,xhrResponse,opcionClass) ->
 
@@ -356,14 +365,18 @@ do ($W = Win) ->
 				json = JSON.parse(result.responseText)
 
 				if json.estado == 'true'
-					document.getElementById("grilla_fila_#{name}_#{indexClass}").setAttribute('data-state','fDelete')
-					document.getElementById("grilla_fila_image_#{name}_#{indexClass}").setAttribute('data-icon','fDelete')
 
-					arrayDivHtml = document.querySelectorAll("#grilla_fila_#{name}_#{indexClass} [data-type=html]")
-					[].forEach.call(arrayDivHtml,(input) ->
-						input.innerHTML = ''
-					)
-					eval "Win_grilla_form_#{name}.close();"
+					if document.getElementById("grilla_fila_#{name}_#{indexClass}")
+						document.getElementById("grilla_fila_#{name}_#{indexClass}").setAttribute('data-state','fDelete')
+						document.getElementById("grilla_fila_image_#{name}_#{indexClass}").setAttribute('data-icon','fDelete')
+
+						arrayDivHtml = document.querySelectorAll("#grilla_fila_#{name}_#{indexClass} [data-type=html]")
+						[].forEach.call(arrayDivHtml,(input) ->
+							input.innerHTML = ''
+						)
+
+					if json.type=='grilla' then eval "Win_grilla_form_#{name}.close();"
+					else if json.type=='form' then  eval "#{name}.close();"
 
 				else console.log "false"
 			,
