@@ -232,11 +232,22 @@ do ($W = Win) ->
 
 	_insertUpdateRow = (name,url,xhrResponse,opcionClass) ->
 
-		if !$W.Script.isJSON xhrResponse.responseText
-			console.log xhrResponse.responseText
+		arrayData = (xhrResponse.responseText).split('<script>')
+		txtJson = arrayData[0];
+
+		if !$W.Script.isJSON txtJson
+			console.log txtJson
 			return
 
-		json = JSON.parse(xhrResponse.responseText)
+		json = JSON.parse(txtJson)
+
+		if arrayData.length > 1
+			arrayData[0] = '';
+			script = arrayData.join('<script>')
+
+			divScript = document.getElementById("div_script_form_#{name}")
+			divScript.innerHTML = script
+			_loadScript divScript
 
 		if json.estado == 'true'
 			type = json.type or ''
@@ -291,14 +302,6 @@ do ($W = Win) ->
 			failure : (xhr) -> console.log "fail"
 		})
 
-		# $W.Load({
-		# 	idApply : "grilla_content_fila_#{name}_#{id}",
-		# 	url     : GRILLA[name],
-		# 	params  :
-		# 		opcionClass : 'updateRow',
-		# 		index : id,
-		# })
-
 	$W.Form.fSave = (name,url,indexClass,varPost) ->
 		objForm      = {}
 		arrayInput   = []
@@ -343,8 +346,7 @@ do ($W = Win) ->
 		$W.Ajax({
 			url    : url,
 			params : params,
-			success : (xhrResponse,xhr) -> _insertUpdateRow(name,url,xhrResponse,opcionClass)
-			,
+			success : (xhrResponse,xhr) -> _insertUpdateRow(name,url,xhrResponse,opcionClass),
 			failure : (xhr) -> console.log "fail"
 		})
 
@@ -366,7 +368,7 @@ do ($W = Win) ->
 
 				if json.estado == 'true'
 
-					if document.getElementById("grilla_fila_#{name}_#{indexClass}")
+					if json.type=='grilla'
 						document.getElementById("grilla_fila_#{name}_#{indexClass}").setAttribute('data-state','fDelete')
 						document.getElementById("grilla_fila_image_#{name}_#{indexClass}").setAttribute('data-icon','fDelete')
 
@@ -375,7 +377,7 @@ do ($W = Win) ->
 							input.innerHTML = ''
 						)
 
-					if json.type=='grilla' then eval "Win_grilla_form_#{name}.close();"
+						eval "Win_grilla_form_#{name}.close();"
 					else if json.type=='form' then  eval "#{name}.close();"
 
 				else console.log "false"

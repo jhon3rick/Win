@@ -42,7 +42,8 @@ do ($W = Win) ->
 
 		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\"></div>
 														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"float:left; width:100%; height:100%; overflow:auto;\">
-															<div style=\"float:left; padding:10px; width:#{fBodyAncho};\">#{htmlForm}<div>
+															<div id=\"div_script_form_#{name}\" style=\"float:left; padding:10px; width:20px; height:20px; overflow:hidden; position:fixed;\"></div>
+															<div style=\"float:left; padding:10px; width:#{fBodyAncho};\">#{htmlForm}</div>
 														</form>"
 		# CREATE TBAR
 		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost
