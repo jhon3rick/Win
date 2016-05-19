@@ -36,6 +36,25 @@ path =
 					'./source/coffee/Win.ajax.coffee',
 					'./source/coffee/Win.grilla.coffee']
 
+
+git =
+	distCoffee  : './example/winJs/js'
+	distStylus  : './example/winJs/css'
+	stylus      : ['./source/stylus/Win.styl',
+					'./source/stylus/Win-theme-blue.styl']
+
+	coffee      : ['./source/coffee/Win.coffee',
+					'./source/coffee/Win.ini.coffee',
+					'./source/coffee/Win.element.coffee',
+					'./source/coffee/Win.css.coffee',
+					'./source/coffee/Win.events.coffee',
+					'./source/coffee/Win.query.coffee',
+					'./source/coffee/Win.output.coffee',
+
+					'./source/coffee/Win.form_git.coffee',
+					'./source/coffee/Win.widget.coffee',
+					'./source/coffee/Win.ajax.coffee']
+
 	# modules     : ['./source/coffee/*.coffee']
 
 banner = [
@@ -117,3 +136,21 @@ gulp.task 'stylus_watch', ->
 
 gulp.task 'compile_google', ['closure','minStylus']
 gulp.task 'compile', ['minCoffee','minStylus']
+
+# GIT
+gulp.task 'git_coffee', ->
+	gulp.src git.coffee
+		.pipe(concat('Win.min.js'))
+		.pipe coffee().on 'error', gutil.log
+		.pipe uglify mangle: true
+		.pipe header banner, pkg: pkg
+		.pipe gulp.dest git.distCoffee
+
+gulp.task 'git_stylus', ->
+	gulp.src git.stylus
+		.pipe stylus({compress:true}).on 'error', gutil.log
+		.pipe header banner, pkg: pkg
+		.pipe(rename({extname: '.min.css'}))
+		.pipe gulp.dest git.distStylus
+
+gulp.task 'git', ['git_coffee','git_stylus']

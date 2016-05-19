@@ -1,6 +1,6 @@
 <div class="subtitle">Validacion Feld</div>
 <div class="parrafo">
-	<div>Field Text</div>
+	<div style="margin: 15px 5px;">Field Text</div>
 	<input type="text" id="inputInteger" class="inputForm" placeholder="inputInteger" data-icon="add" />
 	<div>
 		<pre><code class="html" id="fieldText">
@@ -20,8 +20,8 @@ $c ='
 </div>
 
 <div class="parrafo">
-	<div style="margin-top: 15px;">Field Date</div>
-	<input type="text" id="inputDate" class="inputForm" placeholder="inputDate"/>
+	<div style="margin: 15px 5px;">Field Date</div>
+	<input type="text" id="inputDate" class="inputForm" placeholder="inputDate" value="2016-11-21"/>
 	<div>
 		<pre><code class="html" id="fieldDate">
 			<?php
@@ -43,10 +43,10 @@ $c ='
 
 <!-- =================================================================================== -->
 
-<div class="subtitle">Validacion Field Parent</div>
 <div class="parrafo" id="form-validate">
-	<input type="text" placeholder="inputInteger" data-icon="add" data-validate="uppercase"/>
-	<input type="text" placeholder="inputInteger" data-icon="add" data-validate="integer"/>
+	<div style="margin: 15px 5px;">Validacion Field Parent</div>
+	<input style="margin: 5px 0;" type="text" placeholder="uppercase" data-icon="add" data-validate="uppercase"/><br>
+	<input style="margin: 5px 0;" type="text" placeholder="integer" data-icon="add" data-validate="integer"/>
 	<div>
 		<pre><code class="html" id="fieldParent">
 			<?php
@@ -67,10 +67,10 @@ $c ='
 <script>
 	$W.Form.validate("form-validate");
 
-	// $W.Form.field({
-	// 	idApply : "inputInteger",
-	// 	type    : "integer"		// integer, double, email, text, upercase, lowercase
-	// });
+	$W.Form.field({
+		idApply : "inputInteger",
+		type    : "integer"		// integer, double, email, text, upercase, lowercase
+	});
 
 	$W.Form.field({
 		idApply   : "inputDate",

@@ -119,6 +119,10 @@ $c ='
 			height = "calc(100% - 20px)";
 		}
 
+		var ajax_request = function(){
+			console.log('btn ajax request');
+		}
+
 		Win_ventana_1 = new $W.Window({
 			width       : width,
 			height      : height,
@@ -172,16 +176,18 @@ $c ='
 						{
 							xtype : "button",
 							id    : "btn_2",
-							handler: function () { ajax_load();	},
+							width : 60,
 							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax load"
+							text  : "ajax load",
+							handler: function () { ajax_load();	}
 						},
 						{
 							xtype : "button",
 							id    : "btn_2",
-							handler: function () { ajax_request();	},
+							width : 60,
 							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax request"
+							text  : "ajax request",
+							handler: function () { ajax_request();	}
 						}
 						,"->","-",
 						{
@@ -194,7 +200,7 @@ $c ='
 						{
 							xtype : "tbtext",
 							id    : "btn_1",
-							text  : "una demostracion de un texto largo<br>con salto de linea",
+							text  : "<div style=\"padding:5px;\">una demostracion de un texto largo<br>con salto de linea</div>",
 						}
 					]
 				}

@@ -6,27 +6,10 @@
 		<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"></meta>
 		<meta content="0" http-equiv="Expires"></meta>
 
-		<link rel="stylesheet" href="css/normalize.css" />
-		<link rel="stylesheet" href="../dist/css/Win.min.css" />
-		<link rel="stylesheet" href="../dist/css/Win-theme-blue.min.css" />
-		<link rel="stylesheet" href="css/Win-loaders.css" />
-		<link rel="stylesheet" href="css/icon.css" />
+		<link rel="stylesheet" href="winJs/css/Win.min.css" />
+		<link rel="stylesheet" href="winJs/css/Win-theme-blue.min.css" />
 
-
-		<script src="../dist/js/Win.min.js"></script>
-		<!-- <script src="js/Win.js"></script>
-		// <script src="js/Win.element.js"></script>
-		// <script src="js/Win.css.js"></script>
-		// <script src="js/Win.events.js"></script>
-		// <script src="js/Win.query.js"></script>
-		// <script src="js/Win.output.js"></script>
-
-
-		// <script src="js/Win.form.js"></script>
-		// <script src="js/Win.widget.js"></script>
-		// <script src="js/Win.ajax.js"></script>
-		// <script src="js/Win.ini.js"></script>
-		// <script src="js/Win.desktop.js"></script> -->
+		<script src="winJs/js/Win.min.js"></script>
 
 		<link rel="stylesheet" href="js/highlight/styles/androidstudio.css">
 		<script src="js/highlight/highlight.pack.js"></script>
@@ -40,7 +23,6 @@
 				width   : 100%;
 				display : table;
 				text-align : center;
-				/*background-color : #333;*/
 
 				background: -webkit-gradient(radial, center center, 0, center center, 460, from(#111), to(#000));
 				background: -webkit-radial-gradient(circle, #111, #000);
@@ -85,7 +67,7 @@
 				width    : calc(100% - 150px);
 				overflow : auto;
 				padding  : 0 10px;
-				background-color :#282b2e;
+				background-color : #282b2e;
 			}
 
 			#parent .subtitle, #parent .subtitle2{

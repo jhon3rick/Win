@@ -60,7 +60,11 @@
 				</script>';
 	}
 
-	function default_function() { for ($i=0; $i < 100; $i++) { echo 'contenido renderizado <br>'; } }
+	function default_function() {
+		echo '<div style="padding:10px;">';
+		for ($i=0; $i < 100; $i++) { echo 'contenido renderizado <br>'; }
+		echo '</div">';
+	}
 
 
 ?>
