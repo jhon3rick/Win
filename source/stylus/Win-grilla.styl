@@ -42,12 +42,14 @@ mix_background($image)
 	*
 		font-size 12px
 		color $color
+		font-weight bold
 
 	/.grilla_title_label
 		float left
 		background-color $bgTitle
 		border-bottom 1px solid $border
 		border-right 1px solid $border
+		border-left 1px solid #DDD
 		padding 2px 0 0 3px
 		height 22px
 		cursor default
@@ -195,15 +197,15 @@ mix_background($image)
 
 	& > div
 		float left
-		width 245px
+		width 100%
 		height 100%
 		border 1px solid $border
 		border-bottom none
 		background-color $bgTitle
 
 		/.grilla_type_search
-			float left
-			margin 6px 0px 2px -231px
+			float right
+			margin 6px -25px 2px 0
 			width 20px
 			height 20px
 			background-image url('../img/search.png')
@@ -218,8 +220,8 @@ mix_background($image)
 			background-color transparent
 
 		/.grilla_toolbar_input
-			float left
-			margin 5px 0 0 5px
+			float right
+			margin 5px 5px 0 5px
 
 			input
 				height 22px
@@ -228,8 +230,8 @@ mix_background($image)
 				border 1px solid #FFF
 
 		/.grilla_toolbar_reload
-			float left
-			margin 5px 0 2px -22px
+			float right
+			margin 5px -235px 2px 0
 			width 20px
 			height 21px
 			cursor pointer
@@ -258,9 +260,11 @@ mix_background($image)
 	overflow hidden
 	text-overflow ellipsis
 	cursor default
+	border-left 1px solid #DDD
+
 
 .grilla_content_fila
-	border-bottom 1px solid #BBB
+	border-bottom 1px solid #DDD
 	cursor default
 
 	&:hover
@@ -306,6 +310,7 @@ mix_background($image)
 		padding 0
 		cursor default
 		width 38px
+		background-color #CCC
 
 		/.grilla_fila_cont
 			text-align right
@@ -346,7 +351,7 @@ mix_background($image)
 
 .grilla_ventana
 	overflow hidden
-	padding 10px
+	/*padding 10px*/
 
 	& > aside
 		float left
