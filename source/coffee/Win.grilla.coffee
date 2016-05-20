@@ -220,26 +220,13 @@ do ($W = Win) ->
 		})
 
 	###
-	@method _loadScript
-	@param  obj objectDom load script
+	@method _execScript
+	@param  str separate json and script for objectDom load script
 	###
-	_loadScript = (obj) ->
-		tagsScript = obj.getElementsByTagName('script')
-		for i in tagsScript
-			tagScript = document.createElement('script')
-			tagScript.innerHTML = i.innerHTML
-			i.parentNode.replaceChild(tagScript,i)
+	_execScript = (name,response) ->
 
-	_insertUpdateRow = (name,url,xhrResponse,opcionClass) ->
-
-		arrayData = (xhrResponse.responseText).split('<script>')
+		arrayData = (response).split('<script>')
 		txtJson = arrayData[0];
-
-		if !$W.Script.isJSON txtJson
-			console.log txtJson
-			return
-
-		json = JSON.parse(txtJson)
 
 		if arrayData.length > 1
 			arrayData[0] = '';
@@ -247,7 +234,26 @@ do ($W = Win) ->
 
 			divScript = document.getElementById("div_script_form_#{name}")
 			divScript.innerHTML = script
-			_loadScript divScript
+
+			tagsScript = divScript.getElementsByTagName('script')
+			for i in tagsScript
+				tagScript = document.createElement('script')
+				tagScript.innerHTML = i.innerHTML
+				i.parentNode.replaceChild(tagScript,i)
+
+		# SI NO ES JSON RETURN
+		if !$W.Script.isJSON txtJson
+			console.log txtJson
+			return false
+
+		txtJson
+
+	_insertUpdateRow = (name,url,xhrResponse,opcionClass) ->
+
+		txtJson = _execScript name,xhrResponse.responseText
+		if !txtJson then return
+
+		json = JSON.parse(txtJson)
 
 		if json.estado == 'true'
 			type = json.type or ''
@@ -358,13 +364,12 @@ do ($W = Win) ->
 		$W.Ajax({
 			url    : url,
 			params : params,
-			success : (result,xhr) ->
+			success : (xhrResponse,xhr) ->
 
-				if !$W.Script.isJSON result.responseText
-					console.log result.responseText
-					return
+				txtJson = _execScript name,xhrResponse.responseText
+				if !txtJson then return
 
-				json = JSON.parse(result.responseText)
+				json = JSON.parse(txtJson)
 
 				if json.estado == 'true'
 
