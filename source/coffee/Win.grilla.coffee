@@ -13,7 +13,7 @@ do ($W = Win) ->
 		url         = obj.url or ''
 		idApply     = obj.idApply or ''
 		opcionClass = obj.opcionClass or ''
-		rows       = obj.rows or {}
+		rows        = obj.rows or {}
 		titleItems  = obj.titleItems or {}
 		widthGrilla = '100%'
 		parentHtml  = idApply
@@ -25,7 +25,8 @@ do ($W = Win) ->
 		valueToolbar = obj.valueToolbar or ''
 		advancedToolbar = obj.advancedToolbar or 'disable'
 
-		filterAside  = obj.filterAside or ''
+		ctxMenu     = obj.ctxMenu or []
+		filterAside = obj.filterAside or ''
 
 		pagina  = obj.pagina or ''
 		maxPage = obj.maxPage or ''
@@ -34,18 +35,20 @@ do ($W = Win) ->
 		textBtnNuevo   = obj.textBtnNuevo or 'Nuevo'
 		fPermisoInsert = obj.fPermisoInsert or false
 
-		fTitle  = obj.fTitle or ''
-		fAncho  = obj.fAncho or 'auto'
-		fAlto   = obj.fAlto or 'auto'
+		fTitle      = obj.fTitle or ''
+		fAncho      = obj.fAncho or 'auto'
+		fAlto       = obj.fAlto or 'auto'
+		fNameWindow = obj.fNameWindow or ''
 
 		eventInsert = obj.eventInsert or ''
 		eventUpdate = obj.eventUpdate or ''
+
 
 		grillaHeight = ""
 		GRILLA[name] = { url:url, varPost:varPost }
 
 		if tbar==true and opcionClass==''
-			_createTbar name,idApply,fAncho,fAlto,fTitle,textBtnNuevo,fPermisoInsert,eventInsert
+			_createTbar name,idApply,fNameWindow,fAncho,fAlto,fTitle,textBtnNuevo,fPermisoInsert,eventInsert
 
 			tbarHeight   = document.getElementById("grilla_tbar_#{name}").offsetHeight
 			grillaHeight = "height:calc(100% - #{tbarHeight}px)"
@@ -57,7 +60,7 @@ do ($W = Win) ->
 			htmlToolbar = _createToolbar name,advancedToolbar
 
 		htmlAside   = _createAside name,filterAside
-		htmlContent = _createContent name,opcionClass,pagina,maxPage,style,titleItems,rows,eventUpdate,fAncho,fAlto,fTitle
+		htmlContent = _createContent name,opcionClass,pagina,maxPage,style,titleItems,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
 
 		if htmlAside != "" then widthGrilla = "calc(100% - 205px)"
 
@@ -80,7 +83,7 @@ do ($W = Win) ->
 			document.getElementById("field_buscar_#{name}").value = valueToolbar
 			document.getElementById("field_buscar_#{name}").focus()
 
-	$W.Grilla.fOpen = (name,id,width,height,title,autoScroll) ->
+	$W.Grilla.fOpen = (name, id, fNameWindow, width, height, title, autoScroll) ->
 		url = GRILLA[name]["url"]
 
 		if id>0
@@ -93,8 +96,8 @@ do ($W = Win) ->
 		params.indexClass = id
 		params.opcionClass = opcionClass
 
-		eval "window.Win_grilla_form_#{name} = $W.Window({
-				id       : \"Win_grilla_form_#{name}\",
+		eval "window.#{fNameWindow} = $W.Window({
+				id       : \"#{fNameWindow}\",
 				width    : width,
 				height   : height,
 				title    : title,
@@ -212,7 +215,7 @@ do ($W = Win) ->
 
 				json = JSON.parse(result.responseText)
 
-				document.getElementById("grilla_content_fila_#{name}_#{id}").innerHTML = _createRows name,opcionClass,json.rows,json.eventUpdate,json.fAncho,json.fAlto,json.fTitle
+				document.getElementById("grilla_content_fila_#{name}_#{id}").innerHTML = _createRows name,opcionClass,json.rows,json.eventUpdate,json.fNameWindow,json.fAncho,json.fAlto,json.fTitle
 				document.getElementById("grilla_fila_cont_#{name}_#{id}").innerHTML = cont
 				document.getElementById("grilla_fila_image_#{name}_#{id}").setAttribute('data-icon','fUpdate')
 			,
@@ -266,6 +269,7 @@ do ($W = Win) ->
 			fTitle = json.fTitle or ''
 			fAncho = json.fAncho or ''
 			fAlto  = json.fAlto or ''
+			fNameWindow = json.fNameWindow or ''
 			eventUpdate = json.eventUpdate or ''
 
 			if opcionClass == 'fInsert' or  opcionClass == 'insertRow'
@@ -276,7 +280,7 @@ do ($W = Win) ->
 					contDiv = (body.lastChild).getAttribute("data-cont")
 					contDiv++
 
-				body.innerHTML += _createRows name,opcionClass,rows,eventUpdate,fAncho,fAlto,fTitle
+				body.innerHTML += _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
 
 				if contDiv > 0
 					document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
@@ -284,12 +288,12 @@ do ($W = Win) ->
 
 			else if opcionClass == "fUpdate"
 				contDiv = document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML
-				document.getElementById("grilla_content_fila_#{name}_"+json.idRow).innerHTML = _createRows name,opcionClass,rows,eventUpdate,fAncho,fAlto,fTitle
+				document.getElementById("grilla_content_fila_#{name}_"+json.idRow).innerHTML = _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
 				document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
 
-			if opcionClass == 'fInsert' or  opcionClass == 'fUpdate' then eval "Win_grilla_form_#{name}.close();"
+			if opcionClass == 'fInsert' or  opcionClass == 'fUpdate' then eval "#{fNameWindow}.close();"
 
-		else alert(json.msj)
+		else console.log json.msj
 
 
 	$W.Grilla.insertRow = (name,id) ->
@@ -303,8 +307,7 @@ do ($W = Win) ->
 		$W.Ajax({
 			url    : url,
 			params : params,
-			success : (xhrResponse,xhr) -> _insertUpdateRow(name,url,xhrResponse,opcionClass)
-			,
+			success : (xhrResponse,xhr) -> _insertUpdateRow(name,url,xhrResponse,opcionClass),
 			failure : (xhr) -> console.log "fail"
 		})
 
@@ -382,8 +385,7 @@ do ($W = Win) ->
 							input.innerHTML = ''
 						)
 
-						eval "Win_grilla_form_#{name}.close();"
-					else if json.type=='form' then  eval "#{name}.close();"
+					eval json.fNameWindow+".close();"
 
 				else console.log "false"
 			,
@@ -422,8 +424,8 @@ do ($W = Win) ->
 			</div>
 		</div>"
 
-	_createContent = (name,opcionClass,pagina,maxPage,style,titleItems,rows,eventUpdate,fAncho,fAlto,fTitle) ->
-		htmlItems = _createRows name,opcionClass,rows,eventUpdate,fAncho,fAlto,fTitle
+	_createContent = (name,opcionClass,pagina,maxPage,style,titleItems,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle) ->
+		htmlItems = _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
 		htmlPage  = _createPagination name,pagina,maxPage
 		objTitle  = _createTitle name,titleItems
 
@@ -474,7 +476,7 @@ do ($W = Win) ->
 
 		$W.Grilla.buscar(name)
 
-	_createRows = (name,opcionClass,rows,eventUpdate,fAncho,fAlto,fTitle) ->
+	_createRows = (name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle) ->
 		url     = GRILLA[name]["url"]
 		html    = ""
 		contRow = 0
@@ -484,17 +486,20 @@ do ($W = Win) ->
 			htmlCol = _createCol name,row.idRow,row.cols
 
 			eventDbclick = ""
-			if eventUpdate is true then eventDbclick = "$W.Grilla.fOpen('#{name}', '#{row.idRow}', '#{fAncho}', '#{fAlto}', '#{fTitle}',true)"
+			if eventUpdate is true then eventDbclick = "$W.Grilla.fOpen('#{name}', '#{row.idRow}', '#{fNameWindow}', '#{fAncho}', '#{fAlto}', '#{fTitle}',true)"
 			else if eventUpdate == '' then eventDbclick = ''
 			else eventDbclick = "#{eventUpdate}(#{row.idRow}, this, this.id)"
 
-			rowHtml = "<div id=\"grilla_fila_#{name}_#{row.idRow}\" class=\"grilla_fila\" ondblclick=\"#{eventDbclick}\" data-state=\"#{opcionClass}\" data-index=\"#{row.idRow}\">
+			eventCtxMenu = if row.ctxmenu != '[]' then "oncontextmenu='$W.CtxMenuDom({objApply:this, items:#{row.ctxmenu}},event); return false;'" else ""
+
+			rowHtml = "<div id=\"grilla_fila_#{name}_#{row.idRow}\" class=\"grilla_fila\" ondblclick=\"#{eventDbclick}\" #{eventCtxMenu} data-state=\"#{opcionClass}\" data-index=\"#{row.idRow}\">
 							<div id=\"MuestraToltip_#{name}_#{row.idRow}\" class=\"grilla_col_first\">
-								<div id=\"grilla_fila_cont_#{name}_#{row.idRow}\" class=\"grilla_fila_cont\">#{contRow}</div>
 								<div id=\"grilla_fila_image_#{name}_#{row.idRow}\" class=\"grilla_fila_image\" data-icon=\"#{opcionClass}\"></div>
+								<div id=\"grilla_fila_cont_#{name}_#{row.idRow}\" class=\"grilla_fila_cont\">#{contRow}</div>
 							</div>
 							#{htmlCol}
-						</div>"
+						</div>
+						<script></script>"
 
 			if opcionClass != 'fUpdate' and opcionClass != 'updateRow'
 				html += "<div id=\"grilla_content_fila_#{name}_#{row.idRow}\" class=\"grilla_content_fila\" data-index=\"#{row.idRow}\" data-cont=\"#{contRow}\" style=\"float:left; width:100%;\">#{rowHtml}</div>"
@@ -507,7 +512,7 @@ do ($W = Win) ->
 			html += "<div id=\"div_#{name}_#{idCol}_#{idRow}\" class=\"grilla_celdas\" style=\"width:#{obj.width}px; #{obj.style}\" data-type=\"#{obj.type}\">#{obj.html}</div>"
 		html
 
-	_createTbar = (name,idApply,fAncho,fAlto,fTitle,textBtnNuevo,fPermisoInsert,eventInsert) ->
+	_createTbar = (name,idApply,fNameWindow,fAncho,fAlto,fTitle,textBtnNuevo,fPermisoInsert,eventInsert) ->
 		url = GRILLA[name]["url"]
 		document.getElementById(idApply).innerHTML += "<div id=\"grilla_tbar_#{name}\"></div>";
 
@@ -521,7 +526,7 @@ do ($W = Win) ->
 					text    : textBtnNuevo,
 					handler : () ->
 
-						if eventInsert is true then $W.Grilla.fOpen name,"",fAncho,fAlto,fTitle,true
+						if eventInsert is true then $W.Grilla.fOpen name,"",fNameWindow,fAncho,fAlto,fTitle,true
 						else if eventInsert != "" then eval "#{eventInsert}()"
 				}]
 			})

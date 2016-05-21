@@ -14,7 +14,6 @@ do ($W = Win) ->
 
 	CONTWIDGET = 0
 	ELEMENT_ARRAY = {}
-	CTXMENU = false
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
@@ -288,38 +287,52 @@ do ($W = Win) ->
 
 
 	$W.CtxMenu = (obj) ->
-		document.getElementById(obj.idApply).oncontextmenu = (e) -> # Use document as opposed to window for IE8 compatibility
-			obj.objApply = e.srcElement
-			obj.clientX = event.clientX
-			obj.clientY = event.clientY
-
-			$W.Menu(obj)
-
+		document.getElementById(obj.idApply).oncontextmenu = (event) -> # Use document as opposed to window for IE8 compatibility
+			$W.CtxMenuDom(obj,event)
 			false
 
-	$W.Menu = (obj) ->
-		html = ""
-		_deleteCtxMenu()
-		CTXMENU = true
+	$W.CtxMenuDom = (obj,event) ->
+		event.preventDefault
+		event.stopPropagation()
 
+		if $W('[data-role=win-ctxmenu]')[0]
+			_deleteCtxMenu()
+			return false;
+
+		window.addEventListener "contextmenu", (e) ->
+			if $W('[data-role=win-ctxmenu]')[0]
+				_deleteCtxMenu()
+				e.preventDefault
+				e.stopPropagation()
+				return false
+
+		window.addEventListener "click", (e) ->
+			if $W('[data-role=win-ctxmenu]')[0]
+				_deleteCtxMenu()
+				e.preventDefault
+				e.stopPropagation()
+				return false
+
+		console.log event
+		html = ""
 		if obj.items
 			for own key, arr of obj.items
 				html += "<div data-option=\"top-#{key}\">
 							<div>#{arr.text}</div>
 						</div>"
 
-		divHtml = if obj.objApply then obj.objApply else document.getElementById(obj.idElement)
-		divHtml.innerHTML += "<div class=\"win-menu\" data-role=\"win-menu\" style=\"top:#{event.clientY}px; left:#{event.clientX}px;\">#{html}</div>"
+		event.target.innerHTML += "<div class=\"win-ctxmenu\" data-role=\"win-ctxmenu\" style=\"top:#{event.clientY}px; left:#{event.clientX}px;\">#{html}</div>"
 
 		if obj.items
 			setTimeout () ->
 				for own key, arr of obj.items
-					_menuOption obj.idApply,key,arr.handler
+					_menuOption event.target, key, arr.handler
 
-	_menuOption = (idApply,key,handler) ->
-		document.getElementById(idApply).querySelector("[data-option=top-#{key}]").onclick = () ->
-			_deleteCtxMenu()
-			handler(this)
+	_menuOption = (element,key,handler) ->
+		if element.querySelector("[data-option=top-#{key}]") && handler
+			element.querySelector("[data-option=top-#{key}]").onclick = () ->
+				if typeof(handler) == 'string' then eval(handler)
+				else handler(this)
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
@@ -329,14 +342,11 @@ do ($W = Win) ->
 	@method _deleteCtxMenu
 	###
 	_deleteCtxMenu = () ->
-		if CTXMENU is true
-			array = document.querySelectorAll("[data-role=win-menu]")
+		array = document.querySelectorAll("[data-role=win-ctxmenu]")
 
-			[].forEach.call(array, (menu) ->
-				menu.parentNode.removeChild(menu)
-			)
+		[].forEach.call array, (menu) ->
+			menu.parentNode.removeChild(menu)
 
-		CTXMENU = false
 
 	###
 	@method _router

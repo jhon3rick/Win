@@ -163,16 +163,32 @@ input[type=button]
 	cursor se-resize
 	visibility hidden
 
-.win-menu
+.win-ctxmenu
 	overflow visible
 	position fixed
 	z-index 1000
+	margin 0 !important
+	padding 0 !important
+	height auto !important
 	min-width 150px
 	min-height 20px
+	color #000
+
+	box-shadow 2px 2px 3px #A29B9B
+	border-top 1px solid #CCC
+	border-left 1px solid #CCC
+	background-color #F1F1F1
+	-webkit-user-select none
+	-moz-user-select none
+	-ms-user-select none
 
 	> div
-		padding 4px 8px
+		padding 6px 8px
 		cursor pointer
+		text-align left
+
+		&:hover
+			background-color #ABDDFB
 
 .win-tbar
 	overflow hidden
@@ -203,7 +219,7 @@ input[type=button]
 			min-height 40px
 			min-width 40px
 			cursor pointer
-			padding-top 26px
+			padding 26px 0 0 0
 			font-size 11px
 			border 1px solid transparent
 			text-decoration none

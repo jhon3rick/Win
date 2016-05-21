@@ -62,6 +62,7 @@ do ($W = Win) ->
 				xtype   : "button",
 				id      : "fInsert_#{name}",
 				cls     : "grilla_save",
+				width   : 60,
 				text    : "Guardar",
 				handler : () -> $W.Form.fSave name,url,indexClass,varPost
 
@@ -70,6 +71,7 @@ do ($W = Win) ->
 				xtype   : "button",
 				id      : "fUpdate_#{name}",
 				cls     : "grilla_save",
+				width   : 60,
 				text    : "Actualizar",
 				handler : () -> $W.Form.fSave name,url,indexClass,varPost
 
@@ -78,6 +80,7 @@ do ($W = Win) ->
 				xtype   : "button",
 				id      : "fDelete_#{name}",
 				cls     : "grilla_delete",
+				width   : 60,
 				text    : "Eliminar",
 				handler : () -> $W.Form.fDelete name,url,indexClass,varPost
 

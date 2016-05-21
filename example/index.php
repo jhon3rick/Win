@@ -6,10 +6,14 @@
 		<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"></meta>
 		<meta content="0" http-equiv="Expires"></meta>
 
-		<link rel="stylesheet" href="winJs/css/Win.min.css" />
+	<!-- 	<link rel="stylesheet" href="winJs/css/Win.min.css" />
 		<link rel="stylesheet" href="winJs/css/Win-theme-blue.min.css" />
+ -->
+		<link rel="stylesheet" href="../dist/css/Win.min.css" />
+		<link rel="stylesheet" href="../dist/css/Win-theme-blue.min.css" />
 
-		<script src="winJs/js/Win.min.js"></script>
+		<!-- <script src="winJs/js/Win.min.js"></script> -->
+		<script src="../dist/js/Win.min.js"></script>
 
 		<link rel="stylesheet" href="js/highlight/styles/androidstudio.css">
 		<script src="js/highlight/highlight.pack.js"></script>
@@ -91,7 +95,7 @@
 	<body>
 		<div id="parent">
 			<div class="head">
-				<div style="display:table-cell; vertical-align:middle;">
+				<div style="display:table-cell; vertical-align:middle;" id="title_win">
 					<span style="font-size:30px;">Win Js</span><span style="font-size:12px;">($W)</span>
 				</div>
 			</div>
@@ -114,6 +118,28 @@
 		</div>
 
 		<script type="text/javascript">
+			$W.CtxMenu({
+				idApply : "title_win",
+				items   :
+				[
+					{
+						text    : 'Eliminar1',
+						cls     : 'delete',
+						handler : function(){ console.log("dsdsds"); }
+					},
+					{
+						text    : 'Eliminar2',
+						cls     : 'delete1',
+						handler : function(p){ console.log(p); }
+					},
+					{
+						text    : 'Eliminar3',
+						cls     : 'delete3',
+						handler : function(t){ console.log(t); }
+					}
+				]
+			})
+
 
 			load_file = function (file){
 				$W.Load({
