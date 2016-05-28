@@ -498,8 +498,7 @@ do ($W = Win) ->
 								<div id=\"grilla_fila_cont_#{name}_#{row.idRow}\" class=\"grilla_fila_cont\">#{contRow}</div>
 							</div>
 							#{htmlCol}
-						</div>
-						<script></script>"
+						</div>"
 
 			if opcionClass != 'fUpdate' and opcionClass != 'updateRow'
 				html += "<div id=\"grilla_content_fila_#{name}_#{row.idRow}\" class=\"grilla_content_fila\" data-index=\"#{row.idRow}\" data-cont=\"#{contRow}\" style=\"float:left; width:100%;\">#{rowHtml}</div>"
