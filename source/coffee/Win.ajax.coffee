@@ -86,6 +86,7 @@ do ($W = Win) ->
 				if xhr.status == 404 then divScript.innerHTML = 'Not found'
 				else
 					divScript.innerHTML = xhr.responseText
+					console.log(divScript)
 					_loadScript(divScript)
 
 		xhr.send(param)
@@ -96,7 +97,10 @@ do ($W = Win) ->
 	###
 	_loadScript = (obj) ->
 		tagsScript = obj.getElementsByTagName('script')
+		console.log tagsScript
 		for i in tagsScript
+			console.log 1
+			console.log i
 			tagScript = document.createElement('script')
 			tagScript.innerHTML = i.innerHTML
 			i.parentNode.replaceChild(tagScript,i)

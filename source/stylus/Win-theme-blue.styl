@@ -47,7 +47,8 @@ $colorInputButton = $colorCalendar
 		width 100% /*calc(100% - 20px)*/
 		margin 0  /*5px 0 -5px 5px*/
 
-		*
+		div,
+		button
 			color #FFF
 
 		/.win-btn
@@ -77,15 +78,14 @@ $colorInputButton = $colorCalendar
 		/.win-tab
 			background-color $bgColorTitle
 			color $colorTabPanel
+			border-bottom 2px solid #FFF
 
 			&[data-activo=true]
 				color $colorTbar
 				background-color #FFF
-				border-bottom 2px solid #FFF
 
 			&[data-activo=false]
 				background-color $bgColorTitle
-				border-bottom 2px solid $bgColorTitle
 
 .win-ctxmenu
 	// background-color $bgColorTitle
