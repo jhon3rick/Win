@@ -241,7 +241,6 @@ mix_background($image)
 			background-position center
 			background-image url('../img/reload.png')
 
-
 .grilla_content
 	height 100%
 	width 100%

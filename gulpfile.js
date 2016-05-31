@@ -41,10 +41,10 @@
   };
 
   git = {
-    distCoffee: './example/winJs/js',
-    distStylus: './example/winJs/css',
-    stylus: ['./source/stylus/Win.styl', './source/stylus/Win-theme-blue.styl'],
-    coffee: ['./source/coffee/Win.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.element.coffee', './source/coffee/Win.css.coffee', './source/coffee/Win.events.coffee', './source/coffee/Win.query.coffee', './source/coffee/Win.output.coffee', './source/coffee/Win.form_git.coffee', './source/coffee/Win.widget.coffee', './source/coffee/Win.ajax.coffee']
+    distCoffee: './example/js/winJs/js',
+    distStylus: './example/js/winJs/css',
+    stylus: ['./source_git/stylus/Win.styl', './source_git/stylus/Win-theme-blue.styl'],
+    coffee: ['./source_git/coffee/Win.coffee', './source_git/coffee/Win.ini.coffee', './source_git/coffee/Win.element.coffee', './source_git/coffee/Win.css.coffee', './source_git/coffee/Win.events.coffee', './source_git/coffee/Win.query.coffee', './source_git/coffee/Win.output.coffee', './source_git/coffee/Win.form.coffee', './source_git/coffee/Win.widget.coffee', './source_git/coffee/Win.ajax.coffee']
   };
 
   banner = ["/**", " * <%= pkg.name %> - <%= pkg.description %>", " * @version v<%= pkg.version %>", " * @link    <%= pkg.homepage %>", " * @author  <%= pkg.author.name %> (Twitter <%= pkg.author.twitter %> || email <%= pkg.author.mail %>)", " * @license <%= pkg.license %>", " */", ""].join("\n");

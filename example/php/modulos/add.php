@@ -1,6 +1,5 @@
-<div class="subtitle">Add</div>
+<div class="subtitle">ADD BOTON</div>
 <div class="parrafo">
-	<div>Add Boton</div>
 	<div id="addBtn"></div>
 	<div>
 		<pre><code class="html" id="add1">
@@ -14,9 +13,9 @@ $c ='
 		[
 			{
 				xtype     : "button",
-				text      : "boton1",
+				text      : "New",
 				scale     : "large",
-				iconCls   : "guardar",
+				cls       : "add",
 				iconAlign : "top",
 				handler   : function(){ alert(1) }
 			}
@@ -29,8 +28,8 @@ $c ='
 	</div>
 </div>
 
+<div class="subtitle">ADD TBAR Y ADD BOTON AL TBAR</div>
 <div class="parrafo">
-	<div>Add Tbar y Add Boton al Tbar</div>
 	<div id="addTbar"></div>
 	<div>
 		<pre><code class="html" id="add2">
@@ -49,9 +48,9 @@ $c ='
 				[
 					{
 						xtype     : "button",
-						text      : "Btn 1",
+						text      : "New",
 						scale     : "large",
-						iconCls   : "guardar",
+						cls       : "add",
 						iconAlign : "top",
 						handler   : function(){ alert(1) }
 					}
@@ -67,9 +66,9 @@ $c ='
 		[
 			{
 				xtype     : "button",
-				text      : "Btn 2",
+				text      : "Update",
 				scale     : "large",
-				iconCls   : "guardar",
+				cls       : "load",
 				iconAlign : "top",
 				handler   : function(){ alert(2) }
 			}
@@ -91,12 +90,12 @@ $c ='
 		items   :
 		[
 			{
-				xtype		: "button",
-				text		: "Ejecutar",
-				scale		: "large",
-				iconCls		: "guardar",
-				iconAlign	: "top",
-				handler 	: function(){ alert(1) }
+				xtype     : "button",
+				text      : "New",
+				scale     : "large",
+				cls       : "add",
+				iconAlign : "top",
+				handler   : function(){ alert(1) }
 			}
 		]
 	})
@@ -112,9 +111,9 @@ $c ='
 				[
 					{
 						xtype     : "button",
-						text      : "Btn 1",
+						text      : "New",
 						scale     : "large",
-						iconCls   : "guardar",
+						cls       : "add",
 						iconAlign : "top",
 						handler   : function(){ alert(1) }
 					}
@@ -130,9 +129,9 @@ $c ='
 		[
 			{
 				xtype     : "button",
-				text      : "Btn 2",
+				text      : "Update",
 				scale     : "large",
-				iconCls   : "guardar",
+				cls       : "load",
 				iconAlign : "top",
 				handler   : function(){ alert(2) }
 			}

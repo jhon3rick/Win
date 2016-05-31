@@ -1,4 +1,4 @@
-<div class="subtitle">Tbar</div>
+<div class="subtitle">TBAR</div>
 <div class="parrafo">
 	<div id="div1"></div>
 	<div>
@@ -13,7 +13,7 @@ $c ='
 		[
 			{
 				xtype   : "button",
-				cls     : "user_black_36",
+				cls     : "add",
 				text    : "Nueva ventana",
 				handler : function(){ prueba(); }
 			},
@@ -34,13 +34,13 @@ $c ='
 			},
 			{
 				xtype : "button",
-				cls   : "ic_autorenew_black_36dp",
+				cls   : "load",
 				text  : "ajax load",
 				handler: function () { ajax_load();	}
 			},"--",
 			{
 				xtype : "button",
-				cls   : "ic_autorenew_black_36dp",
+				cls   : "load",
 				text  : "ajax request",
 				handler: function () { ajax_request();	}
 			}
@@ -69,7 +69,7 @@ $c ='
 		[
 			{
 				xtype   : "button",
-				cls     : "user_black_36",
+				cls     : "add",
 				text    : "Nueva ventana",
 				handler : function(){ prueba(); }
 			},
@@ -90,13 +90,13 @@ $c ='
 			},
 			{
 				xtype : "button",
-				cls   : "ic_autorenew_black_36dp",
+				cls   : "load",
 				text  : "ajax load",
 				handler: function () { ajax_load();	}
 			},"--",
 			{
 				xtype : "button",
-				cls   : "ic_autorenew_black_36dp",
+				cls   : "load",
 				text  : "ajax request",
 				handler: function () { ajax_request();	}
 			}
@@ -109,4 +109,7 @@ $c ='
 			}
 		]
 	});
+
+	ajax_load = function(){ alert("Ajax Load"); }
+	ajax_request = function(){ alert("Ajax Request"); }
 </script>

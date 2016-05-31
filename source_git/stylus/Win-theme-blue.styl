@@ -1,0 +1,129 @@
+// TITLE
+$colorTitle   = #FFFF
+$bgColorTitle = #2A80B9
+
+// TBAR
+$colorTbar   = #333
+$bgColorTbar = #FFF
+
+	// BOTON
+	$bgBtnHover    = #BAD8EC
+	$bordeBtnHover = #2A80B9
+	$bordeBtnActive = #2A80B9
+
+	// SEPARATOR
+	$colorSeparator = #888
+
+	// PANEL
+	$colorTitlePanel = #333
+
+	// TABPANEL
+	// $bgColorTabPanel = #D2E6F5
+	$colorTabPanel = #FFF
+	$bgColorTabPanel = $bgColorTitle
+
+// VENTANA WIN
+$wMarco = #FFF
+
+// CALENDAR
+$bgCalendar = #2A80B9
+$colorCalendar = #FFF
+
+// INPUT BUTTON
+$bgInputButton    = $bgCalendar
+$colorInputButton = $colorCalendar
+
+.win-marco
+	background-color $wMarco
+	border 1px solid $bgColorTitle
+
+	/.win-title
+		background-color $bgColorTitle
+		color $colorTitle
+
+	/.win-tbar
+		background-color $bgColorTbar
+		border-bottom 1px solid #888
+		width calc(100% - 20px)
+		margin 0 10px
+
+		div,
+		button
+			color $colorTbar
+
+		/.win-btn
+			color #FFF
+
+			&:hover
+				background-color $bgBtnHover
+
+			&:active
+				background-color $bgBtnActive
+
+		/.win-separator
+			color $colorSeparator
+
+		/.win-separatorHeight
+			border-color $colorSeparator
+
+		/.win-panel-title, /.win-group-title
+			color $colorTitlePanel
+
+		/.grilla_title_label:hover
+			background-color #DDD
+
+	/.win-tabpanel
+		background-color $bgColorTabPanel
+
+		/.win-tab
+			background-color $bgColorTitle
+			color $colorTabPanel
+			border-bottom 2px solid #FFF
+
+			&[data-activo=true]
+				color $colorTbar
+				background-color #FFF
+
+			&[data-activo=false]
+				background-color $bgColorTitle
+
+.win-ctxmenu
+	// background-color $bgColorTitle
+	// color $colorTitle
+
+// .win-calendar, .win-calendar-year
+// 	background $bgCalendar
+// 	color $colorCalendar
+
+// 	.calendar-change:hover
+// 		background #DDD
+// 		color #333
+
+// 	.calendar-header:hover
+// 		background #DDD
+// 		color #333
+
+// 	.weekDaysCell:hover
+// 		background #DDD
+// 		color #333
+// 		font-weight bold
+
+// 	select, input
+// 		background $bgCalendar
+// 		color $colorCalendar
+
+input[type=button]
+	background $bgCalendar
+	color $colorCalendar
+
+	&:hover
+		background-color #DDD
+		color $colorTbar
+
+	&:active
+		background-color $bgBtnActive
+		color $colorTbar
+
+.form_separador
+	color $bgColorTitle
+	border-bottom 1px solid $bgColorTitle

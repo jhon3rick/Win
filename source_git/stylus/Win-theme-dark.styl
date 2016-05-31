@@ -1,0 +1,92 @@
+// TITLE
+$colorTitle   = #FFF
+$bgColorTitle = #2B2B36
+
+// TBAR
+$colorTbar   = #D6D6D6
+$bgColorTbar = #696969
+
+	// BOTON
+	$BgBtnHover    = #2B2B36
+	$BgBtnActive   = #4D4D56
+	$bordeBtnHover = #B7B7B7
+
+	// SEPARATOR
+	$colorSeparator = #D6D6D6
+
+// VENTANA WIN
+$wMarco = #FFF
+
+// CALENDAR
+$bgCalendar = rgba(22, 22, 22, 1)
+$colorCalendar = #FFF
+
+// INPUT BUTTON
+$bgInputButton    = $bgCalendar
+$colorInputButton = $colorCalendar
+
+// VENTANA WIN
+.win-marco
+	background-color $wMarco
+	border 1px solid $bgColorTitle
+
+	/.win-title
+		background-color $bgColorTitle
+		color $colorTitle
+
+		/.win-title-btn
+			background-image url(../img/window/close.png)
+			background-size 15px
+
+	/.win-tbar
+		background-color $bgColorTbar
+		color $colorTbar
+
+		/.win-btn
+
+			&:hover
+				background-color $BgBtnHover
+
+			&:active
+				background-color $BgBtnActive
+
+		/.win-separator
+			color $colorSeparator
+
+		/.win-separatorHeight
+			border-color $colorSeparator
+
+.win-calendar, .win-calendar-year
+	background $bgCalendar
+	color $colorCalendar
+
+	.calendar-change:hover
+		background #DDD
+		color #333
+
+	.calendar-header:hover
+		background #DDD
+		color #333
+
+	.weekDaysCell:hover
+		background #DDD
+		color #333
+		font-weight bold
+
+	select, input
+		background $bgCalendar
+		color $colorCalendar
+
+input[type=button]
+	background $bgCalendar
+	color $colorCalendar
+
+	&:hover
+		background-color #DDD
+		color #333
+
+
+	&:active
+		background-color $BgBtnActive
+		color #333
+

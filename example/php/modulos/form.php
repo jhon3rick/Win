@@ -1,4 +1,4 @@
-<div class="subtitle">Validacion Feld</div>
+<div class="subtitle">VALIDACION FELD FORMULARIO</div>
 <div class="parrafo">
 	<div style="margin: 15px 5px;">Field Text</div>
 	<input type="text" id="inputInteger" class="inputForm" placeholder="inputInteger" data-icon="add" />
@@ -10,7 +10,7 @@ $c ='
 <script>
 	$W.Form.field({
 		idApply : "inputInteger",
-		type    : "integer"		// integer, double, email, mayuscula, minuscula
+		type    : "integer"		// integer, double, email, uppercase, lowercase
 	});
 </script>';
 				echo htmlentities($c);
@@ -31,8 +31,7 @@ $c ='
 	$W.Form.field({
 		idApply   : "inputDate",
 		format    : "y-m-d",
-		type      : "date",
-		listeners : { select: function(j) { alert(j) } }
+		type      : "date"
 	});
 </script>';
 				echo htmlentities($c);
@@ -69,7 +68,7 @@ $c ='
 
 	$W.Form.field({
 		idApply : "inputInteger",
-		type    : "integer"		// integer, double, email, text, upercase, lowercase
+		type    : "integer"		// integer, double, email, text, uppercase, lowercase
 	});
 
 	$W.Form.field({

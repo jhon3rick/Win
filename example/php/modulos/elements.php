@@ -1,4 +1,4 @@
-<div class="subtitle">Elements</div>
+<div class="subtitle">ELEMENTS</div>
 <div class="parrafo">
 	<div>Hidden</div>
 	<div>

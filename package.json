@@ -1,6 +1,6 @@
 {
   "name": "win",
-  "version": "0.0.1",
+  "version": "0.2",
   "description": "Libreria para web aplicaciones RIA",
   "main": "gulpfile.js",
   "dependencies": {},

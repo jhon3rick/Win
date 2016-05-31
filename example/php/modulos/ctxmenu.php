@@ -1,6 +1,5 @@
-<div class="subtitle">Tbar</div>
 <div class="parrafo">
-	<div id="div1">Probar Click derecho aqui!</div>
+	<div id="div1">PROBAR CLICK DERECHO AQUI!</div>
 	<div>
 		<pre><code class="html" id="tbarColor">
 			<?php
@@ -12,19 +11,19 @@ $c ='
 		items   :
 		[
 			{
-				text    : "Eliminar1",
+				text    : "Pintar en Rojo",
 				cls     : "delete",
-				handler : function(a){ a.color="red" }
+				handler : function(){ document.getElementById("div1").style.color="red" }
 			},
 			{
-				text    : "Eliminar2",
+				text    : "Pintar en azul",
 				cls     : "delete1",
-				handler : function(p){ console.log(p); }
+				handler : function(){ document.getElementById("div1").style.color="blue" }
 			},
 			{
-				text    : "Eliminar3",
+				text    : "Opcion 3",
 				cls     : "delete3",
-				handler : function(t){ console.log(t); }
+				handler : function(){ alert("Opcion 3"); }
 			}
 		]
 	})
@@ -43,19 +42,19 @@ $c ='
 		items   :
 		[
 			{
-				text    : "Eliminar1",
+				text    : "Pintar en Rojo",
 				cls     : "delete",
-				handler : function(div){ console.log(div); div.color="red" }
+				handler : function(){ document.getElementById("div1").style.color="red" }
 			},
 			{
-				text    : "Eliminar2",
+				text    : "Pntar en azul",
 				cls     : "delete1",
-				handler : function(p){ console.log(p); }
+				handler : function(){  document.getElementById("div1").style.color="blue" }
 			},
 			{
-				text    : "Eliminar3",
+				text    : "Opcion 3",
 				cls     : "delete3",
-				handler : function(t){ console.log(t); }
+				handler : function(){ alert("Opcion 3"); }
 			}
 		]
 	})

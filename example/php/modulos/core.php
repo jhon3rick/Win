@@ -9,8 +9,8 @@ $c ='
     <div>Segundo Div</div>
 </div>
 <script>
-	$W(".parrafo > div").html("tapquo");						// Captura varios nodos que cumplen la condicion
-	$W(".parrafo > div").html("tapquo").style("color", "red")	// Anidacion de funciones
+	$W(".parrafo > div").html("<div>text 1</div>");					  // Captura varios nodos que cumplen la condicion
+	$W(".parrafo > div").html("<div>text 2</div>").style("color", "red");   // Anidacion de funciones
 </script>';
 				echo htmlentities($c);
 			?>

@@ -1,4 +1,4 @@
-<div class="subtitle">Ventana</div>
+<div class="subtitle">VENTANA</div>
 <div class="parrafo">
 	<div>Elemento Windows</div>
 	<input type="button" onclick="ventana1('auto')" value="AutoResize" data-icon="date"/>
@@ -32,7 +32,7 @@ $c ='
 			resize      : true,
 			autoLoad    :
 			{
-				url     : "bd.php",
+				url     : "php/bd.php",
 				params  :
 				{
 					opc : "prueba_ajax",
@@ -48,7 +48,7 @@ $c ='
 						{
 							xtype : "button",
 							id    : "btn_1",
-							cls   : "user_black_36",
+							cls   : "add",
 							text  : "Nueva ventana",
 							handler : function(){ ventana2(); }
 						},
@@ -61,7 +61,7 @@ $c ='
 							html      : "<div>contenido por parametro</div>",
 							autoLoad  :
 							{
-								url		: "bd.php",
+								url		: "php/bd.php",
 								params	:
 								{
 									opc    : "prueba_ajax_load",
@@ -71,25 +71,24 @@ $c ='
 						},
 						{
 							xtype : "button",
-							id    : "btn_2",
-							handler: function () { ajax_load();	},
-							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax load"
+							width : 60,
+							cls   : "load",
+							text  : "ajax load",
+							handler: function () { alert("Ajax Load"); }
 						},
 						{
 							xtype : "button",
-							id    : "btn_2",
-							handler: function () { ajax_request();	},
-							cls   : "ic_autorenew_black_36dp",
-							text  : "ajax request"
+							width : 60,
+							cls   : "load",
+							text  : "ajax request",
+							handler: function () { alert("Ajax Request"); }
 						}
 						,"->","-",
 						{
 							xtype : "button",
-							id    : "btn_1",
-							cls   : "icon-action-black-ic_perm_identity_black_24dp",
+							cls   : "exit",
 							text  : "Salir",
-							handler : function(){ alert(4); ventana2(); }
+							handler : function(){ Win_ventana_1.close() }
 						},"--",
 						{
 							xtype : "tbtext",
@@ -136,7 +135,7 @@ $c ='
 			resize      : true,
 			autoLoad    :
 			{
-				url     : "bd.php",
+				url     : "php/bd.php",
 				params  :
 				{
 					opc : "prueba_ajax",
@@ -151,8 +150,7 @@ $c ='
 					[
 						{
 							xtype : "button",
-							id    : "btn_1",
-							cls   : "user_black_36",
+							cls   : "add",
 							text  : "Nueva ventana",
 							handler : function(){ ventana2(); }
 						},
@@ -165,7 +163,7 @@ $c ='
 							html      : "<div>contenido por parametro</div>",
 							autoLoad  :
 							{
-								url		: "bd.php",
+								url		: "php/bd.php",
 								params	:
 								{
 									opc    : "prueba_ajax_load",
@@ -175,27 +173,24 @@ $c ='
 						},
 						{
 							xtype : "button",
-							id    : "btn_2",
 							width : 60,
-							cls   : "ic_autorenew_black_36dp",
+							cls   : "load",
 							text  : "ajax load",
-							handler: function () { ajax_load();	}
+							handler: function () { alert("Ajax Load"); }
 						},
 						{
 							xtype : "button",
-							id    : "btn_2",
 							width : 60,
-							cls   : "ic_autorenew_black_36dp",
+							cls   : "load",
 							text  : "ajax request",
-							handler: function () { ajax_request();	}
+							handler: function () { alert("Ajax Request"); }
 						}
 						,"->","-",
 						{
 							xtype : "button",
-							id    : "btn_1",
-							cls   : "icon-action-black-ic_perm_identity_black_24dp",
+							cls   : "exit",
 							text  : "Salir",
-							handler : function(){ alert(4); ventana2(); }
+							handler : function(){ Win_ventana_1.close() }
 						},"--",
 						{
 							xtype : "tbtext",
