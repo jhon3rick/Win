@@ -18,9 +18,7 @@
 
 		<style type="text/css">
 
-			#body-win{
-				padding: 10px;
-			}
+			#body-win{ padding: 10px; }
 
 			#body-win .subtitle, #body-win .subtitle2{
 				color            : #FFF;
@@ -31,12 +29,10 @@
 				background-color : #282b2e;
 			}
 
-			#load-win{
-				height: calc(100% - 30px);
-			}
+			#load-win{ height: calc(100% - 30px); }
 
-			.footer{ 
-				height           : 30px; 
+			.footer{
+				height           : 30px;
 				padding          : 8px 5px 2px 5px;
 				text-align       : center;
 				background-color : #CCC;
@@ -57,38 +53,38 @@
 
 			$W.Add({
 				idApply : "load-win",
-				items : 
+				items   :
 				[
 					{
-						xtype   : "tbar",
-						items   : 
+						xtype : "tbar",
+						items :
 						[
 							{
 								xtype : 'tbtext',
-								text : '<div><span style="color:red; font-size:40px;">$</span><span style="color:red; font-size:40px;">W</span><span style="font-size:30px;">in JS</span></div>',
+								text  : '<div><span style="color:red; font-size:40px;">$</span><span style="color:red; font-size:40px;">W</span><span style="font-size:30px;">in JS</span></div>',
 								width : 400
 							},'->','-',
 							{
-								xtype: 'panel',
-								title: 'Componentes',
+								xtype    : 'panel',
+								title    : 'Componentes',
 								autoLoad :
 								{
-									url		: "php/modulos/componentes.php",
-									params	: {}
+									url    : "php/modulos/componentes.php",
+									params : {}
 								}
 							}
-							
+
 						]
 					},
 					{
-						xtype : 'body',
-						id    : 'body-win',
+						xtype   : 'body',
+						id      : 'body-win',
 						scrollY : true
 					}
 				]
-				
+
 			})
-			
+
 		</script>
 
 	</body>

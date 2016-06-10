@@ -94,8 +94,6 @@ do ($W = Win) ->
 			_resize($W("#win-resize-left-#{id}")[0])
 			_resize($W("#win-resize-right-#{id}")[0])
 
-		if obj.tbar then console.log obj.tbar
-
 		if obj.tbar then _tbar({items:obj.tbar}, "win-section-#{id}")
 		if obj.items then _router(obj.items, "win-section-#{id}")
 		if obj.autoLoad then  _body(obj, "win-section-#{id}")
@@ -313,7 +311,6 @@ do ($W = Win) ->
 				e.stopPropagation()
 				return false
 
-		console.log event
 		html = ""
 		if obj.items
 			for own key, arr of obj.items
@@ -367,7 +364,7 @@ do ($W = Win) ->
 					when 'tabpanel' then _tabPanel(json, idParent)
 					when 'tab' then _tab(json, idParent)
 					when 'tbtext' then _tbText(json, idParent)
-					when 'body' then _body(json, idParent)
+					when 'body' then _body(json, idParent, 'router')
 					else
 						if json == '-'
 							_separator(idParent)
@@ -388,13 +385,11 @@ do ($W = Win) ->
 	###
 	_tabPanel = (obj, idParent) ->
 		style  = obj.style or ''
-		height = obj.height or ''
-		bodyHeight = ''
+		height = obj.height or 35
+		bodyHeight = obj.bodyHeight or "calc(100% - #{height})"
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
-
-		if height != '' then bodyHeight = "calc(100% - #{height})"
 
 		if obj.id then id=obj.id
 		else
@@ -596,10 +591,11 @@ do ($W = Win) ->
 	@method _body
 	@param  obj objectDom parent and config
 	###
-	_body = (obj, idParent) ->
+	_body = (obj, idParent, exec) ->
 		items = obj.items or ''
 		html  = obj.html or ''
 		style = 'overflow:hidden;'
+		exec  = exec or 'json'
 		clsBody   = obj.clsBody or ''
 		bodyStyle = obj.bodyStyle or ''
 
@@ -607,8 +603,8 @@ do ($W = Win) ->
 		else if obj.scrollX is true then style += 'overflow-x:auto;'
 		if obj.scroll is true then style = 'overflow:auto;'
 
-		if obj.idApply
-			id=obj.idApply
+		if obj.idApply then id=obj.idApply
+		else if obj.id and exec=='router' then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-body-#{CONTWIDGET}"
@@ -616,11 +612,10 @@ do ($W = Win) ->
 		parent = document.getElementById(idParent)
 		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style} #{bodyStyle}\" data-role=\"win-body\">#{html}</div>"
 
-
 		setTimeout () ->
 			_resizeBody(idParent)
 
-			if typeof(obj.autoLoad)
+			if obj.autoLoad
 				obj.autoLoad.idApply = id
 				$W.Load(obj.autoLoad)
 

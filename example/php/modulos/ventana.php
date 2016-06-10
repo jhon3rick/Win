@@ -23,13 +23,10 @@ $c ='
 			width       : width,
 			height      : height,
 			id          : "Win_ventana_1",
-			title       : "VENTANA 1",
-			titleStyle  : "",
+			title       : "Ventana 1",
 			scrollY 	: true,
 			modal       : true,
 			closable    : true,
-			drag        : true,
-			resize      : true,
 			autoLoad    :
 			{
 				url     : "php/bd.php",
@@ -46,39 +43,38 @@ $c ='
 					items :
 					[
 						{
-							xtype : "button",
-							id    : "btn_1",
-							cls   : "add",
-							text  : "Nueva ventana",
-							handler : function(){ ventana2(); }
-						},
-						{
-							xtype     : "panel",
-							width     : 160,
-							height    : 56,
-							bodyStyle : "background-color:rgb(208, 205, 205)",
-							bodyStyle : "border:1px solid #2a80b9;",
-							html      : "<div>contenido por parametro</div>",
-							autoLoad  :
+							xtype    : "panel",
+							width    : 110,
+							height   : 56,
+							title    : "Opciones",
+							style    : "text-align:center;",
+							html     : "<div>contenido por parametro</div>",
+							autoLoad :
 							{
 								url		: "php/bd.php",
 								params	:
 								{
-									opc    : "prueba_ajax_load",
-									prueba : 1
+									opc : "prueba_ajax_load",
 								}
 							}
+						},"-",
+						{
+							xtype : "button",
+							cls   : "add",
+							width : 65,
+							text  : "Nueva ventana",
+							handler : function(){ ventana2(); }
 						},
 						{
 							xtype : "button",
-							width : 60,
+							width : 65,
 							cls   : "load",
 							text  : "ajax load",
 							handler: function () { alert("Ajax Load"); }
 						},
 						{
 							xtype : "button",
-							width : 60,
+							width : 65,
 							cls   : "load",
 							text  : "ajax request",
 							handler: function () { alert("Ajax Request"); }
@@ -92,8 +88,45 @@ $c ='
 						},"--",
 						{
 							xtype : "tbtext",
-							id    : "btn_1",
-							text  : "una demostracion de un texto largo<br>con salto de linea",
+							text  : "<div style=\"padding:5px;\">una demostracion de un texto largo<br>con salto de linea</div>",
+						}
+					]
+				}
+			]
+		});
+	}
+
+	function ventana2(){
+		Win_ventana_2 = new $W.Window({
+			id          : "Win_ventana_2",
+			title       : "Ventana 2",
+			width       : 500,
+			height      : 400,
+			scrollY 	: true,
+			modal       : true,
+			closable    : true,
+			autoLoad    :
+			{
+				url     : "php/bd.php",
+				params  : { }
+			},
+			items :
+			[
+				{
+					xtype : "tbar",
+					items :
+					[
+
+						{
+							xtype   : "button",
+							text    : "Salir",
+							cls     : "exit",
+							handler : function(){ Win_ventana_2.close(); }
+						},"-","->","--",
+						{
+							xtype : "tbtext",
+							style : "text-align:center;",
+							text  : "Hello World!",
 						}
 					]
 				}
@@ -118,21 +151,14 @@ $c ='
 			height = "calc(100% - 20px)";
 		}
 
-		var ajax_request = function(){
-			console.log('btn ajax request');
-		}
-
 		Win_ventana_1 = new $W.Window({
 			width       : width,
 			height      : height,
 			id          : "Win_ventana_1",
-			title       : "VENTANA 1",
-			titleStyle  : "",
+			title       : "Ventana 1",
 			scrollY 	: true,
 			modal       : true,
 			closable    : true,
-			drag        : true,
-			resize      : true,
 			autoLoad    :
 			{
 				url     : "php/bd.php",
@@ -149,38 +175,38 @@ $c ='
 					items :
 					[
 						{
-							xtype : "button",
-							cls   : "add",
-							text  : "Nueva ventana",
-							handler : function(){ ventana2(); }
-						},
-						{
-							xtype     : "panel",
-							width     : 160,
-							height    : 56,
-							bodyStyle : "background-color:rgb(208, 205, 205)",
-							bodyStyle : "border:1px solid #2a80b9;",
-							html      : "<div>contenido por parametro</div>",
-							autoLoad  :
+							xtype    : "panel",
+							width    : 110,
+							height   : 56,
+							title    : "Opciones",
+							style    : "text-align:center;",
+							html     : "<div>contenido por parametro</div>",
+							autoLoad :
 							{
 								url		: "php/bd.php",
 								params	:
 								{
-									opc    : "prueba_ajax_load",
-									prueba : 1
+									opc : "prueba_ajax_load",
 								}
 							}
+						},'-',
+						{
+							xtype : "button",
+							cls   : "add",
+							width : 65,
+							text  : "Nueva ventana",
+							handler : function(){ ventana2(); }
 						},
 						{
 							xtype : "button",
-							width : 60,
+							width : 65,
 							cls   : "load",
 							text  : "ajax load",
 							handler: function () { alert("Ajax Load"); }
 						},
 						{
 							xtype : "button",
-							width : 60,
+							width : 65,
 							cls   : "load",
 							text  : "ajax request",
 							handler: function () { alert("Ajax Request"); }
@@ -194,8 +220,45 @@ $c ='
 						},"--",
 						{
 							xtype : "tbtext",
-							id    : "btn_1",
 							text  : "<div style=\"padding:5px;\">una demostracion de un texto largo<br>con salto de linea</div>",
+						}
+					]
+				}
+			]
+		});
+	}
+
+	function ventana2(){
+		Win_ventana_2 = new $W.Window({
+			id          : "Win_ventana_2",
+			title       : "Ventana 2",
+			width       : 500,
+			height      : 400,
+			scrollY 	: true,
+			modal       : true,
+			closable    : true,
+			autoLoad    :
+			{
+				url     : "php/bd.php",
+				params  : { }
+			},
+			items :
+			[
+				{
+					xtype : "tbar",
+					items :
+					[
+
+						{
+							xtype   : "button",
+							text    : "Salir",
+							cls     : "exit",
+							handler : function(){ Win_ventana_2.close(); }
+						},"-","->","--",
+						{
+							xtype : "tbtext",
+							style : "text-align:center;",
+							text  : "Hello World!",
 						}
 					]
 				}
