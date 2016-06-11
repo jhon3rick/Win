@@ -407,8 +407,8 @@ do ($W = Win) ->
 		document.getElementById("win-tabpanel-body-#{id}").style.height = "calc(100% - #{heightTabPanel}px)"
 
 	_tab = (obj, idParent) ->
-		title  = obj.title or ''
-		iconCls  = obj.iconCls or ''
+		title   = obj.title or ''
+		iconCls = obj.iconCls or ''
 
 		if obj.id then id=obj.id
 		else
@@ -429,8 +429,11 @@ do ($W = Win) ->
 				load = this.getAttribute "data-load"
 				if load is "false"
 					this.setAttribute "data-load","true"
-					obj.autoLoad.idApply = "win-tab-body-#{id}"
-					$W.Load(obj.autoLoad)
+
+					if obj.autoLoad
+						obj.autoLoad.idApply = "win-tab-body-#{id}"
+						$W.Load(obj.autoLoad)
+					else if obj.items then _router(obj.items, "win-tab-body-#{id}")
 
 
 	###
