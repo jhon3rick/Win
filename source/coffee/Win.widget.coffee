@@ -94,11 +94,15 @@ do ($W = Win) ->
 			_resize($W("#win-resize-left-#{id}")[0])
 			_resize($W("#win-resize-right-#{id}")[0])
 
-		if obj.tbar then console.log obj.tbar
+		objAdd = []
+		if obj.items then objAdd = obj.items
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
 
-		if obj.tbar then _tbar({items:obj.tbar}, "win-section-#{id}")
-		if obj.items then _router(obj.items, "win-section-#{id}")
-		if obj.autoLoad then  _body(obj, "win-section-#{id}")
+		objAdd.reverse()
+
+		_router(objAdd, "win-section-#{id}")
 
 		close: () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
@@ -135,8 +139,15 @@ do ($W = Win) ->
 				type = lastDiv.getAttribute("data-role")
 				if type is "div-empty" then  lastDiv.parentNode.removeChild(lastDiv)
 
-		if obj.items then _router(obj.items, obj.idApply)
-		if obj.autoLoad then _body(obj, obj.idApply)
+		objAdd = []
+		if obj.items then objAdd = obj.items
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
+
+		objAdd.reverse()
+
+		_router(objAdd, obj.idApply)
 
 	$W.Tbar = (obj) ->
 		parent = document.getElementById("#{obj.idApply}")
@@ -166,6 +177,11 @@ do ($W = Win) ->
 		@.disable = () ->
 			document.getElementById(id).setAttribute('data-state','disable')
 			ELEMENT_ARRAY[id].state = "disable"
+
+		@.active = (index) ->
+			if index>=0
+				$W("##{id} [data-index=index-#{index}]").style('display','none')
+				ELEMENT_ARRAY[id].state = "disable"
 
 		return this
 
@@ -235,7 +251,6 @@ do ($W = Win) ->
 				), duracion
 
 	$W.Alert = (obj) ->
-
 		width  = 250
 		height = 120
 		title  = obj.title or 'Alert'
@@ -313,7 +328,6 @@ do ($W = Win) ->
 				e.stopPropagation()
 				return false
 
-		console.log event
 		html = ""
 		if obj.items
 			for own key, arr of obj.items
@@ -354,8 +368,10 @@ do ($W = Win) ->
 	@param  obj ObjetoDom idParent
 	###
 	_router = (obj, idParent) ->
+
 		if typeof(obj) == 'object'
 			float = 'left'
+			cont  = 0
 
 			obj.forEach (json,index,element) ->
 
@@ -365,9 +381,9 @@ do ($W = Win) ->
 					when 'tbar' then _tbar(json, idParent)
 					when 'panel' then _panel(json, idParent)
 					when 'tabpanel' then _tabPanel(json, idParent)
-					when 'tab' then _tab(json, idParent)
+					when 'tab' then _tab(json, idParent, cont)
 					when 'tbtext' then _tbText(json, idParent)
-					when 'body' then _body(json, idParent)
+					when 'body' then _body(json, idParent, 'router')
 					else
 						if json == '-'
 							_separator(idParent)
@@ -378,6 +394,7 @@ do ($W = Win) ->
 						else if json == '->'
 							float = 'right'
 							document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
+				cont++
 
 			if float == 'left'
 				document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
@@ -388,13 +405,11 @@ do ($W = Win) ->
 	###
 	_tabPanel = (obj, idParent) ->
 		style  = obj.style or ''
-		height = obj.height or ''
-		bodyHeight = ''
+		height = obj.height or 35
+		bodyHeight = obj.bodyHeight or "calc(100% - #{height})"
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
-
-		if height != '' then bodyHeight = "calc(100% - #{height})"
 
 		if obj.id then id=obj.id
 		else
@@ -411,32 +426,45 @@ do ($W = Win) ->
 		heightTabPanel = document.getElementById(id).offsetHeight
 		document.getElementById("win-tabpanel-body-#{id}").style.height = "calc(100% - #{heightTabPanel}px)"
 
-	_tab = (obj, idParent) ->
-		title  = obj.title or ''
-		iconCls  = obj.iconCls or ''
+	_tab = (obj, idParent, cont) ->
+		title   = obj.title or ''
+		iconCls = obj.iconCls or ''
 
 		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-activo=\"false\" data-load=\"false\"><span class=\"icon-tab form\"></span><span>#{title}</span></div>"
-		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:hidden;\" data-activo=\"false\">#{id}</div>"
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-activo=\"false\" data-index=\"index-#{cont}\" data-load=\"false\"><span class=\"icon-tab form\"></span><span>#{title}</span></div>"
+		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto;\" data-activo=\"false\" data-index=\"index-#{cont}\"></div>"
 
 		setTimeout () ->
+			objAdd = []
+			if obj.items then objAdd = obj.items
+			if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+			if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
+			objAdd.reverse()
+
+			ELEMENT_ARRAY[id] = {idParent:idParent, items:objAdd}
+
 			document.getElementById(id).onclick = () ->
-				$W("##{idParent} > [data-activo=true]").attr "data-activo","false"
-				this.setAttribute "data-activo","true"
+				_activeTab(id)
 
-				$W("#win-tabpanel-body-#{idParent} > [data-activo=true]").attr "data-activo","false"
-				$W("#win-tab-body-#{id}").attr "data-activo","true"
+	_activeTab = (id) ->
+		tab      = document.getElementById(id)
+		items    = ELEMENT_ARRAY[id].items
+		idParent = ELEMENT_ARRAY[id].idParent
 
-				load = this.getAttribute "data-load"
-				if load is "false"
-					this.setAttribute "data-load","true"
-					obj.autoLoad.idApply = "win-tab-body-#{id}"
-					$W.Load(obj.autoLoad)
+		$W("##{idParent} > [data-activo=true]").attr "data-activo","false"
+		tab.setAttribute "data-activo","true"
 
+		$W("#win-tabpanel-body-#{idParent} > [data-activo=true]").attr "data-activo","false"
+		$W("#win-tab-body-#{id}").attr "data-activo","true"
+
+		load = tab.getAttribute "data-load"
+		if load is "false"
+			this.setAttribute "data-load","true"
+			if obj.items then _router(items, "win-tab-body-#{id}")
 
 	###
 	@method _panel
@@ -596,10 +624,11 @@ do ($W = Win) ->
 	@method _body
 	@param  obj objectDom parent and config
 	###
-	_body = (obj, idParent) ->
+	_body = (obj, idParent, exec) ->
 		items = obj.items or ''
 		html  = obj.html or ''
 		style = 'overflow:hidden;'
+		exec  = exec or 'json'
 		clsBody   = obj.clsBody or ''
 		bodyStyle = obj.bodyStyle or ''
 
@@ -607,8 +636,8 @@ do ($W = Win) ->
 		else if obj.scrollX is true then style += 'overflow-x:auto;'
 		if obj.scroll is true then style = 'overflow:auto;'
 
-		if obj.idApply
-			id=obj.idApply
+		if obj.idApply then id=obj.idApply
+		else if obj.id and exec=='router' then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-body-#{CONTWIDGET}"
@@ -616,11 +645,10 @@ do ($W = Win) ->
 		parent = document.getElementById(idParent)
 		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style} #{bodyStyle}\" data-role=\"win-body\">#{html}</div>"
 
-
 		setTimeout () ->
 			_resizeBody(idParent)
 
-			if typeof(obj.autoLoad)
+			if obj.autoLoad
 				obj.autoLoad.idApply = id
 				$W.Load(obj.autoLoad)
 

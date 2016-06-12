@@ -1,48 +1,53 @@
 <div class="subtitle">TBAR</div>
 <div class="parrafo">
-	<div id="div1"></div>
+	<div id="divTbar"></div>
 	<div>
 		<pre><code class="html" id="tbarColor">
 			<?php
 $c ='
-<div id="div1"></div>
+<div id="divTbar"></div>
 <script>
 	$W.Tbar({
-		idApply : "div1",
+		idApply : "divTbar",
 		items   :
 		[
 			{
-				xtype   : "button",
-				cls     : "add",
-				text    : "Nueva ventana",
-				handler : function(){ prueba(); }
-			},
-			{
 				xtype    : "panel",
-				title    : "prueba",
-				width    : 160,
+				title    : "Opciones",
+				width    : 110,
+				style    : "text-align:center;",
 				html     : "<div>contenido por parametro</div>",
 				autoLoad :
 				{
-					url		: "bd.php",
+					url		: "php/bd.php",
 					params	:
 					{
 						opc    : "prueba_ajax_load",
 						prueba : 1
 					}
 				}
-			},
+			},"-",
 			{
-				xtype : "button",
-				cls   : "load",
-				text  : "ajax load",
-				handler: function () { ajax_load();	}
+				xtype   : "button",
+				width   : 65,
+				cls     : "add",
+				text    : "Nueva ventana",
+				handler : function(){ alert("Nueva Ventana");  }
+			},
+
+			{
+				xtype   : "button",
+				width   : 65,
+				cls     : "load",
+				text    : "ajax load",
+				handler : function () { ajax_load();	}
 			},"--",
 			{
-				xtype : "button",
-				cls   : "load",
-				text  : "ajax request",
-				handler: function () { ajax_request();	}
+				xtype   : "button",
+				width   : 65,
+				cls     : "load",
+				text    : "ajax request",
+				handler : function () { ajax_request();	}
 			}
 			,"->","-",
 			{
@@ -53,6 +58,9 @@ $c ='
 			}
 		]
 	});
+
+	ajax_load = function(){ alert("Ajax Load"); }
+	ajax_request = function(){ alert("Ajax Request"); }
 </script>';
 				echo htmlentities($c);
 			?>
@@ -64,41 +72,46 @@ $c ='
 	hljs.highlightBlock(document.querySelector('#tbarColor'));
 
 	$W.Tbar({
-		idApply : "div1",
+		idApply : "divTbar",
 		items   :
 		[
 			{
-				xtype   : "button",
-				cls     : "add",
-				text    : "Nueva ventana",
-				handler : function(){ prueba(); }
-			},
-			{
 				xtype    : "panel",
-				title    : "prueba",
-				width    : 160,
+				title    : "Opciones",
+				width    : 110,
+				style    : "text-align:center;",
 				html     : "<div>contenido por parametro</div>",
 				autoLoad :
 				{
-					url		: "bd.php",
+					url		: "php/bd.php",
 					params	:
 					{
 						opc    : "prueba_ajax_load",
 						prueba : 1
 					}
 				}
-			},
+			},"-",
 			{
-				xtype : "button",
-				cls   : "load",
-				text  : "ajax load",
-				handler: function () { ajax_load();	}
+				xtype   : "button",
+				width   : 65,
+				cls     : "add",
+				text    : "Nueva ventana",
+				handler : function(){ alert("Nueva Ventana");  }
+			},
+
+			{
+				xtype   : "button",
+				width   : 65,
+				cls     : "load",
+				text    : "ajax load",
+				handler : function () { ajax_load();	}
 			},"--",
 			{
-				xtype : "button",
-				cls   : "load",
-				text  : "ajax request",
-				handler: function () { ajax_request();	}
+				xtype   : "button",
+				width   : 65,
+				cls     : "load",
+				text    : "ajax request",
+				handler : function () { ajax_request();	}
 			}
 			,"->","-",
 			{

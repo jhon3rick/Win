@@ -385,13 +385,11 @@ do ($W = Win) ->
 	###
 	_tabPanel = (obj, idParent) ->
 		style  = obj.style or ''
-		height = obj.height or ''
-		bodyHeight = ''
+		height = obj.height or 35
+		bodyHeight = obj.bodyHeight or "calc(100% - #{height})"
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
-
-		if height != '' then bodyHeight = "calc(100% - #{height})"
 
 		if obj.id then id=obj.id
 		else
@@ -409,8 +407,8 @@ do ($W = Win) ->
 		document.getElementById("win-tabpanel-body-#{id}").style.height = "calc(100% - #{heightTabPanel}px)"
 
 	_tab = (obj, idParent) ->
-		title  = obj.title or ''
-		iconCls  = obj.iconCls or ''
+		title   = obj.title or ''
+		iconCls = obj.iconCls or ''
 
 		if obj.id then id=obj.id
 		else
@@ -418,7 +416,7 @@ do ($W = Win) ->
 			id="win-tab-#{CONTWIDGET}"
 
 		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-activo=\"false\" data-load=\"false\"><span class=\"icon-tab form\"></span><span>#{title}</span></div>"
-		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:hidden;\" data-activo=\"false\">#{id}</div>"
+		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto;\" data-activo=\"false\">#{id}</div>"
 
 		setTimeout () ->
 			document.getElementById(id).onclick = () ->
@@ -431,8 +429,11 @@ do ($W = Win) ->
 				load = this.getAttribute "data-load"
 				if load is "false"
 					this.setAttribute "data-load","true"
-					obj.autoLoad.idApply = "win-tab-body-#{id}"
-					$W.Load(obj.autoLoad)
+
+					if obj.autoLoad
+						obj.autoLoad.idApply = "win-tab-body-#{id}"
+						$W.Load(obj.autoLoad)
+					else if obj.items then _router(obj.items, "win-tab-body-#{id}")
 
 
 	###

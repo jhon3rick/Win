@@ -48,8 +48,6 @@ do ($W = Win) ->
 
 		xhr.send(param)
 
-
-
 	$W.Load = (obj) ->
 
 		if !obj.idApply
@@ -82,11 +80,9 @@ do ($W = Win) ->
 		xhr.onreadystatechange = () ->
 			if xhr.readyState == 4
 				divScript = document.getElementById(obj.idApply)
-
 				if xhr.status == 404 then divScript.innerHTML = 'Not found'
 				else
 					divScript.innerHTML = xhr.responseText
-					console.log(divScript)
 					_loadScript(divScript)
 
 		xhr.send(param)
@@ -97,10 +93,7 @@ do ($W = Win) ->
 	###
 	_loadScript = (obj) ->
 		tagsScript = obj.getElementsByTagName('script')
-		console.log tagsScript
 		for i in tagsScript
-			console.log 1
-			console.log i
 			tagScript = document.createElement('script')
 			tagScript.innerHTML = i.innerHTML
 			i.parentNode.replaceChild(tagScript,i)

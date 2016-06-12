@@ -12,6 +12,7 @@
 		<option value="ventana">Ventana</option>
 		<option value="add">Add</option>
 		<option value="ctxmenu">Menu click derecho</option>
+		<option value="tabpanel">Tab Panel</option>
 	</select>
 </div>
 <script type="text/javascript">
