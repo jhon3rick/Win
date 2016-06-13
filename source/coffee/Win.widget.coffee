@@ -96,11 +96,9 @@ do ($W = Win) ->
 
 		objAdd = []
 		if obj.items then objAdd = obj.items
-		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
-		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
 		if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
-
-		objAdd.reverse()
+		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
 
 		_router(objAdd, "win-section-#{id}")
 
@@ -141,11 +139,9 @@ do ($W = Win) ->
 
 		objAdd = []
 		if obj.items then objAdd = obj.items
-		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
-		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
 		if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
-
-		objAdd.reverse()
+		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
 
 		_router(objAdd, obj.idApply)
 
@@ -441,11 +437,10 @@ do ($W = Win) ->
 		setTimeout () ->
 			objAdd = []
 			if obj.items then objAdd = obj.items
-			if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
 			if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
-			objAdd.reverse()
+			if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
 
-			ELEMENT_ARRAY[id] = {idParent:idParent, items:objAdd}
+			ELEMENT_ARRAY[id] = {idParent:idParent, items:objAdd, state:'enable'}
 
 			document.getElementById(id).onclick = () ->
 				_activeTab(id)
@@ -463,8 +458,8 @@ do ($W = Win) ->
 
 		load = tab.getAttribute "data-load"
 		if load is "false"
-			this.setAttribute "data-load","true"
-			if obj.items then _router(items, "win-tab-body-#{id}")
+			tab.setAttribute "data-load","true"
+			if items then _router(items, "win-tab-body-#{id}")
 
 	###
 	@method _panel

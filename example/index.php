@@ -83,9 +83,8 @@
 						]
 					},
 					{
-						xtype   : 'body',
-						id      : 'body-win',
-						scrollY : true
+						xtype : 'body',
+						id    : 'body-win',
 					}
 				]
 
