@@ -15,6 +15,7 @@
 					{
 						xtype    : "tab",
 						title    : "Codigo",
+						//selected : true,
 						autoLoad :
 						{
 							url    : "php/bd.php",
@@ -24,6 +25,7 @@
 					{
 						xtype    : "tab",
 						title    : "Tab 1",
+						selected : true,
 						autoLoad :
 						{
 							url    : "php/bd.php",
@@ -33,6 +35,7 @@
 					{
 						xtype    : "tab",
 						title    : "Tab 2",
+						state    : 'disable',
 						autoLoad :
 						{
 							url    : "php/bd.php",
