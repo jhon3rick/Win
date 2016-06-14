@@ -13,7 +13,7 @@
 do ($W = Win) ->
 
 	CONTWIDGET = 0
-	ELEMENT_ARRAY = {}
+	ELEMENTS = {}
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
@@ -96,9 +96,9 @@ do ($W = Win) ->
 
 		objAdd = []
 		if obj.items then objAdd = obj.items
-		if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
-		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
 		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
 
 		_router(objAdd, "win-section-#{id}")
 
@@ -139,9 +139,9 @@ do ($W = Win) ->
 
 		objAdd = []
 		if obj.items then objAdd = obj.items
-		if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
-		if obj.tabpanel then objAdd.push({xtype:'tabpanel', items : obj.tabpanel})
 		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
 
 		_router(objAdd, obj.idApply)
 
@@ -157,38 +157,65 @@ do ($W = Win) ->
 	$W.Element = (id) ->
 
 		@.hidden = () ->
-			if ELEMENT_ARRAY[id] == undefined then return
+			if ELEMENTS[id] == undefined then return
 
 			$W('#'+id).style('display','none')
 			_findResizeBody(id)
-			ELEMENT_ARRAY[id].hidden = true
+			ELEMENTS[id].hidden = true
 
 		@.show = () ->
-			if ELEMENT_ARRAY[id] == undefined then return
+			if ELEMENTS[id] == undefined then return
 
 			$W('#'+id).style('display','block')
 			_findResizeBody(id)
-			ELEMENT_ARRAY[id].hidden = false
+			ELEMENTS[id].hidden = false
 
-		@.enable = () ->
-			if ELEMENT_ARRAY[id] == undefined then return
+		@.enable = (index) ->
+			if ELEMENTS[id] == undefined then return
+			else if index == undefined and ELEMENTS[id].type == 'tabpanel'
+				return document.querySelectorAll("##{id} [data-state=enable]") || {}
+
+			else if ELEMENTS[id].type == 'tabpanel'
+				if index>=0 then id = document.querySelector("##{id} [data-index=index-#{index}]").id
+				else id = index
 
 			document.getElementById(id).setAttribute('data-state','enable')
-			ELEMENT_ARRAY[id].state = "enable"
+			ELEMENTS[id].state = "enable"
 
-		@.disable = () ->
-			if ELEMENT_ARRAY[id] == undefined then return
+		@.disable = (index) ->
+			if ELEMENTS[id] == undefined then return
+			else if ELEMENTS[id].type == 'tab' then _disableTab(id)
+			else if index == undefined and ELEMENTS[id].type == 'tabpanel'
+				return document.querySelectorAll("##{id} [data-state=disable]") || {}
+
+			else if ELEMENTS[id].type == 'tabpanel'
+				if index>=0 then id = document.querySelector("##{id} [data-index=index-#{index}]").id
+				else id = index
+
+				_disableTab(id)
 
 			document.getElementById(id).setAttribute('data-state','disable')
-			ELEMENT_ARRAY[id].state = "disable"
+			ELEMENTS[id].state = "disable" 
+
+		@state = (index) ->
+			state = undefined
+			if ELEMENTS[id] == undefined then return state
+			if ELEMENTS[id].type == 'tabpanel'
+				if index>=0
+					id = document.querySelector("##{id} [data-index=index-#{index}]").id
+					state = ELEMENTS[id].state
+				else state = ELEMENTS[index].state
+			else state = ELEMENTS[id].state
+					
+			return state
 
 		@.selected = (index) ->
-			if ELEMENT_ARRAY[id] == undefined then return
-			else if ELEMENT_ARRAY[id].type == 'tab' then _selectedTab(id)
+			if ELEMENTS[id] == undefined then return
+			else if ELEMENTS[id].type == 'tab' then _selectedTab(id)
 			else if index == undefined
-				return document.querySelector("##{id} [data-selected=true]") || {}
+				return document.querySelector("##{id} [data-selected=true]") || undefined
 
-			else if ELEMENT_ARRAY[id].type == 'tabpanel'
+			else if ELEMENTS[id].type == 'tabpanel'
 				if index>=0
 					idSelected = document.querySelector("##{id} [data-index=index-#{index}]").id
 					_selectedTab(idSelected)
@@ -196,9 +223,13 @@ do ($W = Win) ->
 					_selectedTab(index)
 		this
 
+	_disableTab = (id) -> 
+		document.getElementById("win-tab-body-#{id}").innerHTML = '';
+		document.getElementById(id).setAttribute('data-load','false')
+		document.getElementById(id).setAttribute('data-selected','false')
 
 	$W.BlockBtn = (id) ->
-		if ELEMENT_ARRAY[id].state == "disable" then return
+		if ELEMENTS[id].state == "disable" then return
 
 		$W.Element(id).disable()
 		setTimeout(()->
@@ -418,6 +449,7 @@ do ($W = Win) ->
 	_tabPanel = (obj, idParent) ->
 		style  = obj.style or ''
 		height = obj.height or 35
+		bodyStyle = obj.bodyStyle or ""
 		bodyHeight = obj.bodyHeight or "calc(100% - #{height})"
 
 		if !isNaN width then width = width+'px'
@@ -429,40 +461,47 @@ do ($W = Win) ->
 			id="win-tabpanel-#{CONTWIDGET}"
 
 		html = "<div id=\"#{id}\" class=\"win-tabpanel\" style=\"height:#{height}; #{style}\" data-role=\"win-tabpanel\"></div>
-				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>"
+				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight}; #{bodyStyle}\"></div>"
 
 		document.getElementById(idParent).innerHTML += html
-		ELEMENT_ARRAY[id] = {idParent:idParent, items:obj.items, state:'enable', type:'tabpanel'}
+		ELEMENTS[id] = {idParent:idParent, items:obj.items, state:'enable', type:'tabpanel'}
 
 		if obj.items then _router(obj.items, id)
 
 		heightTabPanel = document.getElementById(id).offsetHeight
 		document.getElementById("win-tabpanel-body-#{id}").style.height = "calc(100% - #{heightTabPanel}px)"
 
+		setTimeout () ->
+			if $W.Element(id).selected() == undefined then $W.Element(id).selected(0)
+
 	_tab = (obj, idParent, cont) ->
-		title    = obj.title or ''
-		iconCls  = obj.iconCls or ''
-		state    = obj.state or 'enable'
-		selected = obj.selected or 'false'
+		title     = obj.title or ''
+		iconCls   = obj.iconCls or ''
+		scrollX   = obj.scrollX or false
+		scrollY   = obj.scrollY or false
+		style     = obj.style or ''
+		bodyStyle = obj.bodyStyle or ''
+		state     = obj.state or 'enable'
+		selected  = obj.selected or 'false'
 
 		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-selected=\"#{selected}\" data-state=\"#{state}\" data-index=\"index-#{cont}\" data-load=\"false\">
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-selected=\"#{selected}\" data-state=\"#{state}\" data-index=\"index-#{cont}\" data-load=\"false\" style=\"#{style}\">
 															<span class=\"icon-tab form\"></span>
 															<span>#{title}</span>
 														</div>"
-		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto;\" data-selected=\"false\" data-index=\"index-#{cont}\"></div>"
+		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto; #{bodyStyle}\" data-selected=\"false\" data-index=\"index-#{cont}\"></div>"
 
 		setTimeout () ->
 			objAdd = []
 			if obj.items then objAdd = obj.items
-			if obj.tbar then objAdd.push({xtype:'tbar', items : obj.tbar})
-			if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+			if obj.autoLoad then objAdd.push({xtype:'body', scrollY:scrollY, scrollX:scrollX, autoLoad : obj.autoLoad})
+			if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
 
-			ELEMENT_ARRAY[id] = {idParent:idParent, items:objAdd, state:state, type:'tab', selected:selected}
+			ELEMENTS[id] = {idParent:idParent, items:objAdd, state:state, type:'tab', selected:selected}
 
 			document.getElementById(id).onclick = () ->
 				_selectedTab(id)
@@ -471,11 +510,11 @@ do ($W = Win) ->
 
 	_selectedTab = (id) ->
 
-		if ELEMENT_ARRAY[id].state is 'disable' then return
+		if ELEMENTS[id].state is 'disable' then return
 
 		tab      = document.getElementById(id)
-		items    = ELEMENT_ARRAY[id].items
-		idParent = ELEMENT_ARRAY[id].idParent
+		items    = ELEMENTS[id].items
+		idParent = ELEMENTS[id].idParent
 
 		$W("##{idParent} > [data-selected=true]").attr "data-selected","false"
 		tab.setAttribute "data-selected","true"
@@ -566,7 +605,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id=CONTWIDGET
 
-		ELEMENT_ARRAY[id] = { state:'enable', hidden:hidden, type:'buttonGroup' }
+		ELEMENTS[id] = { state:'enable', hidden:hidden, type:'buttonGroup' }
 
 		if title != ''
 			title = "<div id=\"win-buttongroup-title-#{id}\" style=\"height:20px;\" class=\"win-buttongroup-title\">#{title}</div>"
@@ -595,7 +634,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-btn-#{CONTWIDGET}"
 
-		ELEMENT_ARRAY[id] = { state:'enable', hidden:hidden, type:'button'}
+		ELEMENTS[id] = { state:'enable', hidden:hidden, type:'button'}
 
 		if !isNaN width then width = width+'px'
 
@@ -607,7 +646,7 @@ do ($W = Win) ->
 		if obj.handler
 			setTimeout () ->
 				document.querySelector("\##{idParent} > \##{id}").onclick = () ->
-					if ELEMENT_ARRAY[id].state == 'disable' then return
+					if ELEMENTS[id].state == 'disable' then return
 
 					$W.BlockBtn id
 					obj.handler this

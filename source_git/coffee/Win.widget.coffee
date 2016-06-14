@@ -13,7 +13,7 @@
 do ($W = Win) ->
 
 	CONTWIDGET = 0
-	ELEMENT_ARRAY = {}
+	ELEMENTS = {}
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
@@ -94,9 +94,13 @@ do ($W = Win) ->
 			_resize($W("#win-resize-left-#{id}")[0])
 			_resize($W("#win-resize-right-#{id}")[0])
 
-		if obj.tbar then _tbar({items:obj.tbar}, "win-section-#{id}")
-		if obj.items then _router(obj.items, "win-section-#{id}")
-		if obj.autoLoad then  _body(obj, "win-section-#{id}")
+		objAdd = []
+		if obj.items then objAdd = obj.items
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
+
+		_router(objAdd, "win-section-#{id}")
 
 		close: () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
@@ -133,8 +137,13 @@ do ($W = Win) ->
 				type = lastDiv.getAttribute("data-role")
 				if type is "div-empty" then  lastDiv.parentNode.removeChild(lastDiv)
 
-		if obj.items then _router(obj.items, obj.idApply)
-		if obj.autoLoad then _body(obj, obj.idApply)
+		objAdd = []
+		if obj.items then objAdd = obj.items
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
+		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
+
+		_router(objAdd, obj.idApply)
 
 	$W.Tbar = (obj) ->
 		parent = document.getElementById("#{obj.idApply}")
@@ -148,27 +157,79 @@ do ($W = Win) ->
 	$W.Element = (id) ->
 
 		@.hidden = () ->
+			if ELEMENTS[id] == undefined then return
+
 			$W('#'+id).style('display','none')
 			_findResizeBody(id)
-			ELEMENT_ARRAY[id].hidden = true
+			ELEMENTS[id].hidden = true
 
 		@.show = () ->
+			if ELEMENTS[id] == undefined then return
+
 			$W('#'+id).style('display','block')
 			_findResizeBody(id)
-			ELEMENT_ARRAY[id].hidden = false
+			ELEMENTS[id].hidden = false
 
-		@.enable = () ->
+		@.enable = (index) ->
+			if ELEMENTS[id] == undefined then return
+			else if index == undefined and ELEMENTS[id].type == 'tabpanel'
+				return document.querySelectorAll("##{id} [data-state=enable]") || {}
+
+			else if ELEMENTS[id].type == 'tabpanel'
+				if index>=0 then id = document.querySelector("##{id} [data-index=index-#{index}]").id
+				else id = index
+
 			document.getElementById(id).setAttribute('data-state','enable')
-			ELEMENT_ARRAY[id].state = "enable"
+			ELEMENTS[id].state = "enable"
 
-		@.disable = () ->
+		@.disable = (index) ->
+			if ELEMENTS[id] == undefined then return
+			else if ELEMENTS[id].type == 'tab' then _disableTab(id)
+			else if index == undefined and ELEMENTS[id].type == 'tabpanel'
+				return document.querySelectorAll("##{id} [data-state=disable]") || {}
+
+			else if ELEMENTS[id].type == 'tabpanel'
+				if index>=0 then id = document.querySelector("##{id} [data-index=index-#{index}]").id
+				else id = index
+
+				_disableTab(id)
+
 			document.getElementById(id).setAttribute('data-state','disable')
-			ELEMENT_ARRAY[id].state = "disable"
+			ELEMENTS[id].state = "disable" 
 
-		return this
+		@state = (index) ->
+			state = undefined
+			if ELEMENTS[id] == undefined then return state
+			if ELEMENTS[id].type == 'tabpanel'
+				if index>=0
+					id = document.querySelector("##{id} [data-index=index-#{index}]").id
+					state = ELEMENTS[id].state
+				else state = ELEMENTS[index].state
+			else state = ELEMENTS[id].state
+					
+			return state
+
+		@.selected = (index) ->
+			if ELEMENTS[id] == undefined then return
+			else if ELEMENTS[id].type == 'tab' then _selectedTab(id)
+			else if index == undefined
+				return document.querySelector("##{id} [data-selected=true]") || undefined
+
+			else if ELEMENTS[id].type == 'tabpanel'
+				if index>=0
+					idSelected = document.querySelector("##{id} [data-index=index-#{index}]").id
+					_selectedTab(idSelected)
+				else
+					_selectedTab(index)
+		this
+
+	_disableTab = (id) -> 
+		document.getElementById("win-tab-body-#{id}").innerHTML = '';
+		document.getElementById(id).setAttribute('data-load','false')
+		document.getElementById(id).setAttribute('data-selected','false')
 
 	$W.BlockBtn = (id) ->
-		if ELEMENT_ARRAY[id].state == "disable" then return
+		if ELEMENTS[id].state == "disable" then return
 
 		$W.Element(id).disable()
 		setTimeout(()->
@@ -233,7 +294,6 @@ do ($W = Win) ->
 				), duracion
 
 	$W.Alert = (obj) ->
-
 		width  = 250
 		height = 120
 		title  = obj.title or 'Alert'
@@ -351,8 +411,10 @@ do ($W = Win) ->
 	@param  obj ObjetoDom idParent
 	###
 	_router = (obj, idParent) ->
+
 		if typeof(obj) == 'object'
 			float = 'left'
+			cont  = 0
 
 			obj.forEach (json,index,element) ->
 
@@ -362,7 +424,7 @@ do ($W = Win) ->
 					when 'tbar' then _tbar(json, idParent)
 					when 'panel' then _panel(json, idParent)
 					when 'tabpanel' then _tabPanel(json, idParent)
-					when 'tab' then _tab(json, idParent)
+					when 'tab' then _tab(json, idParent, cont)
 					when 'tbtext' then _tbText(json, idParent)
 					when 'body' then _body(json, idParent, 'router')
 					else
@@ -375,6 +437,7 @@ do ($W = Win) ->
 						else if json == '->'
 							float = 'right'
 							document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
+				cont++
 
 			if float == 'left'
 				document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
@@ -386,6 +449,7 @@ do ($W = Win) ->
 	_tabPanel = (obj, idParent) ->
 		style  = obj.style or ''
 		height = obj.height or 35
+		bodyStyle = obj.bodyStyle or ""
 		bodyHeight = obj.bodyHeight or "calc(100% - #{height})"
 
 		if !isNaN width then width = width+'px'
@@ -397,44 +461,72 @@ do ($W = Win) ->
 			id="win-tabpanel-#{CONTWIDGET}"
 
 		html = "<div id=\"#{id}\" class=\"win-tabpanel\" style=\"height:#{height}; #{style}\" data-role=\"win-tabpanel\"></div>
-				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight};\"></div>"
+				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight}; #{bodyStyle}\"></div>"
 
 		document.getElementById(idParent).innerHTML += html
+		ELEMENTS[id] = {idParent:idParent, items:obj.items, state:'enable', type:'tabpanel'}
 
 		if obj.items then _router(obj.items, id)
 
 		heightTabPanel = document.getElementById(id).offsetHeight
 		document.getElementById("win-tabpanel-body-#{id}").style.height = "calc(100% - #{heightTabPanel}px)"
 
-	_tab = (obj, idParent) ->
-		title   = obj.title or ''
-		iconCls = obj.iconCls or ''
+		setTimeout () ->
+			if $W.Element(id).selected() == undefined then $W.Element(id).selected(0)
+
+	_tab = (obj, idParent, cont) ->
+		title     = obj.title or ''
+		iconCls   = obj.iconCls or ''
+		scrollX   = obj.scrollX or false
+		scrollY   = obj.scrollY or false
+		style     = obj.style or ''
+		bodyStyle = obj.bodyStyle or ''
+		state     = obj.state or 'enable'
+		selected  = obj.selected or 'false'
 
 		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-activo=\"false\" data-load=\"false\"><span class=\"icon-tab form\"></span><span>#{title}</span></div>"
-		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto;\" data-activo=\"false\">#{id}</div>"
+		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-selected=\"#{selected}\" data-state=\"#{state}\" data-index=\"index-#{cont}\" data-load=\"false\" style=\"#{style}\">
+															<span class=\"icon-tab form\"></span>
+															<span>#{title}</span>
+														</div>"
+		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto; #{bodyStyle}\" data-selected=\"false\" data-index=\"index-#{cont}\"></div>"
 
 		setTimeout () ->
+			objAdd = []
+			if obj.items then objAdd = obj.items
+			if obj.autoLoad then objAdd.push({xtype:'body', scrollY:scrollY, scrollX:scrollX, autoLoad : obj.autoLoad})
+			if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
+
+			ELEMENTS[id] = {idParent:idParent, items:objAdd, state:state, type:'tab', selected:selected}
+
 			document.getElementById(id).onclick = () ->
-				$W("##{idParent} > [data-activo=true]").attr "data-activo","false"
-				this.setAttribute "data-activo","true"
+				_selectedTab(id)
 
-				$W("#win-tabpanel-body-#{idParent} > [data-activo=true]").attr "data-activo","false"
-				$W("#win-tab-body-#{id}").attr "data-activo","true"
+			if selected is true then _selectedTab(id)
 
-				load = this.getAttribute "data-load"
-				if load is "false"
-					this.setAttribute "data-load","true"
+	_selectedTab = (id) ->
 
-					if obj.autoLoad
-						obj.autoLoad.idApply = "win-tab-body-#{id}"
-						$W.Load(obj.autoLoad)
-					else if obj.items then _router(obj.items, "win-tab-body-#{id}")
+		if ELEMENTS[id].state is 'disable' then return
 
+		tab      = document.getElementById(id)
+		items    = ELEMENTS[id].items
+		idParent = ELEMENTS[id].idParent
+
+		$W("##{idParent} > [data-selected=true]").attr "data-selected","false"
+		tab.setAttribute "data-selected","true"
+
+		$W("#win-tabpanel-body-#{idParent} > [data-selected=true]").attr "data-selected","false"
+		$W("#win-tab-body-#{id}").attr "data-selected","true"
+
+		#tab enable
+		load = tab.getAttribute "data-load"
+		if load is "false"
+			tab.setAttribute "data-load","true"
+			if items then _router(items, "win-tab-body-#{id}")
 
 	###
 	@method _panel
@@ -513,7 +605,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id=CONTWIDGET
 
-		ELEMENT_ARRAY[id] = { state:"enable", hidden:hidden }
+		ELEMENTS[id] = { state:'enable', hidden:hidden, type:'buttonGroup' }
 
 		if title != ''
 			title = "<div id=\"win-buttongroup-title-#{id}\" style=\"height:20px;\" class=\"win-buttongroup-title\">#{title}</div>"
@@ -542,7 +634,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-btn-#{CONTWIDGET}"
 
-		ELEMENT_ARRAY[id] = { state:"enable", hidden:hidden }
+		ELEMENTS[id] = { state:'enable', hidden:hidden, type:'button'}
 
 		if !isNaN width then width = width+'px'
 
@@ -554,7 +646,7 @@ do ($W = Win) ->
 		if obj.handler
 			setTimeout () ->
 				document.querySelector("\##{idParent} > \##{id}").onclick = () ->
-					if ELEMENT_ARRAY[id].state == "disable" then return
+					if ELEMENTS[id].state == 'disable' then return
 
 					$W.BlockBtn id
 					obj.handler this
@@ -751,7 +843,7 @@ do ($W = Win) ->
 			document.documentElement.addEventListener('mousemove', _doDrag, false)
 			document.documentElement.addEventListener('mouseup', _stopDrag, false)
 
-		_doDrag = (e) ->
+		_doDrag = (e) -> 
 
 			if attrData == 'left' then _resizeXLeft(e)
 			else if attrData == 'right' then _resizeXRight(e)

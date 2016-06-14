@@ -124,7 +124,7 @@ gulp.task 'default', ->
 gulp.task 'compile_watch', ->
 	gulp.watch path.coffee, ['coffee']
 	gulp.watch path.stylus, ['stylus']
-	gulp.watch path.coffee, ['minCoffee']
+	gulp.watch path.coffee, ['minCoffee'] 
 	gulp.watch path.stylus, ['minStylus']
 
 gulp.task 'coffee_watch', ->

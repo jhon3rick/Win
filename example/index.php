@@ -6,15 +6,15 @@
 		<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"></meta>
 		<meta content="0" http-equiv="Expires"></meta>
 
-		<!--<link rel="stylesheet" href="js/winJs/css/Win.min.css" />
+		<link rel="stylesheet" href="js/winJs/css/Win.min.css" />
 		<link rel="stylesheet" href="js/winJs/css/Win-theme-blue.min.css" />
 		<link rel="stylesheet" href="css/icon.css" />
 
-		<script src="js/winJs/js/Win.min.js"></script>-->
+		<script src="js/winJs/js/Win.min.js"></script>
 
-		<link rel="stylesheet" href="../dist/css/Win.min.css" />
+		<!--<link rel="stylesheet" href="../dist/css/Win.min.css" />
 		<link rel="stylesheet" href="../dist/css/Win-theme-blue.min.css" />
-		<link rel="stylesheet" href="css/icon.css" />
+		<link rel="stylesheet" href="css/icon.css" />-->
 
 		<script src="../dist/js/Win.min.js"></script>
 
@@ -67,7 +67,7 @@
 						[
 							{
 								xtype : 'tbtext',
-								text  : '<div><span style="color:red; font-size:40px;">$</span><span style="color:red; font-size:40px;">W</span><span style="font-size:30px;">in JS</span></div>',
+								text  : '<div><span style="color:red; font-size:40px;">$</span><span style="color:red; font-size:40px;">W</span><span style="font-size:30px;">in JS </span>v0.3</div>',
 								width : 400
 							},'->','-',
 							{

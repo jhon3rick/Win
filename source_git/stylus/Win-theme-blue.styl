@@ -78,14 +78,20 @@ $colorInputButton = $colorCalendar
 		/.win-tab
 			background-color $bgColorTitle
 			color $colorTabPanel
-			border-bottom 2px solid #FFF
+			border 2px solid transparent
+			border-bottom-color #FFF
 
-			&[data-activo=true]
+			&[data-selected=true]
 				color $colorTbar
-				background-color #FFF
+				background-color #FFF !important
 
-			&[data-activo=false]
+			&[data-selected=false]
 				background-color $bgColorTitle
+
+			&[data-state=disable]
+				color #afafaf
+				cursor	default
+				border-bottom-color transparent
 
 .win-ctxmenu
 	// background-color $bgColorTitle
