@@ -161,6 +161,7 @@
 <div id="tab-win"></div>
 <script>
 
+	$W.Element("idTab").selected();				// Selected tab id in tabpanel
 	$W.Element("idTabPanel").selected();			// Get tab selected in tabpanel
 	$W.Element("idTabPanel").selected(0);			// Selected tab position 0 in tabpanel
 	$W.Element("idTabPanel").selected("idTab");	// Selected tab id in tabpanel
