@@ -85,6 +85,7 @@
 					{
 						xtype    : "tab",
 						title    : "Codigo",
+						scrollY  : true,
 						autoLoad :
 						{
 							url    : "php/bd.php",
@@ -104,7 +105,7 @@
 					{
 						xtype    : "tab",
 						title    : "Tab 2",
-						scrollY  : "auto",
+						scrollY  : true,
 						autoLoad :
 						{
 							url    : "php/bd.php",
@@ -115,7 +116,7 @@
 						xtype    : "tab",
 						id       : "idTab",
 						title    : "Tab disable Json",
-						state    : "disable",
+						disable  : true,
 						autoLoad :
 						{
 							url    : "php/bd.php",

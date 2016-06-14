@@ -695,16 +695,19 @@ do ($W = Win) ->
 	@param  obj objectDom parent and config
 	###
 	_body = (obj, idParent, exec) ->
-		items = obj.items or ''
-		html  = obj.html or ''
-		style = 'overflow:hidden;'
-		exec  = exec or 'json'
+		items     = obj.items or ''
+		html      = obj.html or ''
+		style     = 'overflow:auto;'
+		exec      = exec or 'json'
 		clsBody   = obj.clsBody or ''
 		bodyStyle = obj.bodyStyle or ''
+		scroll    = obj.scroll or true
+		scrollY   = obj.scrollY or true
+		scrollX   = obj.scrollX or true
 
-		if obj.scrollY is true then style += 'overflow-y:auto;'
-		else if obj.scrollX is true then style += 'overflow-x:auto;'
-		if obj.scroll is true then style = 'overflow:auto;'
+		if !scrollY then style += 'overflow-y:hidden;'
+		else if !scrollX then style += 'overflow-x:hidden;'
+		if !scroll then style = 'overflow:hidden;'
 
 		if obj.idApply then id=obj.idApply
 		else if obj.id and exec=='router' then id=obj.id

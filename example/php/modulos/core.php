@@ -41,7 +41,7 @@ $c ='
 
 	$W("#id").data("attribute");					// Get attribute
 	$W("#id").data("attribute", "value");			// Set attribute
-	$W("#id").removeData("attribute", "value");		// Set attribute
+	$W("#id").removeData("attribute");			// Set attribute
 
 	$W("#id").val("Value input");					// Set attribute
 	$W("#id").val();							// Get attribute
@@ -58,7 +58,7 @@ $c ='
 	$W("#id").vendor("property", "value");			// Add css prefix
 
 	// EVENTS
-	$W("#id").on("click", function(){ alert("prueba"); }); // Add css prefix
+	$W("#id").on("click", function(){ alert("prueba"); }); // Add event click
 
 </script>';
 				echo htmlentities($c);
