@@ -292,7 +292,7 @@ do ($W = Win) ->
 				document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
 
 			if opcionClass == 'fInsert' or  opcionClass == 'fUpdate' then eval "#{fNameWindow}.close();"
-
+		else if json.estado == 'false' && json.msj then alert json.msj
 		else console.log json.msj
 
 
@@ -333,7 +333,7 @@ do ($W = Win) ->
 					contRequired++
 					msjRequired += '\n* '+label
 
-				field = id.replace("form_#{name}_", '')
+				field = id.replace("form_#{name}_", "")
 				objForm[field] = value
 
 				if objDom.tagName is "select" or objDom.tagName is "SELECT"

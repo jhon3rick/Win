@@ -20,10 +20,15 @@ do ($W = Win) ->
 	# Widgets ventana
 	# ---------------------------------------------------------------------------
 	$W.Window = (obj) ->
-		width       = obj.width or 300
-		height      = obj.height or 300
 		id          = obj.id or ''
 		title       = obj.title or ''
+		width       = obj.width or 300
+		height      = obj.height or 300
+
+		scroll      = if obj.scroll  is undefined then true else obj.scroll
+		scrollX     = if obj.scrollX is undefined then true else obj.scrollX
+		scrollY     = if obj.scrollY is undefined then true else obj.scrollY
+
 		titleStyle  = obj.titleStyle or ''
 		modal       = obj.modal or ''
 		autoDestroy = obj.autoDestroy or ''
@@ -31,7 +36,7 @@ do ($W = Win) ->
 		html        = obj.html or ''
 		drag        = obj.drag or ''
 		theme       = obj.theme or ''
-		style   = obj.style or ''
+		style       = obj.style or ''
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
 		body        = $W('body')[0]
@@ -96,7 +101,7 @@ do ($W = Win) ->
 
 		objAdd = []
 		if obj.items then objAdd = obj.items
-		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
+		if obj.autoLoad then objAdd.push({xtype:'body', scroll:scroll, scrollX:scrollX, scrollY:scrollY, autoLoad : obj.autoLoad})
 		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
 		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
 
@@ -701,12 +706,14 @@ do ($W = Win) ->
 		exec      = exec or 'json'
 		clsBody   = obj.clsBody or ''
 		bodyStyle = obj.bodyStyle or ''
-		scroll    = obj.scroll or true
-		scrollY   = obj.scrollY or true
-		scrollX   = obj.scrollX or true
+
+		scroll    = if obj.scroll  is undefined then true else obj.scroll
+		scrollX   = if obj.scrollX is undefined then true else obj.scrollX
+		scrollY   = if obj.scrollY is undefined then true else obj.scrollY
 
 		if !scrollY then style += 'overflow-y:hidden;'
 		else if !scrollX then style += 'overflow-x:hidden;'
+
 		if !scroll then style = 'overflow:hidden;'
 
 		if obj.idApply then id=obj.idApply

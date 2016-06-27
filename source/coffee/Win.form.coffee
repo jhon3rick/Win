@@ -154,11 +154,12 @@ do ($W = Win) ->
 	###
 	_createTextArea = (name,field,obj,size) ->
 		style = if obj.required is true and obj.value == '' then 'empy' else 'none'
+		value = (obj.value).replace /<br \/>/g,''
 
 		"<div id=\"form_content_field_#{name}_#{field}\" class=\"form_content_field\" style=\"width:#{size.fDivAncho}; min-height:#{size.fDivAlto};\">
 			<div id=\"form_label_#{name}_#{field}\" class=\"form_label\" style=\"width:#{size.fLabelAncho};\">#{obj.label}</div>
 			<div id=\"form_field_#{name}_#{field}\" class=\"form_field\" style=\"width:#{size.fFieldAncho};\">
-				<textarea id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px; height:#{obj.height}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{obj.value}</textarea>
+				<textarea id=\"form_#{name}_#{field}\" style=\"width:#{obj.width}px; height:#{obj.height}px;\" data-required=\"#{obj.required}\" data-style=\"#{style}\" data-label=\"#{obj.label}\">#{value}</textarea>
 			</div>
 		</div>"
 
