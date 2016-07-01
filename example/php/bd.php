@@ -167,17 +167,17 @@
 	$W.Element("idTabPanel").selected(0);			// Selected tab position 0 in tabpanel
 	$W.Element("idTabPanel").selected("idTab");	// Selected tab id in tabpanel
 
-	W.Element("idTab").disable();				// Disable tab id
-	W.Element("idTabPanel").disable(0);			// Disable tab position 0 in tabpanel
-	W.Element("idTabPanel").disable("idTab");		// Disable tab id in tabpanel
+	$W.Element("idTab").disable();				// Disable tab id
+	$W.Element("idTabPanel").disable(0);			// Disable tab position 0 in tabpanel
+	$W.Element("idTabPanel").disable("idTab");		// Disable tab id in tabpanel
 
-	W.Element("idTab").enable();				// Enable tab id
-	W.Element("idTabPanel").enable(0);			// Enable tab position 0 in tabpanel
-	W.Element("idTabPanel").enable("idTab");		// Enable tab id in tabpanel
+	$W.Element("idTab").enable();				// Enable tab id
+	$W.Element("idTabPanel").enable(0);			// Enable tab position 0 in tabpanel
+	$W.Element("idTabPanel").enable("idTab");		// Enable tab id in tabpanel
 
-	W.Element("idTab").state();					// Get state tab id
-	W.Element("idTabPanel").state(0);			// Get state tab position 0
-	W.Element("idTabPanel").state("idTab");		// Get state tab id
+	$W.Element("idTab").state();					// Get state tab id
+	$W.Element("idTabPanel").state(0);			// Get state tab position 0
+	$W.Element("idTabPanel").state("idTab");		// Get state tab id
 
 </script>';
 					echo htmlentities($c);

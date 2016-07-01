@@ -20,7 +20,7 @@ do ($W = Win) ->
 	# Widgets ventana
 	# ---------------------------------------------------------------------------
 	$W.Window = (obj) ->
-		id          = obj.id or ''
+		_$          = @
 		title       = obj.title or ''
 		width       = obj.width or 300
 		height      = obj.height or 300
@@ -40,13 +40,20 @@ do ($W = Win) ->
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
 		body        = $W('body')[0]
-		parent      = this
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
+
+		if obj.id then id = obj.id
+		else
+			CONTWIDGET++
+			id = "window-#{CONTWIDGET}"
+
 		winModal    = document.createElement('div')
+		winModal.id += "win-modal-#{id}"
+		winModal.className += "win-modal"
 
 		bgBody   = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle  = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
-		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\" onclick=\"#{id}.close()\"></div>" else ""
+		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\"></div>" else ""
 
 		if !isNaN width then width = width+'px'
 		else if width is 'auto' then width='calc(100% - 20px)'
@@ -58,29 +65,26 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id==CONTWIDGET
 
-		winModal.innerHTML += "<div id=\"win-modal-#{id}\" class=\"win-modal\">
-									<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{style}\" class=\"win-marco\">
-										<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
-										<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
-										<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
-										<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-#{id}\"></div>
-										<div class=\"win-modal-parent\" id=\"win-modal-window_#{id}\">
-											<div class=\"win-modal-content\">
-												<div class=\"win-loader-default\" id=\"win-loader-#{id}\"></div>
-												<div class=\"win-modal-label\" id=\"label-load-#{id}\"></div>
-											</div>
+		winModal.innerHTML += "<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{style}\" class=\"win-marco\">
+									<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
+									<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
+									<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
+									<div class=\"win-file-resize\" data-resize=\"right\" id=\"win-resize-right-#{id}\"></div>
+									<header id=\"win-header-#{id}\">
+										<div class=\"win-title\" id=\"win-title-#{id}\" style=\"#{bgTitle} #{titleStyle}\">
+											<div class=\"win-title-txt\">#{title}</div>
+											#{divClose}
 										</div>
-										<header id=\"win-header-#{id}\">
-											<div class=\"win-title\" id=\"win-title-#{id}\" style=\"#{bgTitle} #{titleStyle}\">
-												<div class=\"win-title-txt\">#{title}</div>
-												#{divClose}
-											</div>
-										</header>
-										<section id=\"win-section-#{id}\" style=\"height:calc(100% - 27px);\" data-role=\"win-section\"></section>
-									</div>
+									</header>
+									<section id=\"win-section-#{id}\" style=\"height:calc(100% - 27px);\" data-role=\"win-section\">#{html}</section>
 								</div>"
 
 		body.appendChild(winModal)
+
+		if obj.closable != false
+			document.getElementById("btn_close_ventana_#{id}").addEventListener('click',()->
+				_$.close()
+			)
 
 		widthVentana  = document.getElementById(id).offsetWidth
 		heightVentana = document.getElementById(id).offsetHeight
@@ -107,9 +111,10 @@ do ($W = Win) ->
 
 		_router(objAdd, "win-section-#{id}")
 
-		close: () ->
+		_$.close = () ->
 			$W("\#win-modal-#{id}")[0].parentNode.removeChild($W("\#win-modal-#{id}")[0])
 
+		_$
 
 	# ---------------------------------------------------------------------------
 	# Static Methods
@@ -242,88 +247,104 @@ do ($W = Win) ->
 		, 1500)
 
 	$W.Loading = (obj) ->
+		_$    = @
+		state = false
+		if $W('[data-role=win-notify]')[0] then state = true
+
+		# VALIDATE UNIC LOADING
+		_closeNotify()
+		if state and (!obj or obj == 'off') then  return false
+
+		obj        = obj or {}
+		icon       = obj.icon or 'loader'
+		text       = obj.text or 'Load...'
+		loader     = obj.loader or 'default'
+		idApply    = obj.idApply or ''
+		timeOut    = obj.timeOut or ''
+		iconSize   = obj.iconSize or 100
+		closable   = obj.closable or false
+		elementDom = 'body'
 
 		if obj.id then id=obj.id
 		else
 			CONTWIDGET++
-			id="win-loading-#{CONTWIDGET}"
+			id="win-notify-#{CONTWIDGET}"
 
-		if typeof(obj.id_ventana)=='undefined' or typeof(obj.estado)=='undefined'
-			console.warn('Funcion: Loading (Mostrar ventana modal)\nFaltan parametros en el objeto\nParametro Obligatorios: id_ventana ,estado')
-			return
-		if !$W("#win-body-#{obj.id_ventana}")[0]
-			console.warn('Funcion: Loading (Mostrar ventana modal)\nEl id de la ventana es incorrecto no se encuentra la ventana '+id_ventana)
-			return
+		if idApply != '' and document.getElementById(idApply) then elementDom = "##{idApply}"
+		objNotify = {
+						icon     : icon,
+						text     : text,
+						iconSize : iconSize,
+						closable : closable,
+						timeOut  : timeOut,
+					}
+		_openNotify elementDom, id, 'loader', objNotify
 
-		mask   = $W("#win-modal-window_#{obj.id_ventana}")[0]
-		text   = obj.text or 'Load...'
-		loader = obj.loader or 'default'
+		_$.close = ()-> _closeNotify()
 
-		if obj.estado == 'on'
-			$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML= "<div class=\"win-modal-content\">
-																		<div class=\"win-loader-default\" id=\"win-loader-#{obj.id_ventana}\"></div>
-																		<div class=\"win-modal-label\" id=\"label-load-#{obj.id_ventana}\"></div>
-																	</div>"
-
-			mask.style.visibility = 'visible'
-			$W("#win-loader-#{obj.id_ventana}")[0].setAttribute('class','win-loader-'+loader)
-			$W("#label-load-#{obj.id_ventana}")[0].innerHTML = text
-		else if obj.estado == 'off'
-			iconos =
-				sucess : '',
-				fail   : '',
-				warm   : ''
-
-			if obj
-				icono        = iconos[obj.icono] or iconos['sucess']
-				evento_icono = obj.evento_icono or ''
-				texto        = obj.texto or 'OK...'
-				duracion     = obj.duracion or '2000'
-				estilo_texto = obj.estilo_texto or 'padding-top: 10px;font-size: 12px;color:#FFF;'
-			else
-				icono        = iconos.sucess
-				evento_icono = ''
-				texto        = 'Informacion Almacenada'
-				duracion     = '2000'
-				estilo_texto = 'padding-top:10px; font-size:12px; color:#FFF;'
-
-				$W("#win-modal-window_#{obj.id_ventana}")[0].innerHTML = "<div class=\"win-modal-content\">
-																			<div class=\"win-modal-img-finish\">
-																				<img src=\"#{icono}\" onclick=\"#{evento_icono}\"><br>
-																			</div>
-																				<div class=\"win-modal-label label-finish\">#{texto}</div>
-																		<div>";
-
-				setTimeout ( ->
-					mask.style.visibility = 'hidden'
-				), duracion
+		true
 
 	$W.Alert = (obj) ->
-		width  = 250
-		height = 120
-		title  = obj.title or 'Alert'
-		text   = obj.text or ''
-		text   += "<div class=\"content-btn\">
-						<input type=\"button\" value=\"Aceptar\" onclick=\"$W('#Win_ventana_alert')[0].parentNode.parentNode.removeChild($W('#Win_ventana_alert')[0].parentNode)\">
-					</div>"
+		_$    = @
+		state = false
+		if $W('[data-role=win-notify]')[0] then state = true
 
-		new $W.Window(
-			width       : width,
-			height      : height,
-			id          : 'Win_ventana_alert',
-			title       : title,
-			html        : text,
-			type        : 'alert',
-			modal       : true,
-			autoScroll  : true,
-			closable    : false,
-			autoDestroy : true,
-			drag        : false,
-			resize      : false
-		);
+		# VALIDATE UNIC LOADING
+		_closeNotify()
+		if state and (!obj or obj == 'off') then  return false
+		if typeof obj == 'string' then obj = { text: obj }
+
+		obj        = obj or {}
+		text       = obj.text or ''
+		title      = obj.title or 'Aviso!'
+		timeOut    = obj.timeOut or ''
+		closable   = obj.closable or true
+		elementDom = 'body'
+
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id="win-notify-#{CONTWIDGET}"
+
+		objNotify = {
+						text     : text,
+						title    : title,
+						closable : closable,
+						timeOut  : timeOut,
+					}
+		_openNotify elementDom, id, 'alert', objNotify
+
+		_$.close = ()-> _closeNotify()
+
+		true
+
+	_closeNotify = ()->
+		if $W('[data-role=win-notify]')[0]
+			nodo = $W('[data-role=win-notify]')[0]
+			nodo.parentNode.removeChild(nodo)
+
+	_openNotify = (elementDom, id, type, obj)->
+		html = '';
+		if type=='loader'
+			html = "<div class=\"win-loader\" id=\"win-loader-#{id}\" data-loader=\"#{obj.icon}\" style=\"#{obj.iconSize}\"></div>
+					<div class=\"win-modal-label\" id=\"label-load-#{id}\">#{obj.text}</div>"
+
+		else if type=='alert'
+			if obj.closable then html += "<div class=\"win-notify-close\" style=\"position: absolute; right:0; width:50px;\">Close X</div>"
+			html += "<div class=\"win-modal-label\" id=\"label-load-#{id}\">#{obj.title}<br><br>#{obj.text}</div>"
+
+		$W(elementDom).append "<div class=\"win-modal\" id=\"#{id}\" data-role=\"win-notify\">
+									<div class=\"win-modal-parent\" id=\"win-modal-parent-#{id}\">
+										<div class=\"win-modal-content\">
+											<div class=\"win-modal-ribete\" id=\"win-ribete-#{id}\">#{html}<div>
+										</div>
+									</div>
+								</div>"
+
+		if obj.closable then document.getElementById("win-ribete-#{id}").addEventListener('click',()-> _closeNotify() )
+		if obj.timeOut >= 0 and obj.timeOut != '' then setTimeout ( -> _closeNotify() ), obj.timeOut
 
 	$W.Confirm = (obj) ->
-
 		width  = 250
 		height = 120
 		title  = obj.title or 'Confirm'
@@ -336,7 +357,6 @@ do ($W = Win) ->
 		new $W.Window({
 			width       : width,
 			height      : height,
-			id          : 'Win_ventana_confirm',
 			title       : title,
 			html        : text,
 			type        : 'alert',

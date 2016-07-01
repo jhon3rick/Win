@@ -31,11 +31,10 @@ path =
 					'./source/coffee/Win.output.coffee',
 					'./source/coffee/Win.script.coffee',
 
-					'./source/coffee/Win.form.coffee',
 					'./source/coffee/Win.widget.coffee',
 					'./source/coffee/Win.ajax.coffee',
+					'./source/coffee/Win.form.coffee',
 					'./source/coffee/Win.grilla.coffee']
-
 
 git =
 	distCoffee  : './example/js/winJs/js'
@@ -124,7 +123,7 @@ gulp.task 'default', ->
 gulp.task 'compile_watch', ->
 	gulp.watch path.coffee, ['coffee']
 	gulp.watch path.stylus, ['stylus']
-	gulp.watch path.coffee, ['minCoffee'] 
+	gulp.watch path.coffee, ['minCoffee']
 	gulp.watch path.stylus, ['minStylus']
 
 gulp.task 'coffee_watch', ->

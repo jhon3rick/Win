@@ -37,7 +37,7 @@
     coffee: ['./source/coffee/*.coffee'],
     stylus: ['./source/stylus/*.styl'],
     jshint: ['./build/js/*.js'],
-    modules: ['./source/coffee/Win.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.element.coffee', './source/coffee/Win.css.coffee', './source/coffee/Win.events.coffee', './source/coffee/Win.query.coffee', './source/coffee/Win.output.coffee', './source/coffee/Win.script.coffee', './source/coffee/Win.form.coffee', './source/coffee/Win.widget.coffee', './source/coffee/Win.ajax.coffee', './source/coffee/Win.grilla.coffee']
+    modules: ['./source/coffee/Win.coffee', './source/coffee/Win.ini.coffee', './source/coffee/Win.element.coffee', './source/coffee/Win.css.coffee', './source/coffee/Win.events.coffee', './source/coffee/Win.query.coffee', './source/coffee/Win.output.coffee', './source/coffee/Win.script.coffee', './source/coffee/Win.widget.coffee', './source/coffee/Win.ajax.coffee', './source/coffee/Win.form.coffee', './source/coffee/Win.grilla.coffee']
   };
 
   git = {
