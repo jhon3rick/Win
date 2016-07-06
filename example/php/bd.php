@@ -2,17 +2,27 @@
 	error_reporting(E_ALL ^ E_NOTICE);
 	$opc = $_POST['opc'];
 
+
 	switch ($opc) {
-		case 'prueba_ajax':
-			prueba_ajax();
+		case 'method_ajax':
+		// case 'prueba_ajax':
+			method_ajax();
 			break;
 
-		case 'prueba_ajax_load':
-			prueba_ajax_load();
+		case 'method_ajax_failure':
+			sleep(5);
+			method_ajax();
 			break;
 
-		case 'prueba_ajax_request':
-			prueba_ajax_request();
+
+		case 'method_load':
+		// case 'prueba_ajax_load':
+			method_load();
+			break;
+
+		case 'method_load2':
+		// case 'prueba_ajax_request':
+			method_load2();
 			break;
 
 		case 'state_tab_panel':
@@ -36,11 +46,11 @@
 			break;
 	}
 
-	function prueba_ajax_request(){
-		echo"<div>Hello World!</div>";
+	function method_ajax(){
+		echo"Hello World!";
 	}
 
-	function prueba_ajax_load(){
+	function method_load(){
 		echo "<style>
 					.MySelect{
 						width   : 100px;
@@ -55,7 +65,7 @@
 				</select>";
 	}
 
-	function prueba_ajax(){
+	function method_load2(){
 		echo '<div><input type="text" id="input_calendar"></div>
 				<script>
 					$W.Form.field({
@@ -167,17 +177,17 @@
 	$W.Element("idTabPanel").selected(0);			// Selected tab position 0 in tabpanel
 	$W.Element("idTabPanel").selected("idTab");	// Selected tab id in tabpanel
 
-	W.Element("idTab").disable();				// Disable tab id
-	W.Element("idTabPanel").disable(0);			// Disable tab position 0 in tabpanel
-	W.Element("idTabPanel").disable("idTab");		// Disable tab id in tabpanel
+	$W.Element("idTab").disable();				// Disable tab id
+	$W.Element("idTabPanel").disable(0);			// Disable tab position 0 in tabpanel
+	$W.Element("idTabPanel").disable("idTab");		// Disable tab id in tabpanel
 
-	W.Element("idTab").enable();				// Enable tab id
-	W.Element("idTabPanel").enable(0);			// Enable tab position 0 in tabpanel
-	W.Element("idTabPanel").enable("idTab");		// Enable tab id in tabpanel
+	$W.Element("idTab").enable();				// Enable tab id
+	$W.Element("idTabPanel").enable(0);			// Enable tab position 0 in tabpanel
+	$W.Element("idTabPanel").enable("idTab");		// Enable tab id in tabpanel
 
-	W.Element("idTab").state();					// Get state tab id
-	W.Element("idTabPanel").state(0);			// Get state tab position 0
-	W.Element("idTabPanel").state("idTab");		// Get state tab id
+	$W.Element("idTab").state();					// Get state tab id
+	$W.Element("idTabPanel").state(0);			// Get state tab position 0
+	$W.Element("idTabPanel").state("idTab");		// Get state tab id
 
 </script>';
 					echo htmlentities($c);

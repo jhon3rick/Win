@@ -84,7 +84,6 @@ do ($W = Win) ->
 				text    : "Eliminar",
 				handler : () -> $W.Form.fDelete name,url,indexClass,varPost
 
-
 		$W.Tbar {
 			idApply : "form_tbar_#{name}",
 			items   : arrayBtn

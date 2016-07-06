@@ -7,6 +7,9 @@
 		<option value="core">Core</option>
 		<option value="form">Formulario</option>
 		<option value="ajax">Ajax</option>
+		<option value="loading">Loading</option>
+		<option value="alert">Alert</option>
+		<option value="confirm">Confirm</option>
 		<option value="elements">Elements</option>
 		<option value="tbar">Tbar</option>
 		<option value="ventana">Ventana</option>

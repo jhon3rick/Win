@@ -65,6 +65,17 @@ Win = do ->
 				elements if callback.call(elements[key], key, elements[key]) is false
 		elements
 
+	$W.Mix = ->
+		child = {}
+		arg = 0
+		len = arguments.length
+
+		while arg < len
+			argument = arguments[arg]
+			for prop of argument
+				child[prop] = argument[prop] if _isOwnProperty(argument, prop) and argument[prop] isnt `undefined`
+			arg++
+		child
 
 	_instance = (dom, selector = "") ->
 		dom = dom or EMPTY_ARRAY
@@ -97,6 +108,8 @@ Win = do ->
 			selector = null
 
 		domain
+
+	_isOwnProperty = (object, property) -> OBJECT_PROTOTYPE.hasOwnProperty.call object, property
 
 
 	_instance:: = $W.fn = {}
