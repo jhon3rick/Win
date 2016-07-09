@@ -7,14 +7,14 @@ $c ='
 <script>
 	$W.Loading()					// Open, close method
 
-	$W.Loading({timeOut:3000})		// Close timeOut
+	$W.Loading({timeout:3000})		// Close timeout
 
 	$W.Loading({					// Default open params
-		icon     : \'loader\',
-		text     : \'Load...\',
-		loader   : \'default\',
-		idApply  : \'\',
-		timeOut  : \'\',
+		icon     : "loader",
+		text     : "Load...",
+		loader   : "default",
+		idApply  : "",
+		timeout  : "",
 		iconSize : 100,
 		closable : false
 	})
@@ -27,6 +27,5 @@ $c ='
 
 <script>
 	hljs.highlightBlock(document.querySelector('#loading'));
-
-	$W.Loading({timeOut:3000});
+	$W.Loading({timeout:3000});
 </script>

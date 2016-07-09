@@ -29,17 +29,17 @@ do ($W = Win) ->
 		scrollX     = if obj.scrollX is undefined then true else obj.scrollX
 		scrollY     = if obj.scrollY is undefined then true else obj.scrollY
 
-		titleStyle  = obj.titleStyle or ''
-		modal       = obj.modal or ''
-		autoDestroy = obj.autoDestroy or ''
-		autoLoad    = obj.autoLoad or ''
+		body        = $W('body')[0]
 		html        = obj.html or ''
 		drag        = obj.drag or ''
 		theme       = obj.theme or ''
 		style       = obj.style or ''
+		modal       = obj.modal or ''
+		autoLoad    = obj.autoLoad or ''
 		bodyStyle   = obj.bodyStyle or ''
 		bodyColor   = obj.bodyColor or '#FFF'
-		body        = $W('body')[0]
+		titleStyle  = obj.titleStyle or ''
+		autoDestroy = obj.autoDestroy or ''
 		clsBody     = if typeof(obj.type)!= 'undefined' and obj.type != '' then 'alert' else ''
 
 		if obj.id then id = obj.id
@@ -82,7 +82,7 @@ do ($W = Win) ->
 		body.appendChild(winModal)
 
 		if obj.closable != false
-			document.getElementById("btn_close_ventana_#{id}").addEventListener('click',()->
+			document.getElementById("btn_close_ventana_#{id}").addEventListener('click',() ->
 				_$.close()
 			)
 
@@ -106,8 +106,8 @@ do ($W = Win) ->
 		objAdd = []
 		if obj.items then objAdd = obj.items
 		if obj.autoLoad then objAdd.push({xtype:'body', scroll:scroll, scrollX:scrollX, scrollY:scrollY, autoLoad : obj.autoLoad})
-		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
-		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
+		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items:obj.tabpanel})
+		if obj.tbar then objAdd.unshift({xtype:'tbar', items:obj.tbar})
 
 		_router(objAdd, "win-section-#{id}")
 
@@ -149,9 +149,9 @@ do ($W = Win) ->
 
 		objAdd = []
 		if obj.items then objAdd = obj.items
-		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad : obj.autoLoad})
-		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items : obj.tabpanel})
-		if obj.tbar then objAdd.unshift({xtype:'tbar', items : obj.tbar})
+		if obj.autoLoad then objAdd.push({xtype:'body', autoLoad:obj.autoLoad})
+		if obj.tabpanel then objAdd.unshift({xtype:'tabpanel', items:obj.tabpanel})
+		if obj.tbar then objAdd.unshift({xtype:'tbar', items:obj.tbar})
 
 		_router(objAdd, obj.idApply)
 
@@ -242,45 +242,26 @@ do ($W = Win) ->
 		if ELEMENTS[id].disable then return
 
 		$W.Element(id).disable()
-		setTimeout(()->
+		setTimeout(() ->
 			if document.getElementById(id) then $W.Element(id).enable()
 		, 1500)
 
 	$W.Loading = (obj) ->
-		_$    = @
-		state = false
-		if $W('[data-role=win-notify]')[0] then state = true
+		if obj != 'off'
 
-		# VALIDATE UNIC LOADING
-		_closeNotify()
-		if state and (!obj or obj == 'off') then  return false
+			if typeof obj is 'string'
+				str = obj
+				obj = {}
+				if obj != 'on' then obj.text = str
 
-		obj        = obj or {}
-		icon       = obj.icon or 'loader'
-		text       = obj.text or 'Load...'
-		loader     = obj.loader or 'default'
-		idApply    = obj.idApply or ''
-		timeOut    = obj.timeOut or ''
-		iconSize   = obj.iconSize or 100
-		closable   = obj.closable or false
-		elementDom = 'body'
-
-		if obj.id then id=obj.id
+			obj = obj or {}
+			obj.type = 'loading'
+			$W.Notify obj
 		else
-			CONTWIDGET++
-			id="win-notify-#{CONTWIDGET}"
+			_closeNotify()
+			return
 
-		if idApply != '' and document.getElementById(idApply) then elementDom = "##{idApply}"
-		objNotify = {
-						icon     : icon,
-						text     : text,
-						iconSize : iconSize,
-						closable : closable,
-						timeOut  : timeOut,
-					}
-		_openNotify elementDom, id, 'loader', objNotify
-
-		_$.close = ()-> _closeNotify()
+		@.close = () -> _closeNotify()
 
 		true
 
@@ -297,7 +278,7 @@ do ($W = Win) ->
 		obj        = obj or {}
 		text       = obj.text or ''
 		title      = obj.title or 'Aviso!'
-		timeOut    = obj.timeOut or ''
+		timeout    = obj.timeout or ''
 		closable   = obj.closable or true
 		elementDom = 'body'
 
@@ -306,43 +287,112 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-notify-#{CONTWIDGET}"
 
-		objNotify = {
-						text     : text,
-						title    : title,
-						closable : closable,
-						timeOut  : timeOut,
-					}
-		_openNotify elementDom, id, 'alert', objNotify
+		objNotify =
+			text     : text,
+			title    : title,
+			closable : closable,
+			timeout  : timeout,
 
-		_$.close = ()-> _closeNotify()
+		_openNotify elementDom,id,'alert',objNotify
+
+		_$.close = () -> _closeNotify()
 
 		true
 
-	_closeNotify = ()->
+	$W.Notify = (obj) ->
+		state    = false
+		type     = 'notify'
+		icon     = 'warning'
+		text     = 'Aviso'
+		loader   = ''
+		timeout  = 1000
+		iconSize = 100
+		closable = false
+
+		if $W('[data-role=win-notify]')[0] then state = true
+
+		# VALIDATE UNIC LOADING
+		_closeNotify()
+		if state and (!obj or obj == 'off' or obj.type == 'loading') then  return false
+
+		obj = obj or {}
+		if obj.type == 'loading' or obj == 'loading'
+			type     = 'loading'
+			icon     = 'loading'
+			text     = 'Load'
+			loader   = 'default'
+			timeout  = 0
+			iconSize = 100
+			closable = false
+		else if obj.type == 'success' or obj == 'success'
+			type     = 'success'
+			icon     = 'success'
+			text     = 'Ok!'
+			loader   = ''
+			timeout  = 1000
+			iconSize = 100
+			closable = false
+		else if obj.type == 'fail' or obj == 'fail'
+			type     = 'fail'
+			icon     = 'fail'
+			text     = 'Error'
+			loader   = ''
+			timeout  = 1000
+			iconSize = 100
+			closable = false
+
+		icon       = obj.icon or icon
+		text       = obj.text or text
+		loader     = obj.loader or loader
+		idApply    = obj.idApply or ''
+		timeout    = obj.timeout or timeout
+		iconSize   = obj.iconSize or iconSize
+		closable   = obj.closable or closable
+		elementDom = 'body'
+
+		if obj.id then id=obj.id
+		else
+			CONTWIDGET++
+			id="win-notify-#{CONTWIDGET}"
+
+		if idApply != '' and document.getElementById(idApply) then elementDom = "##{idApply}"
+		objNotify =
+			icon     : icon,
+			text     : text,
+			timeout  : timeout,
+			iconSize : iconSize,
+			closable : closable,
+
+		_openNotify elementDom, id, type, objNotify
+
+
+	_closeNotify = () ->
 		if $W('[data-role=win-notify]')[0]
 			nodo = $W('[data-role=win-notify]')[0]
 			nodo.parentNode.removeChild(nodo)
 
-	_openNotify = (elementDom, id, type, obj)->
+	_openNotify = (elementDom, id, type, obj) ->
 		html = '';
-		if type=='loader'
-			html = "<div class=\"win-loader\" id=\"win-loader-#{id}\" data-loader=\"#{obj.icon}\" style=\"#{obj.iconSize}\"></div>
-					<div class=\"win-modal-label\" id=\"label-load-#{id}\">#{obj.text}</div>"
-
-		else if type=='alert'
+		if type=='alert'
 			if obj.closable then html += "<div class=\"win-notify-close\" style=\"position: absolute; right:0; width:50px;\">Close X</div>"
-			html += "<div class=\"win-modal-label\" id=\"label-load-#{id}\">#{obj.title}<br><br>#{obj.text}</div>"
+			html += "<div class=\"win-notify-label\" id=\"label-load-#{id}\">#{obj.title}<br><br>#{obj.text}</div>"
+
+		else
+			html = "<div class=\"win-notify-icon\" id=\"win-notify-icon-#{id}\" data-icon=\"#{obj.icon}\" style=\"#{obj.iconSize}\"></div>
+					<div class=\"win-notify-label\" id=\"label-load-#{id}\">#{obj.text}</div>"
+
+
 
 		$W(elementDom).append "<div class=\"win-modal\" id=\"#{id}\" data-role=\"win-notify\">
 									<div class=\"win-modal-parent\" id=\"win-modal-parent-#{id}\">
 										<div class=\"win-modal-content\">
-											<div class=\"win-modal-ribete\" id=\"win-ribete-#{id}\">#{html}<div>
+											<div class=\"win-notify-ribete\" id=\"win-ribete-#{id}\">#{html}<div>
 										</div>
 									</div>
 								</div>"
 
-		if obj.closable then document.getElementById("win-ribete-#{id}").addEventListener('click',()-> _closeNotify() )
-		if obj.timeOut >= 0 and obj.timeOut != '' then setTimeout ( -> _closeNotify() ), obj.timeOut
+		if obj.closable then document.getElementById("win-ribete-#{id}").addEventListener('click',() -> _closeNotify() )
+		if obj.timeout > 0 and obj.timeout != '' then setTimeout ( -> _closeNotify() ), obj.timeout
 
 	$W.Confirm = (obj) ->
 		width  = 250
@@ -500,15 +550,15 @@ do ($W = Win) ->
 			if $W.Element(id).selected() == undefined then $W.Element(id).selected(0)
 
 	_tab = (obj, idParent, cont) ->
+		style     = obj.style or ''
 		title     = obj.title or ''
+		hidden    = obj.hidden or false
+		disable   = obj.disable or false
 		iconCls   = obj.iconCls or ''
 		scrollX   = obj.scrollX or false
 		scrollY   = obj.scrollY or false
-		style     = obj.style or ''
-		bodyStyle = obj.bodyStyle or ''
-		hidden    = obj.hidden or false
-		disable   = obj.disable or false
 		selected  = obj.selected or false
+		bodyStyle = obj.bodyStyle or ''
 
 		dataState = if disable then 'disable' else 'enable'
 		dataSelected = if selected then 'true' else 'false'
@@ -782,7 +832,7 @@ do ($W = Win) ->
 		body = ''
 		arrayDiv = document.querySelectorAll('#'+idParent+' > [data-role]')
 
-		[].forEach.call(arrayDiv,(element)->
+		[].forEach.call(arrayDiv,(element) ->
 			role = element.getAttribute "data-role"
 
 

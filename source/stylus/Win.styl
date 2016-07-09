@@ -245,16 +245,9 @@ input[type=button]
 
 	/.win-panel
 		vertical-align top
-		// padding 5px
 
 		> div
 			overflow auto
-
-		// /.win-panel-load
-		// 	display table
-
-		// 	> div
-		// 		display table-cell
 
 	/.win-buttongroup
 		vertical-align top
@@ -308,35 +301,32 @@ input[type=button]
 	display table-cell
 	vertical-align middle
 
-.win-modal-ribete
+.win-notify-ribete
 	padding 5px
 	position relative
 	background-color #FFF
 
-.win-loader
+.win-notify-icon
 	width 100px
 	height 100px
 	margin 10px auto
-
-[data-loader="loader"]
 	background-size 100%
-	background-image url(../img/loader/loader.gif)
 	background-repeat no-repeat
 	background-position center
 
-[data-loader="success"]
-	background-position center
-	background-repeat no-repeat
-	background-image url(../img/loader/success.gif)
-	background-size 100%
+	&[data-icon="loading"]
+		background-image url(../img/notify/loading.gif)
 
-[data-loader="fail"]
-	background-position center
-	background-repeat no-repeat
-	background-image url(../img/loader/fail.gif)
-	background-size 100%
+	&[data-icon="warning"]
+		background-image url(../img/notify/warning.png)
 
-.win-modal-label
+	&[data-icon="success"]
+		background-image url(../img/notify/success.png)
+
+	&[data-icon="fail"]
+		background-image url(../img/notify/fail.png)
+
+.win-notify-label
 	color #333
 	margin 10px
 	position relative
