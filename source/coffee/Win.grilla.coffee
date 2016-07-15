@@ -222,80 +222,6 @@ do ($W = Win) ->
 			failure : (xhr) -> console.log "fail"
 		})
 
-	###
-	@method _execScript
-	@param  str separate json and script for objectDom load script
-	###
-	_execScript = (name,response) ->
-
-		arrayData = (response).split('<script>')
-		txtJson = arrayData[0];
-
-		if arrayData.length > 1
-			arrayData[0] = '';
-			script = arrayData.join('<script>')
-
-			divScript = document.getElementById("div_script_form_#{name}")
-			divScript.innerHTML = script
-
-			tagsScript = divScript.getElementsByTagName('script')
-			for i in tagsScript
-				tagScript = document.createElement('script')
-				tagScript.innerHTML = i.innerHTML
-				i.parentNode.replaceChild(tagScript,i)
-
-		# SI NO ES JSON RETURN
-		if !$W.Script.isJSON txtJson
-			console.log txtJson
-			return false
-
-		txtJson
-
-	_insertUpdateRow = (name,url,xhrResponse,opcionClass) ->
-
-		txtJson = _execScript name,xhrResponse.responseText
-		if !txtJson then return
-
-		json = JSON.parse(txtJson)
-
-		if json.estado == 'true'
-			type = json.type or ''
-
-			if type == 'form'
-				eval "#{json.name}.close();"
-				return
-
-			rows   = json.rows or {}
-			fTitle = json.fTitle or ''
-			fAncho = json.fAncho or ''
-			fAlto  = json.fAlto or ''
-			fNameWindow = json.fNameWindow or ''
-			eventUpdate = json.eventUpdate or ''
-
-			if opcionClass == 'fInsert' or  opcionClass == 'insertRow'
-				body = document.getElementById("grilla_body_#{name}")
-
-				# if CONT > 1
-				if body.lastChild
-					contDiv = (body.lastChild).getAttribute("data-cont")
-					contDiv++
-
-				body.innerHTML += _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
-
-				if contDiv > 0
-					document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
-					document.getElementById("grilla_content_fila_#{name}_"+json.idRow).setAttribute("data-cont", contDiv)
-
-			else if opcionClass == "fUpdate"
-				contDiv = document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML
-				document.getElementById("grilla_content_fila_#{name}_"+json.idRow).innerHTML = _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
-				document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
-
-			if opcionClass == 'fInsert' or  opcionClass == 'fUpdate' then eval "#{fNameWindow}.close();"
-		else if json.estado == 'false' && json.msj then alert json.msj
-		else console.log json.msj
-
-
 	$W.Grilla.insertRow = (name,id) ->
 		url  = GRILLA[name]["url"]
 		opcionClass = 'insertRow'
@@ -476,6 +402,81 @@ do ($W = Win) ->
 
 		$W.Grilla.buscar(name)
 
+	###
+	@method _execScript
+	@param  str separate json and script for objectDom load script
+	###
+	_execScript = (name,response) ->
+
+		arrayData = (response).split('<script>')
+		txtJson = arrayData[0];
+
+		if arrayData.length > 1
+			arrayData[0] = '';
+			script = arrayData.join('<script>')
+
+			divScript = document.getElementById("div_script_form_#{name}")
+			divScript.innerHTML = script
+
+			tagsScript = divScript.getElementsByTagName('script')
+			for i in tagsScript
+				tagScript = document.createElement('script')
+				tagScript.innerHTML = i.innerHTML
+				i.parentNode.replaceChild(tagScript,i)
+
+		# SI NO ES JSON RETURN
+		if !$W.Script.isJSON txtJson
+			console.log txtJson
+			return false
+
+		txtJson
+
+	_insertUpdateRow = (name,url,xhrResponse,opcionClass) ->
+
+		txtJson = _execScript name,xhrResponse.responseText
+		if !txtJson then return
+
+		json = JSON.parse(txtJson)
+
+		if json.estado == 'true'
+			type = json.type or ''
+			fCloseWindow = json.fCloseWindow or ''
+			console.log json.fCloseWindow
+
+			if type == 'form'
+				if fCloseWindow isnt '' and fCloseWindow isnt false and fCloseWindow isnt 'false' then eval "#{json.name}.close();"
+				return
+
+			rows   = json.rows or {}
+			fTitle = json.fTitle or ''
+			fAncho = json.fAncho or ''
+			fAlto  = json.fAlto or ''
+			fNameWindow  = json.fNameWindow or ''
+			eventUpdate  = json.eventUpdate or ''
+
+			if opcionClass == 'fInsert' or  opcionClass == 'insertRow'
+				body = document.getElementById("grilla_body_#{name}")
+
+				# if CONT > 1
+				if body.lastChild
+					contDiv = (body.lastChild).getAttribute("data-cont")
+					contDiv++
+
+				body.innerHTML += _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
+
+				if contDiv > 0
+					document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
+					document.getElementById("grilla_content_fila_#{name}_"+json.idRow).setAttribute("data-cont", contDiv)
+
+			else if opcionClass == "fUpdate"
+				contDiv = document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML
+				document.getElementById("grilla_content_fila_#{name}_"+json.idRow).innerHTML = _createRows name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
+				document.getElementById("grilla_fila_cont_#{name}_"+json.idRow).innerHTML = contDiv
+
+			if fCloseWindow and (opcionClass == 'fInsert' or  opcionClass == 'fUpdate') then eval "#{fNameWindow}.close();"
+		else if json.estado == 'false' && json.msj then alert json.msj
+		else console.log json.msj
+
 	_createRows = (name,opcionClass,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle) ->
 		url     = GRILLA[name]["url"]
 		html    = ""
@@ -541,3 +542,4 @@ do ($W = Win) ->
 						<div data-type=\"last\" class=\"grilla_page\"></div>
 					</div>"
 		html
+
