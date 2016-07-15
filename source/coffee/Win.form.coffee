@@ -194,6 +194,16 @@ do ($W = Win) ->
 				$W('#'+obj.idApply)[0].onchange = (event)->
 					return _validateDouble({ event:event, eventType:'change', input:this })
 
+			when 'real'
+				$W('#'+obj.idApply).addClass += " win-input-number";
+
+				$W('#'+obj.idApply)[0].onkeypress = (event)->
+					return _validateReal({ event:event, eventType:'keypress', input:this })
+
+				$W('#'+obj.idApply).on('change', (event)->
+					return _validateReal({ event:event, eventType:'change', input:this })
+				)
+
 			when 'text'
 				$W('#'+obj.idApply)[0].onkeyup = (event)->
 					return _validateText({ event:event, eventType:'keyup', input:this, option:obj.option })
@@ -245,6 +255,15 @@ do ($W = Win) ->
 
 					input.addEventListener "change", (event) ->
 						_validateDouble({ event:event, eventType:'change', input:this })
+
+				when 'real'
+					input.className += " win-input-number";
+
+					input.onkeypress = (event)->
+						return _validateReal({ event:event, eventType:'keypress', input:this })
+
+					input.onchange = (event)->
+						return _validateReal({ event:event, eventType:'change', input:this })
 
 				when 'uppercase'
 					input.className += " win-input-uppercase"
@@ -299,6 +318,18 @@ do ($W = Win) ->
 			if !validate
 				arrayValue = (obj.input.value).split(".")
 				obj.input.value = arrayValue[0]+'.'+arrayValue[1]
+
+	_validateReal = (obj) ->
+		key = if document.all then obj.event.keyCode else obj.event.which
+
+		if _keyEnable(key) then return true
+		else if obj.eventType == 'keypress' then return (/[\d.-]/).test(String.fromCharCode(key))
+		else if obj.eventType == 'change'
+			value = obj.input.value
+			if value is '' then return
+			value = value.replace(/[^\d.-]/g,'')
+			if isNaN value then  obj.input.value = ''
+			else obj.input.value = value
 
 	_validateText = (obj) ->
 		key = if document.all then obj.event.keyCode else obj.event.which
