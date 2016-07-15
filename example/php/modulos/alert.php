@@ -8,12 +8,12 @@ $c ='
 	$W.Alert("Este es un alert")					// Open method message
 	$W.Alert()					// Close method
 
-	$W.Alert({timeOut:3000})		// Close timeOut
+	$W.Alert({timeout:3000})		// Close timeout
 
 	$W.Alert({					// Default open params
 		text     : \'\',
 		title    : \'Aviso!\',
-		timeOut  : \'\',
+		timeout  : \'\',
 		closable : true
 	})
 </script>';
