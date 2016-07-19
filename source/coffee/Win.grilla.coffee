@@ -96,7 +96,7 @@ do ($W = Win) ->
 		params.indexClass = id
 		params.opcionClass = opcionClass
 
-		eval "window.#{fNameWindow} = $W.Window({
+		eval "window.#{fNameWindow} = new $W.Window({
 				id       : \"#{fNameWindow}\",
 				width    : width,
 				height   : height,

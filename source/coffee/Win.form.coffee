@@ -141,9 +141,10 @@ do ($W = Win) ->
 		</div>"
 
 	_createOptionCombo = (value,obj) ->
+		console.log value
 		html = "<option value=\"\">Seleccione...</option>"
 		for own key, option of obj
-			selected = if option.index is value then "selected" else ""
+			selected = if option.index == value then "selected" else ""
 			html += "<option value=\"#{option.index}\" #{selected}>#{option.value}</option>"
 		html
 
