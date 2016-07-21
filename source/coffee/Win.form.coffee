@@ -40,11 +40,11 @@ do ($W = Win) ->
 
 		htmlForm = _routerForm opcionClass,name,field,size
 
-		document.getElementById(idApply).innerHTML += "<div id=\"form_tbar_#{name}\"></div>
-														<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"float:left; width:100%; height:100%; overflow:auto;\">
-															<div id=\"div_script_form_#{name}\" style=\"float:left; padding:10px; width:20px; height:20px; overflow:hidden; position:fixed;\"></div>
-															<div style=\"float:left; padding:10px 0; width:#{fBodyAncho};\">#{htmlForm}</div>
-														</form>"
+		$W("##{idApply}").append("<div id=\"form_tbar_#{name}\"></div>
+							<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"\">
+								<div id=\"div_script_form_#{name}\" class=\"form_load\"></div>
+								<div class=\"form_body\" style=\"width:#{fBodyAncho};\">#{htmlForm}</div>
+							</form>")
 		# CREATE TBAR
 		if fTbar is true then _createBtnTbar name,opcionClass,url,indexClass,fPermisoInsert,fPermisoUpdate,fPermisoDelete,varPost
 
@@ -141,10 +141,13 @@ do ($W = Win) ->
 		</div>"
 
 	_createOptionCombo = (value,obj) ->
-		html = "<option value=\"\">Seleccione...</option>"
+		html  = "<option value=\"\">Seleccione...</option>"
+		value = value.toString()
+
 		for own key, option of obj
-			selected = if option.index is value then "selected" else ""
-			html += "<option value=\"#{option.index}\" #{selected}>#{option.value}</option>"
+			index = option.index.toString()
+			selected = if index == value then "selected" else ""
+			html += "<option value=\"#{index}\" #{selected}>#{option.value}</option>"
 		html
 
 	###

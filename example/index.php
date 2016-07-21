@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Win Js</title>
+		<meta charset="utf-8">
 
 		<meta content="no-cache" http-equiv="Pragma"></meta>
 		<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"></meta>

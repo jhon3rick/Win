@@ -8,6 +8,18 @@ $borderBody = #CCC
 $sizeImage = 13px
 $color = #000
 
+.form_load
+	float left
+	width 20px
+	height 20px
+	padding 10px
+	overflow hidden
+	position fixed
+
+.form_body
+	float left
+	padding 10px 0 0 0
+
 mix_background($image)
 	background-image url($image)
 	background-repeat no-repeat
@@ -26,14 +38,14 @@ mix_background($image)
 .form_separador
 	float left
 	width 100%
-	padding 5px
 	margin 15px 0
+	padding 5px
 
 	> div
 		font-size 12px
 
 .grilla_title
-	border-bottom 1px solid $border
+	border-bottom 1px solid #BBB
 
 .grilla_title,
 .grilla_footer
@@ -50,8 +62,8 @@ mix_background($image)
 	/.grilla_title_label
 		float left
 		background-color $bgTitle
-		border-left 1px solid #CCC
-		padding 2px 0 0 3px
+		border-right 1px solid #BBB
+		padding 2px 0 0 5px
 		height 22px
 		cursor default
 
@@ -255,13 +267,13 @@ mix_background($image)
 
 .grilla_celdas
 	min-height 17px
-	padding 2px 0 2px 3px
+	padding 2px 0 2px 5px
 	font-size 11px
 	white-space nowrap
 	overflow hidden
 	text-overflow ellipsis
 	cursor default
-	border-left 1px solid #DDD
+	// border-left 1px solid #DDD
 
 
 .grilla_content_fila
@@ -308,12 +320,13 @@ mix_background($image)
 		height 100%
 
 	/.grilla_col_first
-		padding 0
-		cursor default
 		width 35px
+		cursor default
+		padding 0
+		// border-right 1px solid #BBB
+		// background-color $bgTitleShadow
 
 		/.grilla_fila_cont
-			text-align right
 			float left
 			font-size 11px
 			width 18px

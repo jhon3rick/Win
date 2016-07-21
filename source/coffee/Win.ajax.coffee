@@ -28,7 +28,7 @@ do ($W = Win) ->
 		crossDomain : false
 		timeout     : 0
 
-	$W.Ajax = (options) ->
+	_xhr = (type,options) ->
 		options.contentType = "application/x-www-form-urlencoded" if !options.contentType
 		settings = $W.Mix($W.ajaxSettings, options)
 
@@ -41,7 +41,16 @@ do ($W = Win) ->
 		xhr.onreadystatechange = ->
 			if xhr.readyState is 4
 				clearTimeout abortTimeout
-				_xhrStatus xhr, settings
+
+				if type != 'load' then _xhrStatus xhr, settings
+				else
+					if (xhr.status >= 200 and xhr.status < 300) or xhr.status is 0
+						$W("##{options.idApply}").html xhr.responseText
+						_loadScript($W("##{options.idApply}")[0])
+
+					else
+						$W("##{options.idApply}").html "Not found"
+						return
 
 		xhr.open settings.method, settings.url, settings.async
 		_xhrHeaders xhr, settings
@@ -55,43 +64,21 @@ do ($W = Win) ->
 			_xhrError "Resource not found", xhr, settings
 			xhr
 
-	$W.Load = (obj) ->
-		if !obj.idApply
-			alert('idApply Obligatorio')
+	$W.Ajax = (options) -> _xhr 'request', options
+	$W.Load = (options) ->
+		text = options.text || 'cargando...'
+		if !options.idApply
+			$W.Alert('idApply Obligatorio')
 			return
-		else if typeof document.getElementById(obj.idApply) == 'null'
-			alert('No se encontro elemento en el arbol Dom')
-			return
 
-		param = ''
-		if typeof(obj.params)!='undefined'
-			for value of obj.params
-				param+= if param=='' then value+"="+obj.params[value] else "&"+value+"="+obj.params[value]
+		$W("##{options.idApply}").html "<div class=\"win-content-min-load\" >
+									<div class=\"win-content-min-load-img\">
+										<div class=\"win-min-load-ajax\"></div>
+									</div>
+									<div class=\"win-content-min-load-label\">#{text}</div>
+								</div>"
 
-		text = obj.text || 'cargando...'
-
-		document.getElementById(obj.idApply).innerHTML = "<div class=\"win-content-min-load\" >
-															<div class=\"win-content-min-load-img\">
-																<div class=\"win-min-load-ajax\"></div>
-															</div>
-															<div class=\"win-content-min-load-label\">#{text}</div>
-														</div>"
-
-		xhr     = new XMLHttpRequest
-		bodyXhr = obj.url+'?'
-		method  = obj.method or 'POST'
-
-		xhr.open(method,bodyXhr, true)
-		if method == 'POST' then xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded", true);
-		xhr.onreadystatechange = () ->
-			if xhr.readyState == 4
-				divScript = document.getElementById(obj.idApply)
-				if xhr.status == 404 then divScript.innerHTML = 'Not found'
-				else
-					divScript.innerHTML = xhr.responseText
-					_loadScript(divScript)
-
-		xhr.send(param)
+		_xhr 'load', options
 
 	###
 	Load data from the server using a HTTP GET request.
@@ -103,8 +90,8 @@ do ($W = Win) ->
 	###
 	$W.get = (url, params, success, dataType) ->
 		$W.Ajax
-			url      : url 
-			method   : 'GET' 
+			url      : url
+			method   : 'GET'
 			params   : params
 			success  : success
 			dataType : dataType
