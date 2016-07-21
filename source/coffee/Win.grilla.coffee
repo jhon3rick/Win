@@ -441,7 +441,6 @@ do ($W = Win) ->
 		if json.estado == 'true'
 			type = json.type or ''
 			fCloseWindow = json.fCloseWindow or ''
-			console.log json.fCloseWindow
 
 			if type == 'form'
 				if fCloseWindow isnt '' and fCloseWindow isnt false and fCloseWindow isnt 'false' then eval "#{json.name}.close();"
