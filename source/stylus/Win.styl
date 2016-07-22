@@ -18,7 +18,10 @@ select
 input, select, textarea, select
 	font-size 12px
 	box-shadow none
-	border 1px solid #CCC
+	border-top none
+	border-left none
+	border-right 1px solid #CCC
+	border-bottom 1px solid #CCC
 	transition box-shadow 0.3s, border 0.3s
 
 input, select
@@ -27,8 +30,9 @@ input, select
 
 	&:focus
 		outline none
-		border solid 1px #0995F9
-		box-shadow 0 0 5px 1px #BFE4FF
+		box-shadow 1px 1px 0 1px #AFDEFF
+		border-right solid 1px #0995F9
+		border-bottom solid 1px #0995F9
 		background-color #F0F8FF
 
 *
