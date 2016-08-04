@@ -41,7 +41,7 @@ do ($W = Win) ->
 		htmlForm = _routerForm opcionClass,name,field,size
 
 		$W("##{idApply}").append("<div id=\"form_tbar_#{name}\"></div>
-							<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"\">
+							<form name=\"form_#{name}\" id=\"form_#{name}\" onsubmit=\"return false;\" data-role=\"win-body\" style=\"overflow:auto;\">
 								<div id=\"div_script_form_#{name}\" class=\"form_load\"></div>
 								<div class=\"form_body\" style=\"width:#{fBodyAncho};\">#{htmlForm}</div>
 							</form>")

@@ -11,6 +11,7 @@ uglify      = require 'gulp-uglify'
 rename      = require 'gulp-rename'
 jshint      = require 'gulp-jshint'
 notify      = require 'gulp-notify'
+nib         = require 'nib'
 closure     = require 'gulp-closure-compiler-service'
 pkg         = require './package.json'
 
@@ -89,7 +90,7 @@ gulp.task 'stylus', ->
 
 gulp.task 'minStylus', ->
 	gulp.src path.stylus
-		.pipe stylus({compress:true}).on 'error', gutil.log
+		.pipe stylus({ compress: true, use: nib() }).on 'error', gutil.log
 		.pipe header banner, pkg: pkg
 		.pipe(rename({extname: '.min.css'}))
 		.pipe gulp.dest path.distStylus

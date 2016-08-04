@@ -3,11 +3,16 @@ $fSizeBody  = 11px
 $fSizeInput = 12px
 $color_min_load_ajax = #000
 
+*
+	box-sizing border-box
+	font-family tahoma,arial,helvetica,sans-serif
+
 body, html
 	margin 0
+	height 100%
 	padding 0
 	overflow visible
-	height 100%
+	font-size $fSizeBody
 
 input, textarea
 	padding 2px 5px
@@ -30,14 +35,10 @@ input, select
 
 	&:focus
 		outline none
-		box-shadow 1px 1px 0 1px #AFDEFF
+		box-shadow .5px .5px 0 .5px #AFDEFF
 		border-right solid 1px #0995F9
 		border-bottom solid 1px #0995F9
 		background-color #F0F8FF
-
-*
-	box-sizing border-box
-	font normal 11px tahoma,arial,helvetica,sans-serif
 
 nav
 	overflow hidden
@@ -268,16 +269,17 @@ input[type=button]
 
 	/.win-tabpanel
 		width 100%
-		overflow hidden
 		padding 0 0 5px 3px
+		overflow hidden
 
 		/.win-tab
 			float left
-			height calc(100% - 5px)
-			padding 5px 10px
-			margin 5px 5px 0 0
-			min-width 50px
 			cursor pointer
+			height calc(100% - 5px)
+			margin 5px 5px 0 0
+			padding 5px 10px
+			min-width 50px
+			font-size 11px
 
 		/.win-tab-body[data-selected=false]
 			display none
@@ -457,7 +459,7 @@ input[type=button]
 					vertical-align middle
 					width 50%
 
-				>div:hover
+				> div:hover
 					background-color  #ADADAD
 					color #000
 
