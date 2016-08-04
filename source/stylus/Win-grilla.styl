@@ -1,3 +1,5 @@
+@require 'nib'
+
 // $border = #174767
 // $border = #2E3641
 $border = #CCC
@@ -21,9 +23,9 @@ $color = #000
 	padding 10px 0 0 0
 
 mix_background($image)
+	background-size $sizeImage
 	background-image url($image)
 	background-repeat no-repeat
-	background-size $sizeImage
 
 .form_content_field
 	float left
@@ -40,9 +42,20 @@ mix_background($image)
 	width 100%
 	margin 15px 0
 	padding 5px
+	font-size 11px
 
-	> div
-		font-size 12px
+.icon-panel
+	float left
+	width 93px
+	cursor pointer
+	margin 5px
+	padding 5px
+	font-size 11px
+	min-height 70px
+	text-align center
+
+	&:hover
+		background-color #A4D1F1
 
 .grilla_title
 	border-bottom 1px solid #BBB
@@ -55,17 +68,17 @@ mix_background($image)
 	background-color $bgTitleShadow
 
 	*
-		font-size 12px
 		color $color
+		font-size 12px
 		font-weight bold
 
 	/.grilla_title_label
 		float left
-		background-color $bgTitle
-		border-right 1px solid #BBB
-		padding 2px 0 0 5px
-		height 22px
 		cursor default
+		height 22px
+		padding 2px 0 0 5px
+		border-right 1px solid #BBB
+		background-color $bgTitle
 
 		&:first-child
 			width 35px
@@ -75,9 +88,9 @@ mix_background($image)
 
 		.grilla_title_order
 			float left
-			margin-left -16px
 			width 16px
 			height 100%
+			margin-left -16px
 
 			> div
 				height 50%
@@ -98,10 +111,9 @@ mix_background($image)
 			[data-order="downOn"]
 				visibility visible
 
-
 .grilla_footer
-	padding 2px
 	height 19px
+	padding 2px
 
 .grilla_body
 	float left
@@ -109,30 +121,24 @@ mix_background($image)
 	height calc(100% - 41px)
 	overflow auto
 	background-color #FFF
-	// box-shadow inset 0 1px 3px 0 rgba(0,0,0,.3),0 1px 1px 0 rgba(0,0,0,.44),0 2px 1px -1px rgba(0,0,0,.0)
 
 .my_grilla_filters
 	float left
 	margin 8px 0 0 6px
-	overflow hidden
 	border 1px solid #BBB
-	-moz-border-radius 5px
-	-webkit-border-radius 5px
-	border-radius 5px
-	-webkit-box-shadow 2px 2px 2px #666
-	-moz-box-shadow 2px 2px 2px #666
-	box-shadow 2px 2px 2px #666
+	overflow hidden
 	background #FFF
+	box-shadow 2px 2px 2px #666
+	border-radius 5px
 
 .TituloBarraFilters
 	float left
 	width 200px
-	text-align left
 	margin 0 0 0 0
 	padding 6px 0 6px 0
+	text-align left
 	border-bottom 1px solid #BBB
-	background -webkit-linear-gradient(top,  #ddd 0%,#eee 50%,#ddd 100%)
-	background linear-gradient(to top,  #ddd 0%,#eee 50%,#ddd 100% )
+	background linear-gradient(to top,  #ddd 0%,#eee 50%,#ddd 100%)
 
 .IconoFiltro
 	background-image url(../img/grilla/filter.png)
@@ -146,24 +152,23 @@ mix_background($image)
 	float left
 	width 20px
 	height 100%
-	background -webkit-linear-gradient(left,  #ddd 0%,#eee 50%,#ddd 100%)
 	background linear-gradient(to left,  #ddd 0%,#eee 50%,#ddd 100% )
 
 .BarraFiltersDespliegueDisabled
 	float left
 	width 20px
 	height 100%
-	background #333
 	margin 0 20px 0 -20px
+	background #333
 
 .BarraFiltersVerticalText
+	top 50%
+	width 12px
+	height 120px
+	margin -75px 0 0 4px
 	position relative
 	background-image url(../img/grilla/text_filtro_busqueda.png)
 	background-repeat no-repeat
-	top 50%
-	margin -75px 0 0 4px
-	width 12px
-	height 120px
 
 .ListadoFilters
 	float left
@@ -174,33 +179,27 @@ mix_background($image)
 
 .LineaFiltro
 	float left
-	height 16px
 	width 150px
-	text-align left
+	height 16px
 	margin 3px 0 0 0
-	padding 0 0 0 10px
 	cursor pointer
-	white-space nowrap
-	overflow hidden
-	text-overflow ellipsis
+	padding 0 0 0 10px
+	overflow ellipsis
+	text-align left
 
 .LineaFiltroDisabled
 	color $border
 
 .LineaFiltroEnabled
 	color #000
-	background-color $bgTitleShadow
-	-moz-border-radius 2px
-	-webkit-border-radius 2px
-	border-radius 2px
-	-webkit-box-shadow 1px 1px 3px #666
-	-moz-box-shadow 1px 1px 2px #666
-	box-shadow 1px 1px 3px #666
 	padding 0 0 0 4px
+	box-shadow 1px 1px 3px #666
 	font-weight bold
+	border-radius 2px
+	background-color $bgTitleShadow
 	background-image url(../img/grilla/delete.png)
-	background-position right
 	background-repeat no-repeat
+	background-position right
 
 .grilla_toolbar
 	float left
@@ -218,9 +217,9 @@ mix_background($image)
 
 		/.grilla_type_search
 			float right
-			margin 2px -25px 2px 0
 			width 24px
 			height 24px
+			margin 2px -25px 2px 0
 			background-image url(../img/grilla/search.png)
 			background-repeat no-repeat
 			background-position center
@@ -237,48 +236,54 @@ mix_background($image)
 			margin 3px
 
 			input
-				height 22px
 				width 232px
-				padding 0 22px
+				height 22px
 				border 1px solid #FFF
+				padding 0 22px
 
 		/.grilla_toolbar_reload
 			float right
-			margin 4px -234px 2px 0
 			width 20px
+			margin 4px -234px 2px 0
 			height 21px
 			cursor pointer
-			background-color transparent
 			background-size 16px
+			background-color transparent
+			background-image url(../img/grilla/reload.png)
 			background-repeat no-repeat
 			background-position center
-			background-image url(../img/grilla/reload.png)
-
 
 .grilla_content
-	height 100%
-	width 100%
 	float left
+	width 100%
+	height 100%
 	overflow-y hidden
 	overflow-x auto
-	background-color #FFF
 	border-left 1px solid $borderBody
 	border-right 1px solid $borderBody
+	background-color #FFF
 
 .grilla_celdas
-	min-height 17px
-	padding 2px 0 2px 5px
-	font-size 11px
-	white-space nowrap
-	overflow hidden
-	text-overflow ellipsis
 	cursor default
-	// border-left 1px solid #DDD
+	padding 2px 5px
+	overflow hidden
+	font-size 11px
+	min-height 17px
+	white-space nowrap
+	text-overflow ellipsis
+
+	img
+		width 16px
+		height 16px
+		cursor pointer
+		margin 0 auto
+		display flex
+		text-align center
 
 
 .grilla_content_fila
-	border-bottom 1px solid #DDD
 	cursor default
+	border-bottom 1px solid #DDD
 
 	&:hover
 		background-color #EAF4FA
@@ -315,27 +320,25 @@ mix_background($image)
 	overflow hidden
 
 	& > div
-		padding-top	5px
 		float left
 		height 100%
+		padding-top	5px
 
 	/.grilla_col_first
 		width 35px
 		cursor default
 		padding 0
-		// border-right 1px solid #BBB
-		// background-color $bgTitleShadow
 
 		/.grilla_fila_cont
 			float left
-			font-size 11px
 			width 18px
+			font-size 11px
 
 		/.grilla_fila_image
 			float left
-			margin 1px
 			width $sizeImage
 			height $sizeImage
+			margin 1px
 
 
 .grilla_fila_image[data-icon="fInsert"],
@@ -364,34 +367,30 @@ mix_background($image)
 
 .grilla_ventana
 	overflow hidden
-	/*padding 10px*/
 
 	& > aside
 		float left
 		height 100%
 		overflow hidden
-		margin-right 5px;
-		// border 1px solid $borderBody
 
 		/.grilla-aside-head
-			float left
 			width 100%
-			height 23px
+			height 51px
+			display flex
+			align-items center
+			justify-content center
 			background-color $bgTitle
 
 		/.grilla-aside-title
-			float left
 			width 170px
 			height 16px
-			text-align left
 			margin 10px 0 4px 16px
 			padding 0 0 0 0
-			font-weight bold
-			-webkit-box-shadow 1px 1px 3px #666
-			-moz-box-shadow 1px 1px 2px #666
 			box-shadow 1px 1px 3px #666
+			text-align left
+			font-weight bold
 
 .grilla_load
-	height 100%
 	float left
+	height 100%
 	overflow hidden

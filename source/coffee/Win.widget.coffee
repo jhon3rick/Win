@@ -47,10 +47,6 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id = "window-#{CONTWIDGET}"
 
-		winModal    = document.createElement('div')
-		winModal.id += "win-modal-#{id}"
-		winModal.className += "win-modal"
-
 		bgBody   = if obj.bgBody then 'background-color:'+obj.bgBody+';' else ''
 		bgTitle  = if obj.bgTitle then 'background-color:'+obj.bgTitle+';' else ''
 		divClose = if obj.closable != false then "<div class=\"win-title-btn\" id=\"btn_close_ventana_#{id}\"></div>" else ""
@@ -65,7 +61,8 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id==CONTWIDGET
 
-		winModal.innerHTML += "<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{style}\" class=\"win-marco\">
+		$W("body").append("<div id=\"win-modal-#{id}\" class=\"win-modal\">
+								<div id=\"#{id}\" style=\"width:#{width}; height:#{height}; #{bgBody} #{style}\" class=\"win-marco\">
 									<div class=\"win-file-resize\" data-resize=\"top\" id=\"win-resize-top-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"bottom\" id=\"win-resize-bottom-#{id}\"></div>
 									<div class=\"win-file-resize\" data-resize=\"left\" id=\"win-resize-left-#{id}\"></div>
@@ -77,14 +74,11 @@ do ($W = Win) ->
 										</div>
 									</header>
 									<section id=\"win-section-#{id}\" style=\"height:calc(100% - 27px);\" data-role=\"win-section\">#{html}</section>
-								</div>"
+								</div>
+							</div>")
 
-		body.appendChild(winModal)
 
-		if obj.closable != false
-			document.getElementById("btn_close_ventana_#{id}").addEventListener('click',() ->
-				_$.close()
-			)
+		if obj.closable != false then $W("#btn_close_ventana_#{id}").on('click',() -> _$.close() )
 
 		widthVentana  = document.getElementById(id).offsetWidth
 		heightVentana = document.getElementById(id).offsetHeight
@@ -511,11 +505,11 @@ do ($W = Win) ->
 
 						else if json == '->'
 							float = 'right'
-							document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
+							$W("##{idParent}").append('<div data-role="div-empty"></div>')
 				cont++
 
 			if float == 'left'
-				document.getElementById(idParent).innerHTML += '<div data-role="div-empty"></div>'
+				$W("##{idParent}").append('<div data-role="div-empty"></div>')
 
 	###
 	@method _tabPanel
@@ -535,10 +529,9 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tabpanel-#{CONTWIDGET}"
 
-		html = "<div id=\"#{id}\" class=\"win-tabpanel\" style=\"height:#{height}; #{style}\" data-role=\"win-tabpanel\"></div>
-				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight}; #{bodyStyle}\"></div>"
+		$W("##{idParent}").append("<div id=\"#{id}\" class=\"win-tabpanel\" style=\"height:#{height}; #{style}\" data-role=\"win-tabpanel\"></div>
+				<div id=\"win-tabpanel-body-#{id}\" class=\"win-tabpanel-body\" style=\"height:#{bodyHeight}; #{bodyStyle}\"></div>")
 
-		document.getElementById(idParent).innerHTML += html
 		ELEMENTS[id] = {idParent:idParent, items:obj.items, disable:false, type:'tabpanel'}
 
 		if obj.items then _router(obj.items, id)
@@ -568,11 +561,11 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tab-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\"class=\"win-tab\" data-selected=\"#{dataSelected}\" data-state=\"#{dataState}\" data-index=\"index-#{cont}\" data-load=\"false\" style=\"#{style}\">
-															<span class=\"icon-tab form\"></span>
-															<span>#{title}</span>
-														</div>"
-		document.getElementById("win-tabpanel-body-#{idParent}").innerHTML += "<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto; #{bodyStyle}\" data-selected=\"false\" data-index=\"index-#{cont}\"></div>"
+		$W("##{idParent}").append("<div id=\"#{id}\"class=\"win-tab\" data-selected=\"#{dataSelected}\" data-state=\"#{dataState}\" data-index=\"index-#{cont}\" data-load=\"false\" style=\"#{style}\">
+										<span class=\"icon-tab form\"></span>
+										<span>#{title}</span>
+									</div>")
+		$W("#win-tabpanel-body-#{idParent}").append("<div id=\"win-tab-body-#{id}\" class=\"win-tab-body\" style=\"height:100%; overflow:auto; #{bodyStyle}\" data-selected=\"false\" data-index=\"index-#{cont}\"></div>")
 
 		setTimeout () ->
 			objAdd = []
@@ -626,19 +619,17 @@ do ($W = Win) ->
 
 		if title != ''
 			height = height-20
-			title = "<div id=\"win-panel-title-#{id}\" style=\"width:#{width}; height:20px; #{style}\" class=\"win-panel-title\">#{title}</div>"
+			title = "<div id=\"win-panel-title-#{id}\" style=\"height:20px; #{style}\" class=\"win-panel-title\">#{title}</div>"
 
 		if !isNaN width then width = width+'px'
 		if !isNaN height then height = height+'px'
 
-		html = "<div id=\"win-panel-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\" data-role=\"win-panel\">
-					#{title}
-					<div id=\"win-panel-load-#{id}\" class=\"win-panel-load\" style=\"width:#{width}; height:#{height}; #{style}\">
-						#{html}
-					</div>
-				</div>"
-
-		document.getElementById(idParent).innerHTML += html
+		$W("##{idParent}").append("<div id=\"win-panel-#{id}\" class=\"win-panel\" style=\"width:#{width}; height:#{height}; #{style}\" data-role=\"win-panel\">
+										#{title}
+										<div id=\"win-panel-load-#{id}\" class=\"win-panel-load\" style=\"width:#{width}; height:#{height}; #{style}\">
+											#{html}
+										</div>
+									</div>")
 
 		if obj.autoLoad
 			setTimeout () ->
@@ -658,7 +649,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tbar-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-tbar\" data-role=\"win-tbar\"></div>"
+		$W("##{idParent}").append("<div id=\"#{id}\" class=\"win-tbar\" data-role=\"win-tbar\"></div>")
 		if obj.items then _router(obj.items, "#{id}")
 
 		setTimeout () ->
@@ -689,10 +680,10 @@ do ($W = Win) ->
 		if title != ''
 			title = "<div id=\"win-buttongroup-title-#{id}\" style=\"height:20px;\" class=\"win-buttongroup-title\">#{title}</div>"
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-buttongroup\" style=\"width:#{width}; #{hidden} #{style}\" data-role=\"win-buttongroup\">
-															#{title}
-															<div id=\"win-buttongroup-body-#{id}\" class=\"win-buttongroup-body\" style=\"#{style}\"></div>
-														</div>"
+		$W("##{idParent}").append("<div id=\"#{id}\" class=\"win-buttongroup\" style=\"width:#{width}; #{hidden} #{style}\" data-role=\"win-buttongroup\">
+										#{title}
+										<div id=\"win-buttongroup-body-#{id}\" class=\"win-buttongroup-body\" style=\"#{style}\"></div>
+									</div>")
 		if obj.items then _router(obj.items, "win-buttongroup-body-#{id}")
 
 
@@ -721,9 +712,9 @@ do ($W = Win) ->
 
 		if !isNaN width then width = width+'px'
 
-		document.getElementById(idParent).innerHTML += "<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\" data-role=\"win-btn\" data-state=\"#{dataState}\" style=\"#{styleHidden}\">
-															<button class=\"#{cls}\">#{text}</button>
-														</div>"
+		$W("##{idParent}").append("<div id=\"#{id}\" class=\"win-btn\" style=\"width:#{width};\" data-role=\"win-btn\" data-state=\"#{dataState}\" style=\"#{styleHidden}\">
+										<button class=\"#{cls}\">#{text}</button>
+									</div>")
 		_findResizeBody(id)
 
 		if obj.handler
@@ -751,19 +742,19 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-tbtext-#{CONTWIDGET}"
 
-		document.getElementById(idParent).innerHTML  += "<div id=\"#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\" data-role=\"win-tbtext\">#{text}</div>"
+		$W("##{idParent}").append("<div id=\"#{id}\" class=\"win-tbtext\" style=\"width:#{width}; #{style}\" data-role=\"win-tbtext\">#{text}</div>")
 
 	###
 	@method _separator
 	@param  obj objectDom parent
 	###
-	_separator = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separator\" data-role=\"win-separator\">|</div>"
+	_separator = (idParent) -> $W("##{idParent}").append("<div class=\"win-separator\" data-role=\"win-separator\">|</div>")
 
 	###
 	@method _separatorHeight
 	@param  obj objectDom parent
 	###
-	_separatorHeight = (idParent) -> document.getElementById(idParent).innerHTML += "<div class=\"win-separatorHeight\" data-role=\"win-separatorHeight\"></div>"
+	_separatorHeight = (idParent) -> $W("##{idParent}").append("<div class=\"win-separatorHeight\" data-role=\"win-separatorHeight\"></div>")
 
 	###
 	@method _body
@@ -792,8 +783,7 @@ do ($W = Win) ->
 			CONTWIDGET++
 			id="win-body-#{CONTWIDGET}"
 
-		parent = document.getElementById(idParent)
-		parent.innerHTML += "<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style} #{bodyStyle}\" data-role=\"win-body\">#{html}</div>"
+		$W("##{idParent}").append("<div id=\"#{id}\" class=\"win-body #{clsBody}\" style=\"#{style} #{bodyStyle}\" data-role=\"win-body\">#{html}</div>")
 
 		setTimeout () ->
 			_resizeBody(idParent)

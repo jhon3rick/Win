@@ -26,7 +26,7 @@ do ($W = Win) ->
 		advancedToolbar = obj.advancedToolbar or 'disable'
 
 		ctxMenu     = obj.ctxMenu or []
-		filterAside = obj.filterAside or ''
+		arrayAside = obj.arrayAside or ''
 
 		pagina  = obj.pagina or ''
 		maxPage = obj.maxPage or ''
@@ -59,13 +59,14 @@ do ($W = Win) ->
 			style = 'style="height:calc(100% - 28px);"'
 			htmlToolbar = _createToolbar name,advancedToolbar
 
-		htmlAside   = _createAside name,filterAside
+		htmlAside   = _createAside name,arrayAside
 		htmlContent = _createContent name,opcionClass,pagina,maxPage,style,titleItems,rows,eventUpdate,fNameWindow,fAncho,fAlto,fTitle
 
 		if htmlAside != "" then widthGrilla = "calc(100% - 205px)"
 
 		if opcionClass == ''
 			htmlGrilla = "<div id=\"grilla_ventana_#{name}\" class=\"grilla_ventana\" style=\"#{grillaHeight};\" data-role=\"win-body\">
+								#{htmlAside}
 								<div id=\"grilla_#{name}\" class=\"grilla_load\" style=\"width:#{widthGrilla};\">
 									#{htmlToolbar}
 									#{htmlContent}
@@ -75,7 +76,7 @@ do ($W = Win) ->
 			parentHtml = "grilla_#{name}"
 			htmlGrilla = "#{htmlToolbar}#{htmlContent}"
 
-		document.getElementById(parentHtml).innerHTML += htmlGrilla
+		$W("##{parentHtml}").append(htmlGrilla)
 		$W("\#grilla_toolbar_reload_#{name}").on("click",() -> $W.Grilla.buscar name )
 		$W("\#grilla_content_page_#{name} .grilla_page").on("click",() -> $W.Grilla.pagination this,name,valueToolbar,pagina,maxPage )
 
@@ -85,15 +86,15 @@ do ($W = Win) ->
 
 	$W.Grilla.fOpen = (name, id, fNameWindow, width, height, title, autoScroll) ->
 		url = GRILLA[name]["url"]
+		params = GRILLA[name]["varPost"]
+		opcionClass = 'vInsert'
 
-		if id>0
+		if id>0 or id is 0
+			opcionClass = 'vUpdate'
 			state = document.getElementById("grilla_fila_#{name}_#{id}").getAttribute('data-state')
 			if state == 'fDelete' then return
 
-		opcionClass = if id>0 then 'vUpdate' else 'vInsert'
-		params = GRILLA[name]["varPost"]
-
-		params.indexClass = id
+		params.indexClass  = id
 		params.opcionClass = opcionClass
 
 		eval "window.#{fNameWindow} = new $W.Window({
@@ -243,7 +244,7 @@ do ($W = Win) ->
 		msjRequired  = ''
 		contRequired = 0
 
-		opcionClass  = if indexClass > 0 then 'fUpdate' else 'fInsert'
+		opcionClass  = if indexClass > 0 or indexClass is 0 then 'fUpdate' else 'fInsert'
 		arrayInput[0] = document.querySelectorAll("#form_#{name} input")
 		arrayInput[1] = document.querySelectorAll("#form_#{name} select")
 		arrayInput[2] = document.querySelectorAll("#form_#{name} textarea")
@@ -327,9 +328,9 @@ do ($W = Win) ->
 			input.setAttribute("data-search","enable")
 		else input.setAttribute("data-search","disable")
 
-	_createAside = (name,filterAside) ->
+	_createAside = (name,arrayAside) ->
 		html = ""
-		for own key, value of filterAside
+		for own key, value of arrayAside
 			html += "<div class=\"grilla-aside-title\">#{value.title}</div>"
 
 		if html != ""
