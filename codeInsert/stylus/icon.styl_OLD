@@ -1,0 +1,9 @@
+$urlPlugin = pathjoin(dirname(path),"/plugins/fileImage.js")
+$urlImages = pathjoin(dirname(path),"/plugins/fileImage.js")
+
+use($urlPlugin)
+
+$arrayImages = loadImages($urlImages)
+for $image in ($arrayImages)
+    .{$image}
+    	background-image: url("../img/icons/36dp/"+$image+".png");
